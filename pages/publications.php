@@ -112,6 +112,57 @@ $publications = getApi('/publications') ?? [];
 </html>
 
 <style>
+.page-hero {
+  position: relative;
+  padding: 160px 0 100px;
+  overflow: hidden;
+}
+
+.page-hero .hero-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.page-hero .hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-hero .hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.8);
+}
+
+.page-hero .hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.page-hero .hero-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 16px;
+}
+
+.page-hero h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.page-hero .hero-subtitle {
+  font-size: 18px;
+  color: rgba(255,255,255,0.7);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
 .publications-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

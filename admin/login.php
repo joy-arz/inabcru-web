@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $result = postApi('/auth/login', ['email' => $email, 'password' => $password]);
 
-    if ($result && isset($result['token'])) {
-        setcookie('auth_token', $result['token'], time() + 86400, '/');
+    if ($result && isset($result['data']['token'])) {
+        setcookie('auth_token', $result['data']['token'], time() + 86400, '/');
         header('Location: ' . BASE_URL . '/admin/dashboard');
         exit;
     } else {

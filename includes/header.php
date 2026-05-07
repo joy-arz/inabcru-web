@@ -16,9 +16,12 @@ if (empty($currentPath)) {
       <span class="logo-text">InaBCRU</span>
     </a>
 
-    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu" aria-expanded="false">
+      <svg class="menu-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+      <svg class="close-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
       </svg>
     </button>
 
@@ -57,6 +60,13 @@ if (empty($currentPath)) {
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(232, 230, 225, 0.5);
   transition: all 0.3s ease;
+  height: 64px;
+}
+
+@media (min-width: 1024px) {
+  .header {
+    height: 80px;
+  }
 }
 
 .header.scrolled {
@@ -75,13 +85,17 @@ if (empty($currentPath)) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 72px;
+  height: 100%;
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 12px;
+  text-decoration: none;
 }
 
 .logo-icon {
@@ -95,6 +109,13 @@ if (empty($currentPath)) {
   justify-content: center;
   font-weight: 700;
   font-size: 18px;
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+.header.home .logo-icon {
+  background: white;
+  color: var(--color-primary);
 }
 
 .logo-text {
@@ -102,25 +123,48 @@ if (empty($currentPath)) {
   font-weight: 600;
   font-size: 20px;
   color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
 .header.home .logo-text {
   color: white;
 }
 
+.header.scrolled .logo-icon {
+  background: var(--color-primary);
+  color: white;
+}
+
+.header.scrolled .logo-text {
+  color: var(--color-text);
+}
+
 .nav-links {
-  display: flex;
+  display: none;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+}
+
+@media (min-width: 1024px) {
+  .nav-links {
+    display: flex;
+  }
 }
 
 .nav-link {
-  padding: 8px 16px;
+  padding: 8px 12px;
   font-size: 15px;
   font-weight: 500;
   color: var(--color-text);
   border-radius: 8px;
   transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+@media (min-width: 1280px) {
+  .nav-link {
+    padding: 8px 16px;
+  }
 }
 
 .nav-link:hover {
@@ -147,28 +191,46 @@ if (empty($currentPath)) {
   font-weight: 600;
 }
 
+.header.home:not(.scrolled) .nav-link.active {
+  color: rgba(249, 115, 22, 0.9);
+  background: rgba(249, 115, 22, 0.1);
+}
+
 .mobile-menu-btn {
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   padding: 8px;
   cursor: pointer;
   color: var(--color-text);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.mobile-menu-btn:hover {
+  background: var(--color-surface-warm);
+}
+
+@media (min-width: 1024px) {
+  .mobile-menu-btn {
+    display: none;
+  }
 }
 
 .header.home .mobile-menu-btn {
   color: white;
 }
 
-@media (max-width: 768px) {
-  .mobile-menu-btn {
-    display: block;
-  }
+.header.home .mobile-menu-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
 
+@media (max-width: 1023px) {
   .nav-links {
-    display: none;
     position: absolute;
-    top: 72px;
+    top: 64px;
     left: 0;
     right: 0;
     background: white;
@@ -176,10 +238,16 @@ if (empty($currentPath)) {
     padding: 16px;
     border-bottom: 1px solid var(--color-border);
     box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
   }
 
   .nav-links.open {
     display: flex;
+    max-height: 60vh;
+    opacity: 1;
   }
 
   .nav-link {
@@ -195,21 +263,47 @@ if (empty($currentPath)) {
     background: var(--color-surface-warm);
     color: var(--color-primary);
   }
+
+  .header.home .nav-link.active {
+    color: var(--color-primary);
+    background: var(--color-surface-warm);
+  }
 }
 </style>
 
 <script>
-window.addEventListener('scroll', function() {
+(function() {
   const header = document.getElementById('mainHeader');
-  if (window.scrollY > 50) {
-    header.classList.add('scrolled');
-  } else {
-    header.classList.remove('scrolled');
-  }
-});
-
-function toggleMobileMenu() {
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const navLinks = document.getElementById('navLinks');
-  navLinks.classList.toggle('open');
-}
+  const menuIcon = mobileMenuBtn.querySelector('.menu-icon');
+  const closeIcon = mobileMenuBtn.querySelector('.close-icon');
+  let isMenuOpen = false;
+
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 20) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  mobileMenuBtn.addEventListener('click', function() {
+    isMenuOpen = !isMenuOpen;
+    navLinks.classList.toggle('open', isMenuOpen);
+    menuIcon.style.display = isMenuOpen ? 'none' : 'block';
+    closeIcon.style.display = isMenuOpen ? 'block' : 'none';
+    mobileMenuBtn.setAttribute('aria-expanded', isMenuOpen);
+  });
+
+  document.addEventListener('click', function(e) {
+    if (isMenuOpen && !navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+      isMenuOpen = false;
+      navLinks.classList.remove('open');
+      menuIcon.style.display = 'block';
+      closeIcon.style.display = 'none';
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
 </script>
