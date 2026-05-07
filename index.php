@@ -2,6 +2,8 @@
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/api.php';
 
+$currentLocale = getLocaleFromUri($_SERVER['REQUEST_URI'] ?? '/');
+
 $stats = getApi('/stats');
 $team = getApi('/team');
 $publications = getApi('/publications');
@@ -11,27 +13,46 @@ if (is_array($stats)) {
     foreach ($stats as $stat) {
         $value = isset($stat['value']) ? intval($stat['value']) : 0;
         $suffix = isset($stat['suffix']) ? htmlspecialchars($stat['suffix']) : '';
-        $label = isset($stat['key']) ? htmlspecialchars($stat['key']) : 'Stat';
-        $statsData[] = ['value' => $value, 'suffix' => $suffix, 'label' => $label];
+        $key = isset($stat['key']) ? htmlspecialchars($stat['key']) : 'Stat';
+        $statsData[] = ['value' => $value, 'suffix' => $suffix, 'label' => t('home.stats.' . $key, $currentLocale)];
     }
 }
 
 if (empty($statsData)) {
     $statsData = [
-        ['value' => 45, 'suffix' => '+', 'label' => 'Spesies Disurvei'],
-        ['value' => 12, 'suffix' => '', 'label' => 'Lokasi Riset'],
-        ['value' => 28, 'suffix' => '', 'label' => 'Publikasi Ilmiah'],
-        ['value' => 35, 'suffix' => '', 'label' => 'Anggota Aktif'],
+        ['value' => 45, 'suffix' => '+', 'label' => t('home.stats.speciesSurveyed', $currentLocale)],
+        ['value' => 12, 'suffix' => '', 'label' => t('home.stats.researchLocations', $currentLocale)],
+        ['value' => 28, 'suffix' => '', 'label' => t('home.stats.scientificPublications', $currentLocale)],
+        ['value' => 35, 'suffix' => '', 'label' => t('home.stats.activeMembers', $currentLocale)],
     ];
 }
+
+$heroTitle = t('home.hero.title', $currentLocale);
+$heroSubtitle = t('home.hero.subtitle', $currentLocale);
+$heroCta = t('home.hero.cta', $currentLocale);
+$statsTitle = t('home.stats.title', $currentLocale);
+$statsSubtitle = t('home.mission.description', $currentLocale);
+$programsTitle = t('home.programs.title', $currentLocale);
+$aboutLabel = t('nav.about', $currentLocale);
+$aboutTitle = t('about.title', $currentLocale);
+$aboutText = t('about.description', $currentLocale);
+$aboutCta = t('common.readMore', $currentLocale) . ' >';
+$newsTitle = t('home.latestNews.title', $currentLocale);
+$donateTitle = t('home.donateCta.title', $currentLocale);
+$donateQuote = t('home.donateCta.description', $currentLocale);
+$donateButton = t('home.donateCta.button', $currentLocale);
+
+$navItems = getNavItems($currentLocale);
+$aboutHref = BASE_URL . '/' . $currentLocale . '/about';
+$donateHref = BASE_URL . '/' . $currentLocale . '/donate';
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="<?php echo $currentLocale; ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>InaBCRU - Indonesia Bat Conservation Research Union</title>
-  <meta name="description" content="Perkumpulan Indonesia Bat Conservation Research Union - Membangun kredibilitas donor untuk konservasi kelelawar di Indonesia">
+  <title><?php echo t('metadata.title', $currentLocale); ?></title>
+  <meta name="description" content="<?php echo t('metadata.description', $currentLocale); ?>">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
@@ -46,11 +67,11 @@ if (empty($statsData)) {
       </div>
       <div class="hero-content container">
         <p class="hero-label">Indonesia Bat Conservation Research Union</p>
-        <h1>Indonesia Bat Conservation Research Union</h1>
-        <p class="hero-subtitle">Membangun kredibilitas institusi untuk konservasi kelelawar di Indonesia</p>
+        <h1><?php echo $heroTitle; ?></h1>
+        <p class="hero-subtitle"><?php echo $heroSubtitle; ?></p>
         <div class="hero-buttons">
-          <a href="<?php echo BASE_URL; ?>/donate" class="btn btn-primary btn-lg">Dukung Kami</a>
-          <a href="<?php echo BASE_URL; ?>/about" class="btn btn-secondary btn-lg">Tentang</a>
+          <a href="<?php echo $donateHref; ?>" class="btn btn-primary btn-lg"><?php echo $heroCta; ?></a>
+          <a href="<?php echo $aboutHref; ?>" class="btn btn-secondary btn-lg"><?php echo t('nav.about', $currentLocale); ?></a>
         </div>
       </div>
       <div class="hero-bottom-gradient"></div>
@@ -82,9 +103,9 @@ if (empty($statsData)) {
     <section class="section-padding bg-background">
       <div class="container">
         <div class="section-header text-center">
-          <p class="section-label">Dampak Kami</p>
-          <h2 class="section-title">Dampak Kami</h2>
-          <p class="section-subtitle mx-auto">Membangun kredibilitas donor institusi untuk organisasi non-profit konservasi kelelawar di Indonesia.</p>
+          <p class="section-label"><?php echo t('home.stats.title', $currentLocale); ?></p>
+          <h2 class="section-title"><?php echo $statsTitle; ?></h2>
+          <p class="section-subtitle mx-auto"><?php echo $statsSubtitle; ?></p>
         </div>
         <div class="stats-grid">
           <?php foreach ($statsData as $stat): ?>
@@ -100,8 +121,8 @@ if (empty($statsData)) {
     <section class="section-padding bg-surface-warm">
       <div class="container">
         <div class="section-header text-center">
-          <p class="section-label">Program Kami</p>
-          <h2 class="section-title">Program Kami</h2>
+          <p class="section-label"><?php echo t('home.programs.title', $currentLocale); ?></p>
+          <h2 class="section-title"><?php echo $programsTitle; ?></h2>
         </div>
         <div class="programs-grid">
           <div class="program-card">
@@ -110,8 +131,8 @@ if (empty($statsData)) {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
             </div>
-            <h3>Survei Kelelawar</h3>
-            <p>Riset lapangan untuk mengidentifikasi dan memetakan populasi kelelawar di berbagai habitat.</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Survei Kelelawar' : 'Bat Survey'; ?></h3>
+            <p><?php echo $currentLocale === 'id' ? 'Riset lapangan untuk mengidentifikasi dan memetakan populasi kelelawar di berbagai habitat.' : 'Field research to identify and map bat populations across various habitats.'; ?></p>
           </div>
           <div class="program-card">
             <div class="program-icon">
@@ -119,8 +140,8 @@ if (empty($statsData)) {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
               </svg>
             </div>
-            <h3>Edukasi & Pelatihan</h3>
-            <p>Program edukasi untuk meningkatkan kesadaran tentang pentingnya kelelawar.</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Edukasi & Pelatihan' : 'Education & Training'; ?></h3>
+            <p><?php echo $currentLocale === 'id' ? 'Program edukasi untuk meningkatkan kesadaran tentang pentingnya kelelawar.' : 'Educational programs to raise awareness about the importance of bats.'; ?></p>
           </div>
           <div class="program-card">
             <div class="program-icon">
@@ -128,8 +149,8 @@ if (empty($statsData)) {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <h3>Konservasi Habitat</h3>
-            <p>Upaya perlindungan habitat alami kelelawar untuk menjaga keseimbangan ekosistem.</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Konservasi Habitat' : 'Habitat Conservation'; ?></h3>
+            <p><?php echo $currentLocale === 'id' ? 'Upaya perlindungan habitat alami kelelawar untuk menjaga keseimbangan ekosistem.' : 'Efforts to protect natural bat habitats to maintain ecosystem balance.'; ?></p>
           </div>
         </div>
       </div>
@@ -142,27 +163,27 @@ if (empty($statsData)) {
       <div class="container relative z-10">
         <div class="about-grid">
           <div class="about-content">
-            <p class="section-label" style="color: rgba(255,255,255,0.6);">Tentang Kami</p>
-            <h2 class="section-title" style="color: white;">Melindungi Kelelawar Indonesia</h2>
-            <p class="about-text">InaBCRU adalah organisasi non-profit yang dedicated untuk konservasi kelelawar di Indonesia melalui penelitian ilmiah, edukasi masyarakat, dan kolaborasi dengan berbagai institusi.</p>
-            <a href="<?php echo BASE_URL; ?>/about" class="btn btn-primary" style="background: var(--color-primary);">Pelajari Lebih Lanjut</a>
+            <p class="section-label" style="color: rgba(255,255,255,0.6);"><?php echo $aboutLabel; ?></p>
+            <h2 class="section-title" style="color: white;"><?php echo $aboutTitle; ?></h2>
+            <p class="about-text"><?php echo $aboutText; ?></p>
+            <a href="<?php echo $aboutHref; ?>" class="btn btn-primary" style="background: var(--color-primary);"><?php echo $aboutCta; ?></a>
           </div>
           <div class="about-stats-grid">
             <div class="about-stat-card">
               <p class="about-stat-value">45+</p>
-              <p class="about-stat-label">Spesies Disurvei</p>
+              <p class="about-stat-label"><?php echo t('home.stats.speciesSurveyed', $currentLocale); ?></p>
             </div>
             <div class="about-stat-card">
               <p class="about-stat-value">28</p>
-              <p class="about-stat-label">Publikasi</p>
+              <p class="about-stat-label"><?php echo t('home.stats.scientificPublications', $currentLocale); ?></p>
             </div>
             <div class="about-stat-card">
               <p class="about-stat-value">12</p>
-              <p class="about-stat-label">Lokasi Riset</p>
+              <p class="about-stat-label"><?php echo t('home.stats.researchLocations', $currentLocale); ?></p>
             </div>
             <div class="about-stat-card">
               <p class="about-stat-value">35</p>
-              <p class="about-stat-label">Anggota</p>
+              <p class="about-stat-label"><?php echo t('home.stats.activeMembers', $currentLocale); ?></p>
             </div>
           </div>
         </div>
@@ -172,24 +193,24 @@ if (empty($statsData)) {
     <section class="section-padding bg-background">
       <div class="container">
         <div class="section-header text-center">
-          <p class="section-label">Berita Terbaru</p>
-          <h2 class="section-title">Berita Terbaru</h2>
+          <p class="section-label"><?php echo t('home.latestNews.title', $currentLocale); ?></p>
+          <h2 class="section-title"><?php echo $newsTitle; ?></h2>
         </div>
         <div class="news-grid">
           <div class="news-card">
             <p class="news-date">2025-03-15</p>
-            <h3>Penemuan Kelelawar Baru di Kalimantan</h3>
-            <p class="news-excerpt">Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Penemuan Kelelawar Baru di Kalimantan' : 'New Bat Species Discovered in Kalimantan'; ?></h3>
+            <p class="news-excerpt"><?php echo $currentLocale === 'id' ? 'Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...' : 'Our research team has just completed a bat survey in the Sulawesi forest area...'; ?></p>
           </div>
           <div class="news-card">
             <p class="news-date">2025-03-10</p>
-            <h3>Pelatihan Peneliti Muda di Yogyakarta</h3>
-            <p class="news-excerpt">Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Pelatihan Peneliti Muda di Yogyakarta' : 'Young Researchers Training in Yogyakarta'; ?></h3>
+            <p class="news-excerpt"><?php echo $currentLocale === 'id' ? 'Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...' : 'Our research team has just completed a bat survey in the Sulawesi forest area...'; ?></p>
           </div>
           <div class="news-card">
             <p class="news-date">2025-03-05</p>
-            <h3>Kolaborasi Riset dengan Universitas Indonesia</h3>
-            <p class="news-excerpt">Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Kolaborasi Riset dengan Universitas Indonesia' : 'Research Collaboration with University of Indonesia'; ?></h3>
+            <p class="news-excerpt"><?php echo $currentLocale === 'id' ? 'Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...' : 'Our research team has just completed a bat survey in the Sulawesi forest area...'; ?></p>
           </div>
         </div>
       </div>
@@ -200,8 +221,8 @@ if (empty($statsData)) {
         <img src="https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1920&q=80" alt="Bat conservation">
       </div>
       <div class="container relative z-10 text-center">
-        <blockquote class="cta-quote">"Kelelawar melindungi hutan, pangan, dan kesehatan kita — bantu kami melindungi mereka."</blockquote>
-        <a href="<?php echo BASE_URL; ?>/donate" class="btn btn-primary btn-lg">Donasi Sekarang</a>
+        <blockquote class="cta-quote">"<?php echo $donateQuote; ?>"</blockquote>
+        <a href="<?php echo $donateHref; ?>" class="btn btn-primary btn-lg"><?php echo $donateButton; ?></a>
       </div>
     </section>
   </main>
@@ -264,6 +285,7 @@ if (empty($statsData)) {
   color: white;
   margin-bottom: 24px;
   line-height: 1.1;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .hero-subtitle {
@@ -271,6 +293,7 @@ if (empty($statsData)) {
   color: rgba(255,255,255,0.7);
   max-width: 640px;
   margin: 0 auto 40px;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 .hero-buttons {
@@ -278,6 +301,7 @@ if (empty($statsData)) {
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
 .hero-bottom-gradient {
@@ -531,6 +555,17 @@ if (empty($statsData)) {
 @keyframes marquee-logos {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 1024px) {

@@ -1,13 +1,14 @@
 <?php
 require_once __DIR__ . '/../includes/config.php';
+$currentLocale = getLocaleFromUri($_SERVER['REQUEST_URI'] ?? '/');
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="<?php echo $currentLocale; ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tentang InaBCRU</title>
-  <meta name="description" content="InaBCRU adalah organisasi yang didedikasikan untuk konservasi kelelawar di Indonesia melalui penelitian, edukasi, dan kolaborasi dengan berbagai pihak.">
+  <title><?php echo t('about.title', $currentLocale); ?></title>
+  <meta name="description" content="<?php echo t('about.description', $currentLocale); ?>">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
@@ -20,40 +21,39 @@ require_once __DIR__ . '/../includes/config.php';
         <div class="hero-overlay"></div>
       </div>
       <div class="hero-content container">
-        <p class="hero-label">Tentang Kami</p>
-        <h1>Tentang InaBCRU</h1>
-        <p class="hero-subtitle">Organisasi yang didedikasikan untuk konservasi kelelawar di Indonesia</p>
+        <p class="hero-label"><?php echo t('nav.about', $currentLocale); ?></p>
+        <h1><?php echo t('about.title', $currentLocale); ?></h1>
+        <p class="hero-subtitle"><?php echo $currentLocale === 'id' ? 'Organisasi yang didedikasikan untuk konservasi kelelawar di Indonesia' : 'An organization dedicated to bat conservation in Indonesia'; ?></p>
       </div>
     </section>
 
     <section class="section-padding bg-background">
       <div class="container-narrow">
         <div class="about-section">
-          <h2>Misi Kami</h2>
-          <p class="lead">Membangun kredibilitas donor institusi untuk organisasi non-profit konservasi kelelawar di Indonesia.</p>
+          <h2><?php echo t('home.mission.title', $currentLocale); ?></h2>
+          <p class="lead"><?php echo t('home.mission.description', $currentLocale); ?></p>
           
           <div class="vision-mission-grid">
             <div class="vm-card">
-              <h3>Visi</h3>
-              <p>Menjadi organisasi terdepan dalam konservasi kelelawar di Indonesia dengan membangun kredibilitas dan kepercayaan donor institusi.</p>
+              <h3><?php echo t('visionMission.vision.title', $currentLocale); ?></h3>
+              <p><?php echo t('visionMission.vision.description', $currentLocale); ?></p>
             </div>
             <div class="vm-card">
-              <h3>Misi</h3>
+              <h3><?php echo t('visionMission.mission.title', $currentLocale); ?></h3>
               <ul>
-                <li>Melakukan penelitian ilmiah tentang kelelawar di Indonesia</li>
-                <li>Membangun kemitraan dengan institusi donor dan akademik</li>
-                <li>Menyelenggarakan program edukasi dan pelatihan</li>
-                <li>Mengadvokasi kebijakan konservasi kelelawar</li>
+                <?php foreach (t('visionMission.mission.items', $currentLocale) as $item): ?>
+                  <li><?php echo $item; ?></li>
+                <?php endforeach; ?>
               </ul>
             </div>
           </div>
         </div>
 
         <div class="about-section">
-          <h2>Tentang Organisasi</h2>
-          <p>InaBCRU adalah organisasi non-profit yang didedikasikan untuk konservasi kelelawar di Indonesia melalui penelitian ilmiah, edukasi masyarakat, dan kolaborasi dengan berbagai institusi.</p>
-          <p>Didirikan pada 5 Februari 2025 di Yogyakarta, kami berkomitmen untuk melindungi kelelawar Indonesia dan habitatnya.</p>
-          <p class="legal-id">Legal ID: <?php echo $messages['footer']['legalId']; ?></p>
+          <h2><?php echo $currentLocale === 'id' ? 'Tentang Organisasi' : 'About the Organization'; ?></h2>
+          <p><?php echo t('about.description', $currentLocale); ?></p>
+          <p><?php echo t('about.founded', $currentLocale); ?></p>
+          <p class="legal-id">Legal ID: <?php echo t('footer.legalId', $currentLocale); ?></p>
         </div>
       </div>
     </section>
@@ -61,8 +61,8 @@ require_once __DIR__ . '/../includes/config.php';
     <section class="section-padding bg-surface-warm">
       <div class="container">
         <div class="section-header text-center">
-          <p class="section-label">Nilai Kami</p>
-          <h2 class="section-title">Prinsip Kerja Kami</h2>
+          <p class="section-label"><?php echo $currentLocale === 'id' ? 'Nilai Kami' : 'Our Values'; ?></p>
+          <h2 class="section-title"><?php echo $currentLocale === 'id' ? 'Prinsip Kerja Kami' : 'Our Working Principles'; ?></h2>
         </div>
         <div class="values-grid">
           <div class="value-card">
@@ -71,8 +71,8 @@ require_once __DIR__ . '/../includes/config.php';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
               </svg>
             </div>
-            <h3>Keilmuan</h3>
-            <p>Kami berbasis pada penelitian ilmiah dan data yang valid untuk mendukung konservasi kelelawar.</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Keilmuan' : 'Scientific'; ?></h3>
+            <p><?php echo $currentLocale === 'id' ? 'Kami berbasis pada penelitian ilmiah dan data yang valid untuk mendukung konservasi kelelawar.' : 'We are based on scientific research and valid data to support bat conservation.'; ?></p>
           </div>
           <div class="value-card">
             <div class="value-icon">
@@ -80,8 +80,8 @@ require_once __DIR__ . '/../includes/config.php';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
               </svg>
             </div>
-            <h3>Kolaborasi</h3>
-            <p>Kami bekerja sama dengan berbagai institusi, universitas, dan komunitas untuk seringk positif.</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Kolaborasi' : 'Collaboration'; ?></h3>
+            <p><?php echo $currentLocale === 'id' ? 'Kami bekerja sama dengan berbagai institusi, universitas, dan komunitas untuk seringk positif.' : 'We collaborate with various institutions, universities, and communities for positive change.'; ?></p>
           </div>
           <div class="value-card">
             <div class="value-icon">
@@ -89,8 +89,8 @@ require_once __DIR__ . '/../includes/config.php';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
               </svg>
             </div>
-            <h3>Edukasi</h3>
-            <p>Kami meningkatkan kesadaran masyarakat tentang pentingnya kelelawar bagi ekosistem.</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Edukasi' : 'Education'; ?></h3>
+            <p><?php echo $currentLocale === 'id' ? 'Kami meningkatkan kesadaran masyarakat tentang pentingnya kelelawar bagi ekosistem.' : 'We raise public awareness about the importance of bats for the ecosystem.'; ?></p>
           </div>
           <div class="value-card">
             <div class="value-icon">
@@ -98,8 +98,8 @@ require_once __DIR__ . '/../includes/config.php';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <h3>Pelestarian</h3>
-            <p>Kami melindungi habitat alami kelelawar untuk menjaga keseimbangan ekosistem Indonesia.</p>
+            <h3><?php echo $currentLocale === 'id' ? 'Pelestarian' : 'Preservation'; ?></h3>
+            <p><?php echo $currentLocale === 'id' ? 'Kami melindungi habitat alami kelelawar untuk menjaga keseimbangan ekosistem Indonesia.' : 'We protect natural bat habitats to maintain the balance of Indonesia\'s ecosystem.'; ?></p>
           </div>
         </div>
       </div>
@@ -107,9 +107,9 @@ require_once __DIR__ . '/../includes/config.php';
 
     <section class="section-padding bg-primary text-white">
       <div class="container text-center">
-        <h2 class="section-title" style="color: white; margin-bottom: 24px;">Bergabung dengan Kami</h2>
-        <p style="max-width: 640px; margin: 0 auto 32px; opacity: 0.9;">Kami selalu mencari sukarelawan dan peneliti yang passionate tentang konservasi kelelawar.</p>
-        <a href="mailto:info.inabcru@gmail.com" class="btn btn-secondary btn-lg">Hubungi Kami</a>
+        <h2 class="section-title" style="color: white; margin-bottom: 24px;"><?php echo $currentLocale === 'id' ? 'Bergabung dengan Kami' : 'Join Us'; ?></h2>
+        <p style="max-width: 640px; margin: 0 auto 32px; opacity: 0.9;"><?php echo $currentLocale === 'id' ? 'Kami selalu mencari sukarelawan dan peneliti yang passionate tentang konservasi kelelawar.' : 'We are always looking for volunteers and researchers passionate about bat conservation.'; ?></p>
+        <a href="mailto:info.inabcru@gmail.com" class="btn btn-secondary btn-lg"><?php echo t('contact.title', $currentLocale); ?></a>
       </div>
     </section>
   </main>

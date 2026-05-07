@@ -1,6 +1,7 @@
 <?php
-$currentPath = $_SERVER['REQUEST_URI'];
-$currentPath = str_replace(BASE_URL, '', $currentPath);
+$currentLocale = getLocaleFromUri($_SERVER['REQUEST_URI'] ?? '/');
+$navItems = getNavItems($currentLocale);
+$currentPath = str_replace('/' . $currentLocale, '', $_SERVER['REQUEST_URI'] ?? '/');
 $currentPath = trim($currentPath, '/');
 if (empty($currentPath)) {
     $currentPath = '';
@@ -11,7 +12,7 @@ if (empty($currentPath)) {
 ?>
 <header class="header <?php echo $isHomePage ? 'home' : ''; ?>" id="mainHeader">
   <nav class="nav container">
-    <a href="<?php echo BASE_URL; ?>/" class="logo">
+    <a href="<?php echo BASE_URL . '/' . $currentLocale; ?>" class="logo">
       <span class="logo-icon">I</span>
       <span class="logo-text">InaBCRU</span>
     </a>
@@ -27,15 +28,9 @@ if (empty($currentPath)) {
 
     <div class="nav-links" id="navLinks">
       <?php 
-      $navItems = [
-        ['href' => BASE_URL . '/', 'label' => 'Beranda'],
-        ['href' => BASE_URL . '/about', 'label' => 'Tentang'],
-        ['href' => BASE_URL . '/team', 'label' => 'Tim'],
-        ['href' => BASE_URL . '/publications', 'label' => 'Publikasi'],
-        ['href' => BASE_URL . '/donate', 'label' => 'Donasi'],
-      ];
       foreach ($navItems as $item): 
-        $itemPath = trim(str_replace(BASE_URL, '', $item['href']), '/');
+        $itemPath = trim(str_replace('/' . $currentLocale, '', $item['href']), BASE_URL);
+        $itemPath = trim($itemPath, '/');
         $isActive = ($currentPath === $itemPath) || 
                     ($currentPath === '' && $itemPath === '');
       ?>
@@ -45,8 +40,45 @@ if (empty($currentPath)) {
         </a>
       <?php endforeach; ?>
     </div>
+
+    <a href="<?php echo switchLocaleUrl($currentLocale); ?>" class="locale-switch">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A8.001 8.001 0 0116.953 8H12m4.947 8.5A8.001 8.001 0 0012 20v-1m4.953-8.5A8.001 8.001 0 0112 12v-1"/>
+      </svg>
+      <span><?php echo $currentLocale === 'id' ? 'EN' : 'ID'; ?></span>
+    </a>
   </nav>
 </header>
+
+<style>
+.locale-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface-warm);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.locale-switch:hover {
+  background: var(--color-border);
+  color: var(--color-primary);
+}
+
+.header.home .locale-switch {
+  color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.1);
+}
+
+.header.home .locale-switch:hover {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
 
 <style>
 .header {

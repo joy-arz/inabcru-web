@@ -4,24 +4,30 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/$ /$1 [R=301,L]
 
-# Frontend pages - route to pages folder without .php extension
+# Default to Indonesian locale if no locale present
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^about/?$ /pages/about.php [L]
+RewriteCond %{REQUEST_URI} !^/(id|en)/
+RewriteRule ^(.*)$ /id/$1 [R=301,L]
+
+# Frontend pages with locale prefix
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^id/?$ /index.php [L]
+RewriteRule ^id/about/?$ /pages/about.php [L]
+RewriteRule ^id/team/?$ /pages/team.php [L]
+RewriteRule ^id/publications/?$ /pages/publications.php [L]
+RewriteRule ^id/donate/?$ /pages/donate.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^team/?$ /pages/team.php [L]
+RewriteRule ^en/?$ /index.php [L]
+RewriteRule ^en/about/?$ /pages/about.php [L]
+RewriteRule ^en/team/?$ /pages/team.php [L]
+RewriteRule ^en/publications/?$ /pages/publications.php [L]
+RewriteRule ^en/donate/?$ /pages/donate.php [L]
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^publications/?$ /pages/publications.php [L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^donate/?$ /pages/donate.php [L]
-
-# Admin pages
+# Admin pages (no locale prefix)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^admin/?$ /admin/dashboard.php [L]

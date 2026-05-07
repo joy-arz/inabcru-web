@@ -2,15 +2,16 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/api.php';
 
+$currentLocale = getLocaleFromUri($_SERVER['REQUEST_URI'] ?? '/');
 $team = getApi('/team') ?? [];
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="<?php echo $currentLocale; ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tim Kami | InaBCRU</title>
-  <meta name="description" content="Tim peneliti dan konservasionis yang berdedikasi untuk konservasi kelelawar di Indonesia">
+  <title><?php echo t('team.title', $currentLocale); ?> | InaBCRU</title>
+  <meta name="description" content="<?php echo t('team.subtitle', $currentLocale); ?>">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
@@ -23,9 +24,9 @@ $team = getApi('/team') ?? [];
         <div class="hero-overlay"></div>
       </div>
       <div class="hero-content container">
-        <p class="hero-label">Tim Kami</p>
-        <h1>Tim Kami</h1>
-        <p class="hero-subtitle">Tim peneliti dan konservasionis yang berdedikasi</p>
+        <p class="hero-label"><?php echo t('nav.team', $currentLocale); ?></p>
+        <h1><?php echo t('team.title', $currentLocale); ?></h1>
+        <p class="hero-subtitle"><?php echo t('team.subtitle', $currentLocale); ?></p>
       </div>
     </section>
 
@@ -54,14 +55,14 @@ $team = getApi('/team') ?? [];
             endforeach;
           else:
             $defaultTeam = [
-              ['name' => 'Dr. Budi Santoso', 'title' => 'Ketua Umum', 'bio' => 'Ahli biologi kelelawar dengan pengalaman 15 tahun dalam penelitian konservasi.'],
-              ['name' => 'Dr. Siti Nurhaliza', 'title' => 'Wakil Ketua', 'bio' => 'Spesialis ekologi kelelawar dan habitat conservation expert.'],
-              ['name' => 'Ahmad Hidayat', 'title' => 'Sekretaris', 'bio' => 'Koordinator program lapangan dan pengelolaan data penelitian.'],
-              ['name' => 'Dewi Kusuma', 'title' => 'Bendahara', 'bio' => 'Ahli keuangan dengan pengalaman di organisasi non-profit.'],
-              ['name' => 'Dr. Rahman Firdaus', 'title' => 'Peneliti Senior', 'bio' => 'Spesialis genetika kelelawar dan taksonomi.'],
-              ['name' => 'Lisa Permata', 'title' => 'Koordinator Edukasi', 'bio' => 'Spesialis pendidikan lingkungan dan program komunitas.'],
-              ['name' => 'Dr. Ahmad Wijaya', 'title' => 'Peneliti', 'bio' => 'Spesialis perilaku kelelawar dan survei akustik.'],
-              ['name' => 'Rina Setiawan', 'title' => 'Koordinator Lapangan', 'bio' => 'Koordinator kegiatan survei lapangan dan partisipasi komunitas.'],
+              ['name' => 'Dr. Budi Santoso', 'title' => $currentLocale === 'id' ? 'Ketua Umum' : 'Chairman', 'bio' => $currentLocale === 'id' ? 'Ahli biologi kelelawar dengan pengalaman 15 tahun dalam penelitian konservasi.' : 'Bat biology expert with 15 years of experience in conservation research.'],
+              ['name' => 'Dr. Siti Nurhaliza', 'title' => $currentLocale === 'id' ? 'Wakil Ketua' : 'Vice Chairman', 'bio' => $currentLocale === 'id' ? 'Spesialis ekologi kelelawar dan habitat conservation expert.' : 'Bat ecology and habitat conservation specialist.'],
+              ['name' => 'Ahmad Hidayat', 'title' => $currentLocale === 'id' ? 'Sekretaris' : 'Secretary', 'bio' => $currentLocale === 'id' ? 'Koordinator program lapangan dan pengelolaan data penelitian.' : 'Field program coordinator and research data management.'],
+              ['name' => 'Dewi Kusuma', 'title' => $currentLocale === 'id' ? 'Bendahara' : 'Treasurer', 'bio' => $currentLocale === 'id' ? 'Ahli keuangan dengan pengalaman di organisasi non-profit.' : 'Finance expert with experience in non-profit organizations.'],
+              ['name' => 'Dr. Rahman Firdaus', 'title' => $currentLocale === 'id' ? 'Peneliti Senior' : 'Senior Researcher', 'bio' => $currentLocale === 'id' ? 'Spesialis genetika kelelawar dan taksonomi.' : 'Bat genetics and taxonomy specialist.'],
+              ['name' => 'Lisa Permata', 'title' => $currentLocale === 'id' ? 'Koordinator Edukasi' : 'Education Coordinator', 'bio' => $currentLocale === 'id' ? 'Spesialis pendidikan lingkungan dan program komunitas.' : 'Environmental education and community program specialist.'],
+              ['name' => 'Dr. Ahmad Wijaya', 'title' => $currentLocale === 'id' ? 'Peneliti' : 'Researcher', 'bio' => $currentLocale === 'id' ? 'Spesialis perilaku kelelawar dan survei akustik.' : 'Bat behavior and acoustic survey specialist.'],
+              ['name' => 'Rina Setiawan', 'title' => $currentLocale === 'id' ? 'Koordinator Lapangan' : 'Field Coordinator', 'bio' => $currentLocale === 'id' ? 'Koordinator kegiatan survei lapangan dan partisipasi komunitas.' : 'Field survey and community participation coordinator.'],
             ];
             foreach ($defaultTeam as $member):
           ?>
@@ -85,8 +86,8 @@ $team = getApi('/team') ?? [];
 
     <section class="section-padding bg-surface-warm border-t border-border">
       <div class="container text-center">
-        <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px;">Bergabung dengan Tim Kami</h2>
-        <p style="color: var(--color-muted); max-width: 480px; margin: 0 auto 24px;">Kami selalu mencari sukarelawan dan peneliti yang passionate tentang konservasi kelelawar.</p>
+        <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px;"><?php echo $currentLocale === 'id' ? 'Bergabung dengan Tim Kami' : 'Join Our Team'; ?></h2>
+        <p style="color: var(--color-muted); max-width: 480px; margin: 0 auto 24px;"><?php echo $currentLocale === 'id' ? 'Kami selalu mencari sukarelawan dan peneliti yang passionate tentang konservasi kelelawar.' : 'We are always looking for volunteers and researchers passionate about bat conservation.'; ?></p>
         <a href="mailto:info.inabcru@gmail.com" class="contact-link">info.inabcru@gmail.com</a>
       </div>
     </section>

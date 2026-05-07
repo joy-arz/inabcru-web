@@ -1,40 +1,41 @@
 <?php
 $currentYear = date('Y');
+$currentLocale = getLocaleFromUri($_SERVER['REQUEST_URI'] ?? '/');
 ?>
 <footer class="footer bg-dark text-white">
   <div class="container">
     <div class="footer-content">
       <div class="footer-brand">
-        <a href="<?php echo BASE_URL; ?>/" class="footer-logo">
+        <a href="<?php echo BASE_URL . '/' . $currentLocale; ?>" class="footer-logo">
           <span class="logo-icon">I</span>
           <span class="logo-text">InaBCRU</span>
         </a>
-        <p class="footer-tagline"><?php echo $messages['footer']['tagline']; ?></p>
+        <p class="footer-tagline"><?php echo t('footer.tagline', $currentLocale); ?></p>
       </div>
 
       <div class="footer-links">
-        <h4><?php echo $messages['footer']['quickLinks']; ?></h4>
+        <h4><?php echo t('footer.quickLinks', $currentLocale); ?></h4>
         <ul>
-          <li><a href="<?php echo BASE_URL; ?>/"><?php echo $messages['nav']['home']; ?></a></li>
-          <li><a href="<?php echo BASE_URL; ?>/about"><?php echo $messages['nav']['about']; ?></a></li>
-          <li><a href="<?php echo BASE_URL; ?>/team"><?php echo $messages['nav']['team']; ?></a></li>
-          <li><a href="<?php echo BASE_URL; ?>/publications"><?php echo $messages['nav']['publications']; ?></a></li>
-          <li><a href="<?php echo BASE_URL; ?>/donate"><?php echo $messages['nav']['donate']; ?></a></li>
+          <li><a href="<?php echo BASE_URL . '/' . $currentLocale; ?>"><?php echo t('nav.home', $currentLocale); ?></a></li>
+          <li><a href="<?php echo BASE_URL . '/' . $currentLocale; ?>/about"><?php echo t('nav.about', $currentLocale); ?></a></li>
+          <li><a href="<?php echo BASE_URL . '/' . $currentLocale; ?>/team"><?php echo t('nav.team', $currentLocale); ?></a></li>
+          <li><a href="<?php echo BASE_URL . '/' . $currentLocale; ?>/publications"><?php echo t('nav.publications', $currentLocale); ?></a></li>
+          <li><a href="<?php echo BASE_URL . '/' . $currentLocale; ?>/donate"><?php echo t('nav.donate', $currentLocale); ?></a></li>
         </ul>
       </div>
 
       <div class="footer-contact">
-        <h4><?php echo $messages['footer']['contactInfo']; ?></h4>
+        <h4><?php echo t('footer.contactInfo', $currentLocale); ?></h4>
         <ul>
-          <li><?php echo $messages['footer']['email']; ?>: info.inabcru@gmail.com</li>
-          <li><?php echo $messages['footer']['founded']; ?>: February 5, 2025</li>
+          <li><?php echo t('footer.email', $currentLocale); ?>: info.inabcru@gmail.com</li>
+          <li><?php echo t('footer.founded', $currentLocale); ?>: February 5, 2025</li>
         </ul>
       </div>
     </div>
 
     <div class="footer-bottom">
       <p>&copy; <?php echo $currentYear; ?> Indonesia Bat Conservation Research Union</p>
-      <p class="legal-id"><?php echo $messages['footer']['legalId']; ?></p>
+      <p class="legal-id"><?php echo t('footer.legalId', $currentLocale); ?></p>
     </div>
   </div>
 </footer>

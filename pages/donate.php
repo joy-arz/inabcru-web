@@ -1,14 +1,16 @@
 <?php
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/api.php';
+
+$currentLocale = getLocaleFromUri($_SERVER['REQUEST_URI'] ?? '/');
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="<?php echo $currentLocale; ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dukung Kami | InaBCRU</title>
-  <meta name="description" content="Bantu kami melindungi kelelawar Indonesia melalui donasi">
+  <title><?php echo t('donate.title', $currentLocale); ?> | InaBCRU</title>
+  <meta name="description" content="<?php echo t('donate.subtitle', $currentLocale); ?>">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
   <style>
     .toast {
@@ -43,9 +45,9 @@ require_once __DIR__ . '/../includes/api.php';
         <div class="hero-overlay"></div>
       </div>
       <div class="hero-content container">
-        <p class="hero-label">Dukung Kami</p>
-        <h1>Dukung Kami</h1>
-        <p class="hero-subtitle">Bantu kami melindungi kelelawar Indonesia</p>
+        <p class="hero-label"><?php echo t('nav.donate', $currentLocale); ?></p>
+        <h1><?php echo t('donate.title', $currentLocale); ?></h1>
+        <p class="hero-subtitle"><?php echo t('donate.subtitle', $currentLocale); ?></p>
       </div>
     </section>
 
@@ -53,19 +55,19 @@ require_once __DIR__ . '/../includes/api.php';
       <div class="container">
         <div class="donate-grid">
           <div class="donate-info">
-            <h2>Transfer Bank</h2>
+            <h2><?php echo t('donate.bankTransfer', $currentLocale); ?></h2>
             
             <div class="bank-card">
               <div class="bank-row">
-                <span class="bank-label">Nama Bank</span>
+                <span class="bank-label"><?php echo t('donate.bankName', $currentLocale); ?></span>
                 <span class="bank-value">Bank Central Asia (BCA)</span>
               </div>
               <div class="bank-row">
-                <span class="bank-label">Nomor Rekening</span>
+                <span class="bank-label"><?php echo t('donate.accountNumber', $currentLocale); ?></span>
                 <span class="bank-value bank-account">1234567890</span>
               </div>
               <div class="bank-row">
-                <span class="bank-label">Nama Penerima</span>
+                <span class="bank-label"><?php echo t('donate.accountName', $currentLocale); ?></span>
                 <span class="bank-value">InaBCRU</span>
               </div>
             </div>
@@ -74,42 +76,42 @@ require_once __DIR__ . '/../includes/api.php';
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
               </svg>
-              Salin Nomor Rekening
+              <?php echo $currentLocale === 'id' ? 'Salin Nomor Rekening' : 'Copy Account Number'; ?>
             </button>
 
             <div class="donate-note">
-              <h4>Penting</h4>
-              <p>Setelah melakukan transfer, silakan kirim bukti transfer ke email kami di info.inabcru@gmail.com dengan subject "Donasi [Nama]" untuk pencatatan donasi.</p>
+              <h4><?php echo $currentLocale === 'id' ? 'Penting' : 'Important'; ?></h4>
+              <p><?php echo $currentLocale === 'id' ? 'Setelah melakukan transfer, silakan kirim bukti transfer ke email kami di info.inabcru@gmail.com dengan subject "Donasi [Nama]" untuk pencatatan donasi.' : 'After making a transfer, please send proof of transfer to our email at info.inabcru@gmail.com with subject "Donation [Name]" for donation recording.'; ?></p>
             </div>
           </div>
 
           <div class="donate-tiers">
-            <h2>Paket Donasi</h2>
+            <h2><?php echo t('donate.donationTiers.title', $currentLocale); ?></h2>
             
             <div class="tiers-grid">
               <div class="tier-card">
-                <span class="tier-amount">Rp 100.000</span>
-                <p class="tier-impact">Mendukung biaya bahan edukasi untuk satu sekolah</p>
-                <button class="btn btn-outline btn-sm" onclick="copyAccount('1234567890', 'tier1')">Donasi Sekarang</button>
+                <span class="tier-amount"><?php echo $currentLocale === 'id' ? 'Rp 100.000' : 'Rp 100,000'; ?></span>
+                <p class="tier-impact"><?php echo t('donate.donationTiers.Rp100K.impact', $currentLocale); ?></p>
+                <button class="btn btn-outline btn-sm" onclick="copyAccount('1234567890', 'tier1')"><?php echo $currentLocale === 'id' ? 'Donasi Sekarang' : 'Donate Now'; ?></button>
               </div>
               
               <div class="tier-card popular">
-                <span class="popular-badge">Populer</span>
-                <span class="tier-amount">Rp 500.000</span>
-                <p class="tier-impact">Mendukung satu sesi pelatihan lapangan</p>
-                <button class="btn btn-primary btn-sm" onclick="copyAccount('1234567890', 'tier2')">Donasi Sekarang</button>
+                <span class="popular-badge"><?php echo $currentLocale === 'id' ? 'Populer' : 'Popular'; ?></span>
+                <span class="tier-amount"><?php echo $currentLocale === 'id' ? 'Rp 500.000' : 'Rp 500,000'; ?></span>
+                <p class="tier-impact"><?php echo t('donate.donationTiers.Rp500K.impact', $currentLocale); ?></p>
+                <button class="btn btn-primary btn-sm" onclick="copyAccount('1234567890', 'tier2')"><?php echo $currentLocale === 'id' ? 'Donasi Sekarang' : 'Donate Now'; ?></button>
               </div>
               
               <div class="tier-card">
-                <span class="tier-amount">Rp 1.000.000</span>
-                <p class="tier-impact">Mendukung penelitian satu lokasi survei</p>
-                <button class="btn btn-outline btn-sm" onclick="copyAccount('1234567890', 'tier3')">Donasi Sekarang</button>
+                <span class="tier-amount"><?php echo $currentLocale === 'id' ? 'Rp 1.000.000' : 'Rp 1,000,000'; ?></span>
+                <p class="tier-impact"><?php echo t('donate.donationTiers.Rp1M.impact', $currentLocale); ?></p>
+                <button class="btn btn-outline btn-sm" onclick="copyAccount('1234567890', 'tier3')"><?php echo $currentLocale === 'id' ? 'Donasi Sekarang' : 'Donate Now'; ?></button>
               </div>
               
               <div class="tier-card">
-                <span class="tier-amount">Rp 5.000.000+</span>
-                <p class="tier-impact">Mendukung program konservasi terintegrasi</p>
-                <button class="btn btn-outline btn-sm" onclick="copyAccount('1234567890', 'tier4')">Donasi Sekarang</button>
+                <span class="tier-amount"><?php echo $currentLocale === 'id' ? 'Rp 5.000.000+' : 'Rp 5,000,000+'; ?></span>
+                <p class="tier-impact"><?php echo t('donate.donationTiers.Rp5M.impact', $currentLocale); ?></p>
+                <button class="btn btn-outline btn-sm" onclick="copyAccount('1234567890', 'tier4')"><?php echo $currentLocale === 'id' ? 'Donasi Sekarang' : 'Donate Now'; ?></button>
               </div>
             </div>
           </div>
@@ -125,21 +127,21 @@ require_once __DIR__ . '/../includes/api.php';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
           </div>
-          <h3>Donor Institusi</h3>
-          <p>Kami menyediakan MoU untuk donor institusi dengan laporan transparansi lengkap.</p>
-          <a href="mailto:info.inabcru@gmail.com?subject=MoU%20Inquiry" class="contact-link">Hubungi kami untuk informasi MoU</a>
+          <h3><?php echo t('donate.institutional.title', $currentLocale); ?></h3>
+          <p><?php echo t('donate.institutional.mouInfo', $currentLocale); ?></p>
+          <a href="mailto:info.inabcru@gmail.com?subject=MoU%20Inquiry" class="contact-link"><?php echo t('donate.institutional.contactForMoU', $currentLocale); ?></a>
         </div>
       </div>
     </section>
 
     <section class="section-padding bg-primary text-white">
       <div class="container text-center">
-        <blockquote class="cta-quote">"Kelelawar melindungi hutan, pangan, dan kesehatan kita — bantu kami melindungi mereka."</blockquote>
+        <blockquote class="cta-quote">"<?php echo t('donate.ctaQuote', $currentLocale); ?>"</blockquote>
         <button class="btn btn-secondary btn-lg" onclick="copyAccount('1234567890', 'cta')">
           <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
           </svg>
-          Donasi Sekarang
+          <?php echo t('donate.donateCta.button', $currentLocale); ?>
         </button>
       </div>
     </section>
@@ -151,7 +153,7 @@ require_once __DIR__ . '/../includes/api.php';
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
     </svg>
-    <span>Nomor rekening berhasil disalin!</span>
+    <span><?php echo $currentLocale === 'id' ? 'Nomor rekening berhasil disalin!' : 'Account number copied!'; ?></span>
   </div>
 
   <script>
@@ -167,7 +169,7 @@ require_once __DIR__ . '/../includes/api.php';
         }, 2000);
       }).catch(err => {
         console.error('Failed to copy:', err);
-        alert('Gagal menyalin nomor rekening');
+        alert('<?php echo $currentLocale === 'id' ? 'Gagal menyalin nomor rekening' : 'Failed to copy account number'; ?>');
       });
     }
   </script>

@@ -2,15 +2,16 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/api.php';
 
+$currentLocale = getLocaleFromUri($_SERVER['REQUEST_URI'] ?? '/');
 $publications = getApi('/publications') ?? [];
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="<?php echo $currentLocale; ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Publikasi | InaBCRU</title>
-  <meta name="description" content="Publikasi ilmiah dan hasil penelitian kami tentang kelelawar di Indonesia">
+  <title><?php echo t('publications.title', $currentLocale); ?> | InaBCRU</title>
+  <meta name="description" content="<?php echo t('publications.subtitle', $currentLocale); ?>">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
@@ -23,17 +24,44 @@ $publications = getApi('/publications') ?? [];
         <div class="hero-overlay"></div>
       </div>
       <div class="hero-content container">
-        <p class="hero-label">Publikasi</p>
-        <h1>Publikasi</h1>
-        <p class="hero-subtitle">Publikasi ilmiah dan hasil penelitian kami</p>
+        <p class="hero-label"><?php echo t('nav.publications', $currentLocale); ?></p>
+        <h1><?php echo t('publications.title', $currentLocale); ?></h1>
+        <p class="hero-subtitle"><?php echo t('publications.subtitle', $currentLocale); ?></p>
       </div>
     </section>
 
     <section class="section-padding bg-background">
       <div class="container">
+        <?php
+        $allYears = [];
+        foreach ($publications as $pub) {
+            if (isset($pub['date'])) {
+                $year = date('Y', strtotime($pub['date']));
+                $allYears[$year] = $year;
+            }
+        }
+        $allYears = array_values(array_unique($allYears));
+        sort($allYears);
+        $selectedYear = isset($_GET['year']) ? intval($_GET['year']) : 0;
+        ?>
+        <?php if (count($allYears) > 1): ?>
+          <div class="filter-bar">
+            <label for="yearFilter"><?php echo t('publications.filterByYear', $currentLocale); ?>:</label>
+            <select id="yearFilter" onchange="filterByYear(this.value)">
+              <option value=""><?php echo t('publications.allYears', $currentLocale); ?></option>
+              <?php foreach ($allYears as $year): ?>
+                <option value="<?php echo $year; ?>" <?php echo $selectedYear == $year ? 'selected' : ''; ?>><?php echo $year; ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+        <?php endif; ?>
+
         <?php if (!empty($publications)): ?>
           <div class="publications-grid">
-            <?php foreach ($publications as $pub): ?>
+            <?php foreach ($publications as $pub):
+              $pubYear = isset($pub['date']) ? date('Y', strtotime($pub['date'])) : '';
+              if ($selectedYear && $pubYear != $selectedYear) continue;
+            ?>
               <div class="publication-card">
                 <?php if (!empty($pub['cover_image'])): ?>
                   <div class="pub-cover">
@@ -82,11 +110,11 @@ $publications = getApi('/publications') ?? [];
             <?php
             $mockPublications = [
               ['title' => 'Diversity and Distribution of Fruit Bats in Sulawesi', 'journal' => 'Journal of Bat Research', 'date' => '2024-03-15', 'cover_image' => 'https://picsum.photos/seed/bat1/800/450'],
-              ['title' => 'KEANEKARAGAMAN KELELAWAR DI TAMAN NASIONAL LORE LINDU', 'journal' => 'Indonesian Journal of Conservation', 'date' => '2024-02-20', 'cover_image' => 'https://picsum.photos/seed/bat2/800/450'],
+              ['title' => $currentLocale === 'id' ? 'KEANEKARAGAMAN KELELAWAR DI TAMAN NASIONAL LORE LINDU' : 'Diversity of Bats in Lore Lindu National Park', 'journal' => 'Indonesian Journal of Conservation', 'date' => '2024-02-20', 'cover_image' => 'https://picsum.photos/seed/bat2/800/450'],
               ['title' => 'Habitat Preference of Echolocating Bats in Java', 'journal' => 'Biodiversity Journal', 'date' => '2023-11-10', 'cover_image' => 'https://picsum.photos/seed/bat3/800/450'],
-              ['title' => 'Populasi Kelelawar Penghisap Darah di Kalimantan', 'journal' => 'Veterinary Journal', 'date' => '2023-08-25', 'cover_image' => 'https://picsum.photos/seed/bat4/800/450'],
-              ['title' => 'Conservation Status of endemic Bats in Papua', 'journal' => 'Endangered Species Research', 'date' => '2023-05-15', 'cover_image' => 'https://picsum.photos/seed/bat5/800/450'],
-              ['title' => 'Survey Kelelawar di Kawasan Ekosistem Leuser', 'journal' => 'Forest Research Journal', 'date' => '2022-12-01', 'cover_image' => 'https://picsum.photos/seed/bat6/800/450'],
+              ['title' => $currentLocale === 'id' ? 'Populasi Kelelawar Penghisap Darah di Kalimantan' : 'Blood-Feeding Bat Population in Kalimantan', 'journal' => 'Veterinary Journal', 'date' => '2023-08-25', 'cover_image' => 'https://picsum.photos/seed/bat4/800/450'],
+              ['title' => 'Conservation Status of Endemic Bats in Papua', 'journal' => 'Endangered Species Research', 'date' => '2023-05-15', 'cover_image' => 'https://picsum.photos/seed/bat5/800/450'],
+              ['title' => $currentLocale === 'id' ? 'Survei Kelelawar di Kawasan Ekosistem Leuser' : 'Bat Survey in Leuser Ecosystem Area', 'journal' => 'Forest Research Journal', 'date' => '2022-12-01', 'cover_image' => 'https://picsum.photos/seed/bat6/800/450'],
             ];
             foreach ($mockPublications as $pub):
             ?>
@@ -108,6 +136,18 @@ $publications = getApi('/publications') ?? [];
   </main>
 
   <?php require_once __DIR__ . '/../includes/footer.php'; ?>
+
+  <script>
+    function filterByYear(year) {
+      const url = new URL(window.location);
+      if (year) {
+        url.searchParams.set('year', year);
+      } else {
+        url.searchParams.delete('year');
+      }
+      window.location = url;
+    }
+  </script>
 </body>
 </html>
 
@@ -161,6 +201,31 @@ $publications = getApi('/publications') ?? [];
   color: rgba(255,255,255,0.7);
   max-width: 640px;
   margin: 0 auto;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.filter-bar label {
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.filter-bar select {
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-background);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filter-bar select:hover {
+  border-color: var(--color-primary);
 }
 
 .publications-grid {
