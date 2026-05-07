@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result && isset($result['token'])) {
         setcookie('auth_token', $result['token'], time() + 86400, '/');
-        header('Location: ' . BASE_URL . '/admin/dashboard.php');
+        header('Location: ' . BASE_URL . '/admin/dashboard');
         exit;
     } else {
         $error = $result['message'] ?? 'Login failed';

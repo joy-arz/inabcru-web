@@ -1,13 +1,15 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
+$currentPage = str_replace('.php', '', $currentPage);
+$scriptName = basename($_SERVER['SCRIPT_NAME'], '.php');
 checkAdminAuth();
 
 $navItems = [
-  ['href' => 'dashboard.php', 'label' => 'Dashboard', 'icon' => 'dashboard'],
-  ['href' => 'publications.php', 'label' => 'Publications', 'icon' => 'book'],
-  ['href' => 'articles.php', 'label' => 'Articles', 'icon' => 'newspaper'],
-  ['href' => 'team.php', 'label' => 'Team', 'icon' => 'users'],
-  ['href' => 'stats.php', 'label' => 'Impact Stats', 'icon' => 'chart'],
+  ['href' => BASE_URL . '/admin/dashboard', 'label' => 'Dashboard', 'icon' => 'dashboard'],
+  ['href' => BASE_URL . '/admin/publications', 'label' => 'Publications', 'icon' => 'book'],
+  ['href' => BASE_URL . '/admin/articles', 'label' => 'Articles', 'icon' => 'newspaper'],
+  ['href' => BASE_URL . '/admin/team', 'label' => 'Team', 'icon' => 'users'],
+  ['href' => BASE_URL . '/admin/stats', 'label' => 'Impact Stats', 'icon' => 'chart'],
 ];
 
 $icons = [
@@ -48,7 +50,10 @@ $icons = [
 
     <nav class="sidebar-nav">
       <?php foreach ($navItems as $item): ?>
-        <a href="<?php echo $item['href']; ?>" class="nav-item <?php echo $currentPage === $item['href'] ? 'active' : ''; ?>">
+        <?php 
+          $itemPage = str_replace(BASE_URL . '/admin/', '', $item['href']);
+        ?>
+        <a href="<?php echo $item['href']; ?>" class="nav-item <?php echo $scriptName === $itemPage ? 'active' : ''; ?>">
           <svg class="nav-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <?php echo $icons[$item['icon']]; ?>
           </svg>
@@ -60,7 +65,7 @@ $icons = [
     </nav>
 
     <div class="sidebar-footer">
-      <a href="<?php echo BASE_URL; ?>/admin/logout.php" class="nav-item logout">
+      <a href="<?php echo BASE_URL; ?>/admin/logout" class="nav-item logout">
         <svg class="nav-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <?php echo $icons['logout']; ?>
         </svg>

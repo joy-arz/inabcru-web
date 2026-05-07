@@ -7,7 +7,8 @@ function getApi($endpoint, $useAuth = false) {
         'http' => [
             'method' => 'GET',
             'header' => "Content-Type: application/json\r\n",
-            'ignore_errors' => true
+            'ignore_errors' => true,
+            'timeout' => 10
         ]
     ];
 
@@ -17,7 +18,13 @@ function getApi($endpoint, $useAuth = false) {
 
     $context = stream_context_create($options);
     $response = @file_get_contents($url, false, $context);
-    return $response ? json_decode($response, true) : null;
+    
+    if ($response === false) {
+        return null;
+    }
+    
+    $decoded = json_decode($response, true);
+    return $decoded;
 }
 
 function postApi($endpoint, $data, $useAuth = false) {
@@ -28,7 +35,8 @@ function postApi($endpoint, $data, $useAuth = false) {
             'method' => 'POST',
             'header' => "Content-Type: application/json\r\n",
             'content' => $payload,
-            'ignore_errors' => true
+            'ignore_errors' => true,
+            'timeout' => 10
         ]
     ];
 
@@ -49,7 +57,8 @@ function putApi($endpoint, $data, $useAuth = false) {
             'method' => 'PUT',
             'header' => "Content-Type: application/json\r\n",
             'content' => $payload,
-            'ignore_errors' => true
+            'ignore_errors' => true,
+            'timeout' => 10
         ]
     ];
 
@@ -68,7 +77,8 @@ function deleteApi($endpoint, $useAuth = false) {
         'http' => [
             'method' => 'DELETE',
             'header' => "Content-Type: application/json\r\n",
-            'ignore_errors' => true
+            'ignore_errors' => true,
+            'timeout' => 10
         ]
     ];
 
@@ -87,14 +97,20 @@ function isAuthenticated() {
 
 function checkAdminAuth() {
     if (!isAuthenticated()) {
-        header('Location: ' . BASE_URL . '/admin/login.php');
+        header('Location: ' . BASE_URL . '/admin/login');
         exit;
     }
 }
 
 function checkLoginToken() {
     if (isset($_COOKIE['auth_token'])) {
-        header('Location: ' . BASE_URL . '/admin/dashboard.php');
+        header('Location: ' . BASE_URL . '/admin/dashboard');
         exit;
     }
+}
+
+function formatStatValue($stat) {
+    $value = isset($stat['value']) ? intval($stat['value']) : 0;
+    $suffix = isset($stat['suffix']) ? htmlspecialchars($stat['suffix']) : '';
+    return $value . $suffix;
 }

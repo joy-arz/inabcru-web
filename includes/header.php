@@ -1,13 +1,15 @@
 <?php
-$requestUri = $_SERVER['REQUEST_URI'];
-$currentPath = str_replace(BASE_URL, '', $requestUri);
+$currentPath = $_SERVER['REQUEST_URI'];
+$currentPath = str_replace(BASE_URL, '', $currentPath);
 $currentPath = trim($currentPath, '/');
 if (empty($currentPath)) {
     $currentPath = '';
+    $isHomePage = true;
+} else {
+    $isHomePage = false;
 }
-$currentPage = $currentPath ?: 'index';
 ?>
-<header class="header">
+<header class="header <?php echo $isHomePage ? 'home' : ''; ?>" id="mainHeader">
   <nav class="nav container">
     <a href="<?php echo BASE_URL; ?>/" class="logo">
       <span class="logo-icon">I</span>
@@ -20,12 +22,19 @@ $currentPage = $currentPath ?: 'index';
       </svg>
     </button>
 
-    <div class="nav-links">
-      <?php foreach ($navItems as $item): 
+    <div class="nav-links" id="navLinks">
+      <?php 
+      $navItems = [
+        ['href' => BASE_URL . '/', 'label' => 'Beranda'],
+        ['href' => BASE_URL . '/about', 'label' => 'Tentang'],
+        ['href' => BASE_URL . '/team', 'label' => 'Tim'],
+        ['href' => BASE_URL . '/publications', 'label' => 'Publikasi'],
+        ['href' => BASE_URL . '/donate', 'label' => 'Donasi'],
+      ];
+      foreach ($navItems as $item): 
         $itemPath = trim(str_replace(BASE_URL, '', $item['href']), '/');
-        $isActive = ($currentPage === $itemPath) || 
-                    ($currentPage === $itemPath . '.php') ||
-                    ($itemPath === '' && $currentPage === 'index');
+        $isActive = ($currentPath === $itemPath) || 
+                    ($currentPath === '' && $itemPath === '');
       ?>
         <a href="<?php echo $item['href']; ?>" 
            class="nav-link <?php echo $isActive ? 'active' : ''; ?>">
@@ -44,8 +53,22 @@ $currentPage = $currentPath ?: 'index';
   right: 0;
   z-index: 100;
   background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(232, 230, 225, 0.5);
+  transition: all 0.3s ease;
+}
+
+.header.scrolled {
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.header.home {
+  background: rgba(15, 17, 23, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .nav {
@@ -81,6 +104,10 @@ $currentPage = $currentPath ?: 'index';
   color: var(--color-text);
 }
 
+.header.home .logo-text {
+  color: white;
+}
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -106,6 +133,20 @@ $currentPage = $currentPath ?: 'index';
   font-weight: 600;
 }
 
+.header.home .nav-link {
+  color: rgba(255,255,255,0.8);
+}
+
+.header.home .nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.header.home .nav-link.active {
+  color: white;
+  font-weight: 600;
+}
+
 .mobile-menu-btn {
   display: none;
   background: none;
@@ -113,6 +154,10 @@ $currentPage = $currentPath ?: 'index';
   padding: 8px;
   cursor: pointer;
   color: var(--color-text);
+}
+
+.header.home .mobile-menu-btn {
+  color: white;
 }
 
 @media (max-width: 768px) {
@@ -141,12 +186,30 @@ $currentPage = $currentPath ?: 'index';
     width: 100%;
     padding: 12px 16px;
   }
+
+  .header.home .nav-link {
+    color: var(--color-text);
+  }
+
+  .header.home .nav-link:hover {
+    background: var(--color-surface-warm);
+    color: var(--color-primary);
+  }
 }
 </style>
 
 <script>
+window.addEventListener('scroll', function() {
+  const header = document.getElementById('mainHeader');
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+
 function toggleMobileMenu() {
-  const navLinks = document.querySelector('.nav-links');
+  const navLinks = document.getElementById('navLinks');
   navLinks.classList.toggle('open');
 }
 </script>

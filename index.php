@@ -2,9 +2,28 @@
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/api.php';
 
-$stats = getApi('/stats') ?? [];
-$team = getApi('/team') ?? [];
-$publications = getApi('/publications') ?? [];
+$stats = getApi('/stats');
+$team = getApi('/team');
+$publications = getApi('/publications');
+
+$statsData = [];
+if (is_array($stats)) {
+    foreach ($stats as $stat) {
+        $value = isset($stat['value']) ? intval($stat['value']) : 0;
+        $suffix = isset($stat['suffix']) ? htmlspecialchars($stat['suffix']) : '';
+        $label = isset($stat['key']) ? htmlspecialchars($stat['key']) : 'Stat';
+        $statsData[] = ['value' => $value, 'suffix' => $suffix, 'label' => $label];
+    }
+}
+
+if (empty($statsData)) {
+    $statsData = [
+        ['value' => 45, 'suffix' => '+', 'label' => 'Spesies Disurvei'],
+        ['value' => 12, 'suffix' => '', 'label' => 'Lokasi Riset'],
+        ['value' => 28, 'suffix' => '', 'label' => 'Publikasi Ilmiah'],
+        ['value' => 35, 'suffix' => '', 'label' => 'Anggota Aktif'],
+    ];
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -30,8 +49,8 @@ $publications = getApi('/publications') ?? [];
         <h1>Indonesia Bat Conservation Research Union</h1>
         <p class="hero-subtitle">Membangun kredibilitas institusi untuk konservasi kelelawar di Indonesia</p>
         <div class="hero-buttons">
-          <a href="<?php echo BASE_URL; ?>/pages/donate.php" class="btn btn-primary btn-lg">Dukung Kami</a>
-          <a href="<?php echo BASE_URL; ?>/pages/about.php" class="btn btn-secondary btn-lg">Tentang</a>
+          <a href="<?php echo BASE_URL; ?>/donate" class="btn btn-primary btn-lg">Dukung Kami</a>
+          <a href="<?php echo BASE_URL; ?>/about" class="btn btn-secondary btn-lg">Tentang</a>
         </div>
       </div>
       <div class="hero-bottom-gradient"></div>
@@ -54,7 +73,7 @@ $publications = getApi('/publications') ?? [];
         foreach ($allPartners as $partner):
         ?>
           <div class="partner-item">
-            <img src="<?php echo $partner['logo']; ?>" alt="<?php echo $partner['name']; ?>" onerror="this.style.display='none'">
+            <img src="<?php echo $partner['logo']; ?>" alt="<?php echo $partner['name']; ?>" onerror="this.parentElement.style.display='none'">
           </div>
         <?php endforeach; ?>
       </div>
@@ -68,18 +87,10 @@ $publications = getApi('/publications') ?? [];
           <p class="section-subtitle mx-auto">Membangun kredibilitas donor institusi untuk organisasi non-profit konservasi kelelawar di Indonesia.</p>
         </div>
         <div class="stats-grid">
-          <?php
-          $statsData = !empty($stats) ? $stats : [
-            ['label' => 'Spesies Disurvei', 'value' => '45+'],
-            ['label' => 'Lokasi Riset', 'value' => '12'],
-            ['label' => 'Publikasi Ilmiah', 'value' => '28'],
-            ['label' => 'Anggota Aktif', 'value' => '35'],
-          ];
-          foreach ($statsData as $stat):
-          ?>
+          <?php foreach ($statsData as $stat): ?>
             <div class="stat-card">
-              <div class="stat-value"><?php echo htmlspecialchars($stat['value'] ?? $stat['display_value'] ?? '0'); ?></div>
-              <div class="stat-label"><?php echo htmlspecialchars($stat['label'] ?? $stat['description'] ?? ''); ?></div>
+              <div class="stat-value"><?php echo $stat['value'] . $stat['suffix']; ?></div>
+              <div class="stat-label"><?php echo $stat['label']; ?></div>
             </div>
           <?php endforeach; ?>
         </div>
@@ -134,7 +145,7 @@ $publications = getApi('/publications') ?? [];
             <p class="section-label" style="color: rgba(255,255,255,0.6);">Tentang Kami</p>
             <h2 class="section-title" style="color: white;">Melindungi Kelelawar Indonesia</h2>
             <p class="about-text">InaBCRU adalah organisasi non-profit yang dedicated untuk konservasi kelelawar di Indonesia melalui penelitian ilmiah, edukasi masyarakat, dan kolaborasi dengan berbagai institusi.</p>
-            <a href="<?php echo BASE_URL; ?>/pages/about.php" class="btn btn-primary" style="background: var(--color-primary);">Pelajari Lebih Lanjut</a>
+            <a href="<?php echo BASE_URL; ?>/about" class="btn btn-primary" style="background: var(--color-primary);">Pelajari Lebih Lanjut</a>
           </div>
           <div class="about-stats-grid">
             <div class="about-stat-card">
@@ -190,7 +201,7 @@ $publications = getApi('/publications') ?? [];
       </div>
       <div class="container relative z-10 text-center">
         <blockquote class="cta-quote">"Kelelawar melindungi hutan, pangan, dan kesehatan kita — bantu kami melindungi mereka."</blockquote>
-        <a href="<?php echo BASE_URL; ?>/pages/donate.php" class="btn btn-primary btn-lg">Donasi Sekarang</a>
+        <a href="<?php echo BASE_URL; ?>/donate" class="btn btn-primary btn-lg">Donasi Sekarang</a>
       </div>
     </section>
   </main>
@@ -515,6 +526,11 @@ $publications = getApi('/publications') ?? [];
 .relative.z-10 {
   position: relative;
   z-index: 10;
+}
+
+@keyframes marquee-logos {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 @media (max-width: 1024px) {
