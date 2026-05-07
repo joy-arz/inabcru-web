@@ -1,0 +1,19 @@
+# Previous versions (deprecated)
+prev-version/
+
+# Package files
+package.json
+package-lock.json
+
+# Keep backend-php as backup reference only
+backend-php/
+
+# OS files
+.DS_Store
+*.pem
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

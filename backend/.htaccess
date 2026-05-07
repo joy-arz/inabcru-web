@@ -1,0 +1,26 @@
+RewriteEngine On
+
+# Redirect all requests to public/index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ public/index.php [QSA,L]
+
+# Protect sensitive files
+RewriteRule ^includes/ - [F,L]
+RewriteRule ^vendor/ - [F,L]
+RewriteRule ^\.env$ - [F,L]
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# PHP settings
+<IfModule mod_php.c>
+    php_value upload_max_filesize 50M
+    php_value post_max_size 55M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+</IfModule>

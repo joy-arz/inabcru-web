@@ -1,0 +1,16 @@
+{
+    "name": "inabcru/backend-php",
+    "description": "InaBCRU PHP Backend API",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "InaBCRU\\": "includes/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
