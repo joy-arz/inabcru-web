@@ -1,0 +1,77 @@
+@extends('layouts.app')
+
+@section('title', trans_for('team.title') . ' | InaBCRU')
+@section('description', trans_for('team.subtitle'))
+
+@section('content')
+{{-- Hero Section --}}
+<section class="pt-40 pb-16 relative overflow-hidden">
+  <div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1920&q=80" alt="Research team in field" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-dark/80"></div>
+  </div>
+  <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
+    <div class="animate-fade-up opacity-0">
+      <p class="text-xs font-semibold uppercase tracking-[0.12em] text-white/60 mb-4">
+        {{ $locale == 'id' ? 'Tim Kami' : 'Our Team' }}
+      </p>
+      <h1 class="font-heading text-4xl md:text-5xl font-bold tracking-[-0.02em] mb-4 text-white">
+        {{ trans_for('team.title') }}
+      </h1>
+      <p class="text-white/70 text-lg max-w-2xl">
+        {{ trans_for('team.subtitle') }}
+      </p>
+    </div>
+  </div>
+</section>
+
+{{-- Team Grid Section --}}
+<section class="py-16 bg-background">
+  <div class="max-w-6xl mx-auto px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      @php
+      $teamMembers = [
+        ['name' => 'Dr. Budi Santoso', 'role' => $locale == 'id' ? 'Ketua Umum' : 'Chairman', 'bio' => $locale == 'id' ? 'Ahli biologi kelelawar dengan pengalaman 15 tahun dalam penelitian konservasi.' : 'Bat biologist with 15 years of experience in conservation research.'],
+        ['name' => 'Dr. Siti Nurhaliza', 'role' => $locale == 'id' ? 'Wakil Ketua' : 'Vice Chairman', 'bio' => $locale == 'id' ? 'Spesialis ekologi kelelawar dan habitat conservation expert.' : 'Bat ecology specialist and habitat conservation expert.'],
+        ['name' => 'Ahmad Hidayat', 'role' => $locale == 'id' ? 'Sekretaris' : 'Secretary', 'bio' => $locale == 'id' ? 'Koordinator program lapangan dan pengelolaan data penelitian.' : 'Field program coordinator and research data management.'],
+        ['name' => 'Dewi Kusuma', 'role' => $locale == 'id' ? 'Bendahara' : 'Treasurer', 'bio' => $locale == 'id' ? 'Ahli keuangan dengan pengalaman di organisasi non-profit.' : 'Finance expert with experience in non-profit organizations.'],
+        ['name' => 'Dr. Rahman Firdaus', 'role' => $locale == 'id' ? 'Peneliti Senior' : 'Senior Researcher', 'bio' => $locale == 'id' ? 'Spesialis genetika kelelawar dan taksonomi.' : 'Bat genetics and taxonomy specialist.'],
+        ['name' => 'Lisa Permata', 'role' => $locale == 'id' ? 'Koordinator Edukasi' : 'Education Coordinator', 'bio' => $locale == 'id' ? 'Spesialis pendidikan lingkungan dan program komunitas.' : 'Environmental education and community programs specialist.'],
+        ['name' => 'Dr. Ahmad Wijaya', 'role' => $locale == 'id' ? 'Peneliti' : 'Researcher', 'bio' => $locale == 'id' ? 'Spesialis perilaku kelelawar dan survei akustik.' : 'Bat behavior specialist and acoustic survey expert.'],
+        ['name' => 'Rina Setiawan', 'role' => $locale == 'id' ? 'Koordinator Lapangan' : 'Field Coordinator', 'bio' => $locale == 'id' ? 'Koordinator kegiatan survei lapangan dan partisipasi komunitas.' : 'Field survey activities and community participation coordinator.'],
+      ];
+      @endphp
+
+      @foreach($teamMembers as $idx => $member)
+        <div class="text-center group cursor-pointer animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
+          <div class="relative w-24 h-24 mx-auto mb-4 rounded-full bg-surface-warm overflow-hidden border-2 border-border group-hover:border-primary transition-colors duration-300">
+            <svg class="absolute inset-0 w-full h-full text-primary/20" viewBox="0 0 100 100" fill="currentColor">
+              <path d="M50 10c-5 0-9 4-9 9v6c-8 3-14 11-14 20 0 12 9 22 20 24v5c0 3 2 5 5 5h8c3 0 5-2 5-5v-5c11-2 20-12 20-24 0-9-6-17-14-20v-6c0-5-4-9-9-9h-12zm-3 9c0-2 2-4 4-4s4 2 4 4v6c0 2-2 4-4 4s-4-2-4-4v-6zm6 22c8 0 14 4 14 10 0 3-1 5-3 6l2 7H34l2-7c-2-1-3-3-3-6 0-6 6-10 14-10h8z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading text-lg font-semibold text-text mb-1">
+            {{ $member['name'] }}
+          </h3>
+          <p class="text-cta text-sm font-medium mb-2">{{ $member['role'] }}</p>
+          <p class="text-muted text-sm">{{ $member['bio'] }}</p>
+        </div>
+      @endforeach
+    </div>
+  </div>
+</section>
+
+{{-- Join Team Section --}}
+<section class="py-16 bg-surface-warm border-t border-border">
+  <div class="max-w-6xl mx-auto px-6 lg:px-8 text-center animate-fade-up opacity-0">
+    <h2 class="font-heading text-2xl font-bold text-text mb-4">
+      {{ $locale == 'id' ? 'Bergabung dengan Tim Kami' : 'Join Our Team' }}
+    </h2>
+    <p class="text-muted mb-6 max-w-xl mx-auto">
+      {{ $locale == 'id' ? 'Kami selalu mencari sukarelawan dan peneliti yang passionate tentang konservasi kelelawar.' : 'We are always looking for passionate volunteers and researchers in bat conservation.' }}
+    </p>
+    <a href="mailto:info.inabcru@gmail.com" class="text-primary hover:underline font-medium">
+      info.inabcru@gmail.com
+    </a>
+  </div>
+</section>
+@endsection

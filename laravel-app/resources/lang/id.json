@@ -1,0 +1,128 @@
+{
+    "metadata": {
+        "title": "InaBCRU - Indonesia Bat Conservation Research Union",
+        "description": "Perkumpulan Indonesia Bat Conservation Research Union - Membangun kredibilitas donor untuk konservasi kelelawar di Indonesia"
+    },
+    "nav": {
+        "home": "Beranda",
+        "about": "Tentang",
+        "visionMission": "Visi & Misi",
+        "team": "Tim",
+        "programs": "Program",
+        "publications": "Publikasi",
+        "news": "Berita",
+        "impact": "Dampak",
+        "donate": "Donasi",
+        "contact": "Kontak"
+    },
+    "footer": {
+        "tagline": "Melindungi kelelawar untuk menjaga keseimbangan ekosistem Indonesia",
+        "quickLinks": "Tautan Cepat",
+        "contactInfo": "Informasi Kontak",
+        "email": "Email",
+        "founded": "Didirikan",
+        "legalId": "AHU-0009178.AH.01.07.TAHUN 2025",
+        "rights": "Hak Cipta"
+    },
+    "home": {
+        "hero": {
+            "title": "Indonesia Bat Conservation Research Union",
+            "subtitle": "Membangun kredibilitas institusi untuk konservasi kelelawar di Indonesia",
+            "cta": "Dukung Kami"
+        },
+        "stats": {
+            "title": "Dampak Kami",
+            "speciesSurveyed": "Jumlah spesies disurvei",
+            "researchLocations": "Lokasi penelitian",
+            "scientificPublications": "Publikasi ilmiah",
+            "activeMembers": "Anggota aktif"
+        },
+        "mission": {
+            "title": "Misi Kami",
+            "description": "Membangun kredibilitas donor institusi untuk organisasi non-profit konservasi kelelawar di Indonesia."
+        },
+        "programs": {
+            "title": "Program Kami",
+            "subtitle": "Beragam program untuk konservasi dan penelitian kelelawar"
+        },
+        "latestNews": {
+            "title": "Berita Terbaru"
+        },
+        "donateCta": {
+            "title": "Dukung Konservasi Kelelawar",
+            "description": "Kelelawar melindungi hutan, pangan, dan kesehatan kita — bantu kami melindungi mereka.",
+            "button": "Donasi Sekarang"
+        }
+    },
+    "about": {
+        "title": "Tentang InaBCRU",
+        "description": "InaBCRU adalah organisasi yang didedikasikan untuk konservasi kelelawar di Indonesia melalui penelitian, edukasi, dan kolaborasi dengan berbagai pihak.",
+        "founded": "Didirikan pada 5 Februari 2025 di Yogyakarta",
+        "legalId": "AHU-0009178.AH.01.07.TAHUN 2025"
+    },
+    "visionMission": {
+        "title": "Visi & Misi",
+        "vision": {
+            "title": "Visi",
+            "description": "Menjadi organisasi terdepan dalam konservasi kelelawar di Indonesia dengan membangun kredibilitas dan kepercayaan donor institusi."
+        },
+        "mission": {
+            "title": "Misi",
+            "items": [
+                "Melakukan penelitian ilmiah tentang kelelawar di Indonesia",
+                "Membangun kemitraan dengan institusi donor dan akademik",
+                "Menyelenggarakan program edukasi dan pelatihan",
+                "Mengadvokasi kebijakan konservasi kelelawar"
+            ]
+        }
+    },
+    "team": {
+        "title": "Tim Kami",
+        "subtitle": "Tim peneliti dan konservasionis yang berdedikasi"
+    },
+    "donate": {
+        "title": "Dukung Kami",
+        "subtitle": "Bantu kami melindungi kelelawar Indonesia",
+        "description": "Kelelawar melindungi hutan, pangan, dan kesehatan kita — bantu kami melindungi mereka.",
+        "bankTransfer": "Transfer Bank",
+        "bankName": "Nama Bank",
+        "accountNumber": "Nomor Rekening",
+        "accountName": "Nama Penerima",
+        "donationTiers": {
+            "title": "Paket Donasi",
+            "Rp100K": {
+                "amount": "Rp 100.000",
+                "impact": "Mendukung biaya bahan edukasi untuk satu sekolah"
+            },
+            "Rp500K": {
+                "amount": "Rp 500.000",
+                "impact": "Mendukung satu sesi pelatihan lapangan"
+            },
+            "Rp1M": {
+                "amount": "Rp 1.000.000",
+                "impact": "Mendukung penelitian satu lokasi survei"
+            },
+            "Rp5M": {
+                "amount": "Rp 5.000.000+",
+                "impact": "Mendukung program konservasi terintegrasi"
+            }
+        },
+        "institutional": {
+            "title": "Donor Institusi",
+            "mouInfo": "Kami menyediakan MoU untuk donor institusi dengan laporan transparansi lengkap.",
+            "contactForMoU": "Hubungi kami untuk informasi MoU"
+        },
+        "ctaQuote": "Kelelawar melindungi hutan, pangan, dan kesehatan kita — bantu kami melindungi mereka."
+    },
+    "publications": {
+        "title": "Publikasi",
+        "subtitle": "Publikasi ilmiah dan hasil penelitian kami",
+        "filterByYear": "Filter berdasarkan tahun",
+        "allYears": "Semua tahun"
+    },
+    "common": {
+        "loading": "Memuat...",
+        "error": "Terjadi kesalahan",
+        "close": "Tutup"
+    }
+}
