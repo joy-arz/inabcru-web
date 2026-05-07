@@ -17,13 +17,23 @@ if ($method === 'POST' && ($action === 'login' || $action === 'auth')) {
         apiError('Email and password are required');
     }
 
-    $user = Database::fetchOne(
-        "SELECT * FROM admin_users WHERE email = ?",
-        [$email]
-    );
+    // Check if input is UUID (id) or email/username
+    $user = null;
+    if (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $email)) {
+        $user = Database::fetchOne(
+            "SELECT * FROM admin_users WHERE id = ?",
+            [$email]
+        );
+    } else {
+        // Try to find user by email field (which may contain username or email)
+        $user = Database::fetchOne(
+            "SELECT * FROM admin_users WHERE email = ?",
+            [$email]
+        );
+    }
 
     if (!$user || !Auth::passwordVerify($password, $user['password_hash'])) {
-        apiError('Invalid email or password', 401);
+        apiError('Invalid credentials', 401);
     }
 
     $token = Auth::createToken($user['id'], $user['email']);
