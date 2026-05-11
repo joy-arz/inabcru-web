@@ -1,12 +1,19 @@
-# Previous versions (deprecated)
-prev-version/
-
-# Package files
-package.json
-package-lock.json
-
-# Keep backend-php as backup reference only
-backend-php/
+# Laravel
+/vendor/
+/node_modules/
+/.env
+/.env.backup
+/.env.production
+/.phpunit.result.cache
+/bootstrap/cache/
+/storage/*.key
+/storage/logs/*
+!/storage/logs/.gitkeep
+/public/build/
+/public/hot
+/public/storage
+/public/vite.config.js.timestamp-*
+/public/vite.config.ts.timestamp-*
 
 # OS files
 .DS_Store
@@ -17,3 +24,17 @@ backend-php/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Previous versions
+prev-version/
+backend-php/
+
+# Package files
+package.json
+package-lock.json
