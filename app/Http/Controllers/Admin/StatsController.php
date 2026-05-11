@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\ImpactStat;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class StatsController extends Controller
+{
+    public function index(): View
+    {
+        $stats = ImpactStat::orderBy('display_order')->get();
+        return view('admin.stats', compact('stats'));
+    }
+
+    public function update(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'stats' => 'required|array',
+            'stats.*.id' => 'required|integer',
+            'stats.*.label_id' => 'required|string',
+            'stats.*.label_en' => 'required|string',
+            'stats.*.value' => 'required|string',
+            'stats.*.icon' => 'nullable|string',
+        ]);
+
+        foreach ($data['stats'] as $statData) {
+            ImpactStat::where('id', $statData['id'])->update([
+                'label_id' => $statData['label_id'],
+                'label_en' => $statData['label_en'],
+                'value' => $statData['value'],
+                'icon' => $statData['icon'] ?? null,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Stats updated');
+    }
+}
