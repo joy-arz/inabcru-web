@@ -50,19 +50,22 @@
             <div class="lg:col-span-2 space-y-6">
                 <div class="bg-white rounded-xl shadow-md p-6 space-y-6">
                     <h2 class="font-heading text-lg font-semibold text-text-main flex items-center gap-2">
-                        <span>📋</span> Metadata
+                        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Metadata
                     </h2>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                                <span>🇮🇩</span> Title (Indonesian)
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Title (Indonesian)
                             </label>
                             <input type="text" name="title_id" value="{{ old('title_id', $publication->title_id ?? '') }}" placeholder="Judul publikasi" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
                         </div>
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                                <span>🇬🇧</span> Title (English)
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Title (English)
                             </label>
                             <input type="text" name="title_en" value="{{ old('title_en', $publication->title_en ?? '') }}" placeholder="Publication title" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
                         </div>
@@ -91,13 +94,15 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                                <span>🇮🇩</span> Abstract (ID)
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Abstract (ID)
                             </label>
                             <textarea name="abstract_id" rows="3" placeholder="Abstrak dalam Bahasa Indonesia" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('abstract_id', $publication->abstract_id ?? '') }}</textarea>
                         </div>
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                                <span>🇬🇧</span> Abstract (EN)
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Abstract (EN)
                             </label>
                             <textarea name="abstract_en" rows="3" placeholder="Abstract in English" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('abstract_en', $publication->abstract_en ?? '') }}</textarea>
                         </div>
@@ -108,7 +113,8 @@
                     <div class="border-b bg-gray-50 px-6 py-4 flex items-center justify-between">
                         <div>
                             <h2 class="font-heading text-lg font-semibold text-text-main flex items-center gap-2">
-                                <span>📁</span> Media Blocks
+                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                Media Blocks
                             </h2>
                             <p class="text-sm text-gray-500 mt-1">Add PDF, images, videos, or YouTube embeds. Drag to reorder.</p>
                         </div>
@@ -216,10 +222,10 @@
     let editingBlockIndex = null;
 
     const MEDIA_TYPES = {
-        pdf: { icon: '📄', color: 'bg-red-50 text-red-600', label: 'PDF Document' },
-        image: { icon: '🖼️', color: 'bg-blue-50 text-blue-600', label: 'Image' },
-        video: { icon: '🎬', color: 'bg-purple-50 text-purple-600', label: 'Video' },
-        youtube: { icon: '▶️', color: 'bg-red-100 text-red-600', label: 'YouTube' }
+        pdf: { label: 'PDF', color: 'bg-red-50 text-red-600', icon: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path></svg>' },
+        image: { label: 'Image', color: 'bg-blue-50 text-blue-600', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>' },
+        video: { label: 'Video', color: 'bg-purple-50 text-purple-600', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>' },
+        youtube: { label: 'YouTube', color: 'bg-red-100 text-red-600', icon: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"></path></svg>' }
     };
 
     function initMediaBlocks() {
@@ -260,7 +266,7 @@
                         </button>
                     </div>
                     <div class="${type.color} p-2 rounded-lg">
-                        <span class="text-lg">${type.icon}</span>
+                        <span class="text-base">${type.icon}</span>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="font-medium text-gray-900 truncate text-sm">${block.type === 'youtube' ? 'YouTube: ' + displayUrl : displayUrl}</p>

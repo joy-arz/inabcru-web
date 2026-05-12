@@ -33,11 +33,17 @@
                     <div class="grid grid-cols-12 gap-4 items-end p-4 bg-gray-50 rounded-lg">
                         <div class="col-span-1 text-center font-mono text-gray-400 text-sm">#{{ $index + 1 }}</div>
                         <div class="col-span-3">
-                            <label class="block text-xs text-gray-500 mb-1">🇮🇩 Label (ID)</label>
+                            <label class="block text-xs text-gray-500 mb-1">
+                                <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Label (ID)
+                            </label>
                             <input type="text" name="stats[{{ $stat->id }}][label_id]" value="{{ $stat->label_id }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm" />
                         </div>
                         <div class="col-span-3">
-                            <label class="block text-xs text-gray-500 mb-1">🇬🇧 Label (EN)</label>
+                            <label class="block text-xs text-gray-500 mb-1">
+                                <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Label (EN)
+                            </label>
                             <input type="text" name="stats[{{ $stat->id }}][label_en]" value="{{ $stat->label_en }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm" />
                         </div>
                         <div class="col-span-2">

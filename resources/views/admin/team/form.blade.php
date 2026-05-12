@@ -42,13 +42,15 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-2">
                     <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>🇮🇩</span> Position (Indonesian)
+                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Position (Indonesian)
                     </label>
                     <input type="text" name="title_id" value="{{ old('title_id', $member->title_id ?? '') }}" placeholder="Nama jabatan dalam Bahasa Indonesia" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
                 </div>
                 <div class="space-y-2">
                     <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>🇬🇧</span> Position (English)
+                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Position (English)
                     </label>
                     <input type="text" name="title_en" value="{{ old('title_en', $member->title_en ?? '') }}" placeholder="Position title in English" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
                 </div>
@@ -57,13 +59,15 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-2">
                     <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>🇮🇩</span> Bio (Indonesian)
+                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Bio (Indonesian)
                     </label>
                     <textarea name="bio_id" rows="4" placeholder="Biografi dalam Bahasa Indonesia" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('bio_id', $member->bio_id ?? '') }}</textarea>
                 </div>
                 <div class="space-y-2">
                     <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>🇬🇧</span> Bio (English)
+                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Bio (English)
                     </label>
                     <textarea name="bio_en" rows="4" placeholder="Biography in English" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('bio_en', $member->bio_en ?? '') }}</textarea>
                 </div>
