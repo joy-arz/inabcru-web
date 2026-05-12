@@ -7,7 +7,7 @@
 {{-- Hero Section --}}
 <section class="pt-40 pb-16 relative overflow-hidden">
   <div class="absolute inset-0">
-    <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1920&q=80" alt="Research team in field" class="w-full h-full object-cover">
+    <img src="/images/Field activity/IMG_2214.webp" alt="Research team in field" class="w-full h-full object-cover">
     <div class="absolute inset-0 bg-dark/80"></div>
   </div>
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">

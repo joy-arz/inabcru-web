@@ -7,7 +7,7 @@
 {{-- Hero Section --}}
 <section class="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0">
-    <img src="https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1920&q=80" alt="Bat in natural habitat" class="w-full h-full object-cover">
+    <img src="/images/Field activity/IMG_9975.webp" alt="Bat in natural habitat" class="w-full h-full object-cover">
     <div class="absolute inset-0 bg-dark/75"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent"></div>
     <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 0%, rgba(15, 23, 42, 0.4) 100%);"></div>
@@ -270,7 +270,7 @@
 {{-- Donate CTA Section --}}
 <section class="py-24 bg-dark text-white relative overflow-hidden">
   <div class="absolute inset-0 z-0">
-    <img src="https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1920&q=80" alt="Bat conservation" class="w-full h-full object-cover opacity-30">
+    <img src="/images/Field activity/IMG_9975.webp" alt="Bat conservation" class="w-full h-full object-cover opacity-30">
   </div>
 
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 text-center">

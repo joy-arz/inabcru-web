@@ -7,7 +7,7 @@
 {{-- Hero Section --}}
 <section class="pt-40 pb-20 relative overflow-hidden">
   <div class="absolute inset-0">
-    <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=1920&q=80" alt="Our impact" class="w-full h-full object-cover">
+    <img src="/images/Field activity/IMG_4469.webp" alt="Our impact" class="w-full h-full object-cover">
     <div class="absolute inset-0 bg-dark/80"></div>
   </div>
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
