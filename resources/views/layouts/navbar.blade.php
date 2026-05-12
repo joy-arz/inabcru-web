@@ -2,12 +2,7 @@
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 md:h-20">
       <a href="/{{ $locale }}" class="flex items-center gap-3 cursor-pointer">
-        <div id="logo-icon" class="w-10 h-10 rounded-lg flex items-center justify-center transition-colors duration-300 bg-white">
-          <span class="font-heading font-bold text-xl text-primary">I</span>
-        </div>
-        <span id="logo-text" class="font-heading font-bold text-xl hidden sm:block transition-colors duration-300 text-white">
-          InaBCRU
-        </span>
+        <img id="navbar-logo" src="/images/Logo/InaBCRU_LOGO CERAH.webp" alt="InaBCRU" class="h-10 md:h-12 w-auto object-contain transition-opacity duration-300">
       </a>
 
       <div class="hidden xl:flex items-center gap-1">
@@ -46,15 +41,22 @@
 
       <div class="flex items-center gap-3">
         <div class="relative lang-dropdown" id="langDropdown">
-          <button onclick="toggleLangDropdown()" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-white hover:text-primary hover:bg-white/10 transition-colors duration-200 cursor-pointer">
+          <button onclick="toggleLangDropdown()" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/10 transition-colors duration-200 cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
             </svg>
             <span class="hidden lg:inline">{{ strtoupper($locale) }}</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            </svg>
           </button>
-          <div id="langDropdownContent" class="lang-dropdown-content hidden">
-            <a href="/id" class="lang-dropdown-item {{ $locale == 'id' ? 'active' : '' }}">Indonesia</a>
-            <a href="/en" class="lang-dropdown-item {{ $locale == 'en' ? 'active' : '' }}">English</a>
+          <div id="langDropdownContent" class="lang-dropdown-content hidden absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
+            <a href="/id" class="lang-dropdown-item {{ $locale == 'id' ? 'active' : '' }} flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
+              <span class="text-base">🇮🇩</span> Indonesia
+            </a>
+            <a href="/en" class="lang-dropdown-item {{ $locale == 'en' ? 'active' : '' }} flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
+              <span class="text-base">🇬🇧</span> English
+            </a>
           </div>
         </div>
 
@@ -126,8 +128,7 @@
 
   function handleScroll() {
     const navbar = document.getElementById('navbar');
-    const logoIcon = document.getElementById('logo-icon');
-    const logoText = document.getElementById('logo-text');
+    const navbarLogo = document.getElementById('navbar-logo');
     const navLinks = document.querySelectorAll('.nav-link');
 
     isScrolled = window.scrollY > 20;
@@ -137,10 +138,9 @@
       navbar.style.backdropFilter = 'blur(12px)';
       navbar.style.borderBottom = '1px solid #E8E6E1';
       navbar.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-      logoIcon.style.background = '#2B3984';
-      logoIcon.querySelector('span').style.color = 'white';
-      logoText.style.color = '#0F1117';
-
+      if (navbarLogo) {
+        navbarLogo.src = '/images/Logo/InaBCRU_LOGO GELAP A.webp';
+      }
       navLinks.forEach(link => {
         link.classList.remove('text-white', 'home-active');
         link.classList.add('text-text');
@@ -163,10 +163,9 @@
       navbar.style.backdropFilter = 'blur(24px)';
       navbar.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
       navbar.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
-      logoIcon.style.background = 'white';
-      logoIcon.querySelector('span').style.color = '#2B3984';
-      logoText.style.color = 'white';
-
+      if (navbarLogo) {
+        navbarLogo.src = '/images/Logo/InaBCRU_LOGO CERAH.webp';
+      }
       navLinks.forEach(link => {
         link.classList.add('text-white', 'home-active');
         link.classList.remove('text-text');

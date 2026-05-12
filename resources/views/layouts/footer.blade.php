@@ -3,9 +3,7 @@
     <div class="grid md:grid-cols-4 gap-12 mb-12">
       <div>
         <a href="/{{ $locale }}" class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary">
-            <span class="font-heading font-bold text-xl text-white">I</span>
-          </div>
+          <img src="/images/Logo/InaBCRU_LOGO GELAP A.webp" alt="InaBCRU" class="h-10 w-auto object-contain">
           <span class="font-heading font-bold text-xl">InaBCRU</span>
         </a>
         <p class="text-gray-500 text-sm leading-relaxed">{{ trans_for('footer.tagline', $locale) }}</p>
