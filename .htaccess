@@ -1,70 +1,7 @@
-RewriteEngine On
-
-# Remove trailing slashes
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)/$ /$1 [R=301,L]
-
-# Default to Indonesian locale if no locale present
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/(id|en)/
-RewriteRule ^(.*)$ /id/$1 [R=301,L]
-
-# Frontend pages with locale prefix
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^id/?$ /index.php [L]
-RewriteRule ^id/about/?$ /pages/about.php [L]
-RewriteRule ^id/team/?$ /pages/team.php [L]
-RewriteRule ^id/publications/?$ /pages/publications.php [L]
-RewriteRule ^id/donate/?$ /pages/donate.php [L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^en/?$ /index.php [L]
-RewriteRule ^en/about/?$ /pages/about.php [L]
-RewriteRule ^en/team/?$ /pages/team.php [L]
-RewriteRule ^en/publications/?$ /pages/publications.php [L]
-RewriteRule ^en/donate/?$ /pages/donate.php [L]
-
-# Admin pages (no locale prefix)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^admin/?$ /admin/dashboard.php [L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^admin/login/?$ /admin/login.php [L]
-
-# Backend API routing
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^api/(.*)$ /backend/public/index.php [QSA,L]
-
-# Prevent directory listing
-Options -Indexes
-
-# Protect sensitive files
-<FilesMatch "^(config|database|auth)\.php$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
-
-# Protect includes folder
 <IfModule mod_rewrite.c>
-    RewriteRule ^includes/ - [F,L]
-    RewriteRule ^backend/includes/ - [F,L]
-</IfModule>
-
-# Cache static assets
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType image/webp "access plus 1 month"
-    ExpiresByType text/css "access plus 1 week"
-    ExpiresByType application/javascript "access plus 1 week"
-</IfModule>
-
-# GZIP compression
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json
+    RewriteEngine On
+    RewriteBase /
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
 </IfModule>
