@@ -3,18 +3,23 @@
 @section('content')
 <div class="space-y-6">
     <div class="flex items-center justify-between">
-        <div>
-            <h1 class="font-heading text-3xl font-bold text-gray-900">{{ isset($id) ? 'Edit' : 'New' }} Publication</h1>
-            <p class="text-gray-500 mt-1">{{ isset($id) ? 'Update the publication details' : 'Create a new research publication' }}</p>
-        </div>
-        <a href="{{ route('admin.publications.index') }}" class="text-gray-500 hover:text-gray-700">
-            <button class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('admin.publications.index') }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
-                Cancel
-            </button>
-        </a>
+            </a>
+            <div>
+                <h1 class="font-heading text-3xl font-bold text-gray-900">{{ isset($id) ? 'Edit' : 'New' }} Publication</h1>
+                <p class="text-gray-500 mt-1">Manage publication metadata and media blocks</p>
+            </div>
+        </div>
+        <button type="submit" form="pub-form" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            {{ isset($id) ? 'Update' : 'Create' }} Publication
+        </button>
     </div>
 
     @if($errors->any())
@@ -27,71 +32,412 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-xl shadow-md p-6">
-        <form method="POST" action="{{ isset($id) ? route('admin.publications.update', $id) : route('admin.publications.store') }}" class="space-y-6">
-            @csrf
-            @if(isset($id))
-                @method('PUT')
-            @endif
+    @if(session('success'))
+        <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+            {{ session('success') }}
+        </div>
+    @endif
 
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>🇮🇩</span> Title (Indonesian)
-                    </label>
-                    <input type="text" name="title_id" value="{{ old('title_id', $publication->title_id ?? '') }}" placeholder="Judul publikasi dalam Bahasa Indonesia" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
+    <form id="pub-form" method="POST" action="{{ isset($id) ? route('admin.publications.update', $id) : route('admin.publications.store') }}" class="space-y-6">
+        @csrf
+        @if(isset($id))
+            @method('PUT')
+        @endif
+
+        <input type="hidden" name="content_blocks" id="content_blocks_json" value="{{ old('content_blocks', isset($publication) ? json_encode($publication->content_blocks ?? []) : '[]') }}">
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-xl shadow-md p-6 space-y-6">
+                    <h2 class="font-heading text-lg font-semibold text-text-main flex items-center gap-2">
+                        <span>📋</span> Metadata
+                    </h2>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                <span>🇮🇩</span> Title (Indonesian)
+                            </label>
+                            <input type="text" name="title_id" value="{{ old('title_id', $publication->title_id ?? '') }}" placeholder="Judul publikasi" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                <span>🇬🇧</span> Title (English)
+                            </label>
+                            <input type="text" name="title_en" value="{{ old('title_en', $publication->title_en ?? '') }}" placeholder="Publication title" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">Journal / Source</label>
+                            <input type="text" name="journal" value="{{ old('journal', $publication->journal ?? '') }}" placeholder="Journal name" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">Year</label>
+                            <select name="year" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                                @for($y = date('Y'); $y >= 1900; $y--)
+                                    <option value="{{ $y }}" {{ old('year', $publication->year ?? '') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">DOI</label>
+                        <input type="text" name="doi" value="{{ old('doi', $publication->doi ?? '') }}" placeholder="https://doi.org/..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                <span>🇮🇩</span> Abstract (ID)
+                            </label>
+                            <textarea name="abstract_id" rows="3" placeholder="Abstrak dalam Bahasa Indonesia" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('abstract_id', $publication->abstract_id ?? '') }}</textarea>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                <span>🇬🇧</span> Abstract (EN)
+                            </label>
+                            <textarea name="abstract_en" rows="3" placeholder="Abstract in English" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('abstract_en', $publication->abstract_en ?? '') }}</textarea>
+                        </div>
+                    </div>
                 </div>
-                <div class="space-y-2">
-                    <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>🇬🇧</span> Title (English)
-                    </label>
-                    <input type="text" name="title_en" value="{{ old('title_en', $publication->title_en ?? '') }}" placeholder="Publication title in English" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="border-b bg-gray-50 px-6 py-4 flex items-center justify-between">
+                        <div>
+                            <h2 class="font-heading text-lg font-semibold text-text-main flex items-center gap-2">
+                                <span>📁</span> Media Blocks
+                            </h2>
+                            <p class="text-sm text-gray-500 mt-1">Add PDF, images, videos, or YouTube embeds. Drag to reorder.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="addMediaBlock('pdf')" class="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                                <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path fill="white" d="M14 2v6h6"></path></svg>
+                                PDF
+                            </button>
+                            <button type="button" onclick="addMediaBlock('image')" class="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                Image
+                            </button>
+                            <button type="button" onclick="addMediaBlock('video')" class="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                                <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                                Video
+                            </button>
+                            <button type="button" onclick="addMediaBlock('youtube')" class="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                                <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"></path><path fill="white" d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+                                YouTube
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-4" id="media-blocks-container">
+                        <div id="media-blocks-list" class="space-y-3">
+                        </div>
+                        <div id="empty-media-message" class="text-center py-8 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg {{ (isset($publication) && !empty($publication->content_blocks)) ? 'hidden' : '' }}">
+                            <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <p>No media blocks yet</p>
+                            <p class="text-sm text-gray-400">Add PDF, images, videos, or YouTube embeds above</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700">Journal / Source</label>
-                    <input type="text" name="journal" value="{{ old('journal', $publication->journal ?? '') }}" placeholder="Journal name" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+            <div class="space-y-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="font-heading text-lg font-semibold text-text-main mb-4">Cover Image</h2>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Image URL</label>
+                        <input type="url" name="cover_image_url" id="cover_image_url" value="{{ old('cover_image_url', $publication->cover_image_url ?? '') }}" placeholder="https://..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                    </div>
+                    <div id="cover-preview" class="mt-3 {{ isset($publication->cover_image_url) && $publication->cover_image_url ? '' : 'hidden' }}">
+                        <img src="{{ $publication->cover_image_url ?? '' }}" alt="Cover preview" class="w-full h-40 object-cover rounded-lg border border-gray-200" />
+                    </div>
                 </div>
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700">Year</label>
-                    <input type="number" name="year" value="{{ old('year', $publication->year ?? '') }}" placeholder="2024" min="1900" max="2099" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
-                </div>
-            </div>
 
-            <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700">DOI</label>
-                <input type="text" name="doi" value="{{ old('doi', $publication->doi ?? '') }}" placeholder="https://doi.org/..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>🇮🇩</span> Abstract (Indonesian)
-                    </label>
-                    <textarea name="abstract_id" rows="4" placeholder="Abstrak dalam Bahasa Indonesia" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('abstract_id', $publication->abstract_id ?? '') }}</textarea>
-                </div>
-                <div class="space-y-2">
-                    <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <span>🇬🇧</span> Abstract (English)
-                    </label>
-                    <textarea name="abstract_en" rows="4" placeholder="Abstract in English" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('abstract_en', $publication->abstract_en ?? '') }}</textarea>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="font-heading text-lg font-semibold text-text-main mb-4">Help</h2>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p><strong>PDF:</strong> Scientific papers, reports</p>
+                        <p><strong>Image:</strong> Photos, infographics</p>
+                        <p><strong>Video:</strong> Field recordings</p>
+                        <p><strong>YouTube:</strong> Embed from YouTube</p>
+                        <p class="pt-2 border-t">Use ⇧⇩ buttons to reorder blocks</p>
+                    </div>
                 </div>
             </div>
+        </div>
+    </form>
 
-            <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700">Cover Image URL</label>
-                <input type="url" name="cover_image_url" value="{{ old('cover_image_url', $publication->cover_image_url ?? '') }}" placeholder="https://..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+    <div id="media-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeMediaModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden">
+                <div class="flex items-center justify-between p-4 border-b">
+                    <h3 class="font-heading text-lg font-semibold" id="media-modal-title">Edit Media Block</h3>
+                    <button onclick="closeMediaModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 space-y-4" id="media-modal-content">
+                </div>
+                <div class="flex justify-end gap-3 p-4 border-t bg-gray-50">
+                    <button onclick="closeMediaModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
+                    <button onclick="saveMediaBlock()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors cursor-pointer">Save Block</button>
+                </div>
             </div>
-
-            <div class="flex items-center justify-end gap-4 pt-4">
-                <a href="{{ route('admin.publications.index') }}" class="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Cancel</a>
-                <button type="submit" class="px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors cursor-pointer">
-                    {{ isset($id) ? 'Update' : 'Create' }} Publication
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+
+    <div id="preview-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closePreviewModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl w-full max-w-3xl shadow-xl overflow-hidden">
+                <div class="flex items-center justify-between p-4 border-b">
+                    <h3 class="font-heading text-lg font-semibold" id="preview-modal-title">Preview</h3>
+                    <button onclick="closePreviewModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4" id="preview-modal-content" style="max-height: 60vh; overflow-y: auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    let mediaBlocks = [];
+    let editingBlockIndex = null;
+
+    const MEDIA_TYPES = {
+        pdf: { icon: '📄', color: 'bg-red-50 text-red-600', label: 'PDF Document' },
+        image: { icon: '🖼️', color: 'bg-blue-50 text-blue-600', label: 'Image' },
+        video: { icon: '🎬', color: 'bg-purple-50 text-purple-600', label: 'Video' },
+        youtube: { icon: '▶️', color: 'bg-red-100 text-red-600', label: 'YouTube' }
+    };
+
+    function initMediaBlocks() {
+        try {
+            const jsonEl = document.getElementById('content_blocks_json');
+            const existingData = jsonEl ? jsonEl.value : '[]';
+            mediaBlocks = JSON.parse(existingData) || [];
+        } catch (e) {
+            mediaBlocks = [];
+        }
+        renderMediaBlocks();
+    }
+
+    function renderMediaBlocks() {
+        const container = document.getElementById('media-blocks-list');
+        const emptyMsg = document.getElementById('empty-media-message');
+
+        if (mediaBlocks.length === 0) {
+            container.innerHTML = '';
+            emptyMsg.classList.remove('hidden');
+            return;
+        }
+
+        emptyMsg.classList.add('hidden');
+        container.innerHTML = mediaBlocks.map((block, index) => {
+            const type = MEDIA_TYPES[block.type] || MEDIA_TYPES.image;
+            const displayUrl = block.type === 'youtube' ? (block.youtube_id || '') : (block.url || 'No URL');
+            const caption = block.caption_id || block.caption_en || 'No caption';
+
+            return `
+                <div class="bg-white border rounded-lg p-4 flex items-center gap-3" data-index="${index}">
+                    <div class="flex flex-col gap-1">
+                        <button onclick="moveBlock(${index}, -1)" class="p-1 hover:bg-gray-100 rounded {{ $loop->first ? 'opacity-30' : '' }}" ${index === 0 ? 'disabled' : ''}>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                        </button>
+                        <button onclick="moveBlock(${index}, 1)" class="p-1 hover:bg-gray-100 rounded {{ $loop->last ? 'opacity-30' : '' }}" ${index === mediaBlocks.length - 1 ? 'disabled' : ''}>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                    </div>
+                    <div class="${type.color} p-2 rounded-lg">
+                        <span class="text-lg">${type.icon}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-gray-900 truncate text-sm">${block.type === 'youtube' ? 'YouTube: ' + displayUrl : displayUrl}</p>
+                        <p class="text-xs text-gray-500 truncate">${caption}</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="previewBlock(${index})" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Preview">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                        <button onclick="editBlock(${index})" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Edit">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button onclick="deleteBlock(${index})" class="p-2 hover:bg-red-50 rounded-lg text-red-500 hover:text-red-600" title="Delete">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('content_blocks_json').value = JSON.stringify(mediaBlocks);
+    }
+
+    function addMediaBlock(type) {
+        editingBlockIndex = null;
+        const block = {
+            id: 'block-' + Date.now(),
+            type: type,
+            url: '',
+            youtube_id: '',
+            caption_id: '',
+            caption_en: ''
+        };
+
+        showMediaModal(block);
+    }
+
+    function editBlock(index) {
+        editingBlockIndex = index;
+        showMediaModal(mediaBlocks[index]);
+    }
+
+    function showMediaModal(block) {
+        const modal = document.getElementById('media-modal');
+        const content = document.getElementById('media-modal-content');
+        const title = document.getElementById('media-modal-title');
+        const typeInfo = MEDIA_TYPES[block.type] || MEDIA_TYPES.image;
+
+        title.textContent = 'Edit ' + typeInfo.label;
+
+        let inputFields = '';
+
+        if (block.type === 'youtube') {
+            inputFields = `
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">YouTube Video ID</label>
+                    <input type="text" id="block_youtube_id" value="${block.youtube_id || ''}" placeholder="dQw4w9WgXcQ" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-mono" />
+                    <p class="text-xs text-gray-500">Extract ID from URL: youtube.com/watch?v=<strong>ID</strong></p>
+                </div>
+            `;
+        } else {
+            inputFields = `
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">${typeInfo.label} URL</label>
+                    <input type="url" id="block_url" value="${block.url || ''}" placeholder="https://..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                </div>
+            `;
+        }
+
+        content.innerHTML = `
+            ${inputFields}
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Caption (ID)</label>
+                    <input type="text" id="block_caption_id" value="${block.caption_id || ''}" placeholder="Keterangan dalam Bahasa Indonesia" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Caption (EN)</label>
+                    <input type="text" id="block_caption_en" value="${block.caption_en || ''}" placeholder="English caption" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                </div>
+            </div>
+        `;
+
+        modal.classList.remove('hidden');
+    }
+
+    function saveMediaBlock() {
+        const url = document.getElementById('block_url')?.value || '';
+        const youtube_id = document.getElementById('block_youtube_id')?.value || '';
+        const caption_id = document.getElementById('block_caption_id')?.value || '';
+        const caption_en = document.getElementById('block_caption_en')?.value || '';
+
+        const blockData = {
+            id: editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].id : 'block-' + Date.now(),
+            type: editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].type : 'image',
+            url: url,
+            youtube_id: youtube_id,
+            caption_id: caption_id,
+            caption_en: caption_en
+        };
+
+        if (editingBlockIndex !== null) {
+            mediaBlocks[editingBlockIndex] = blockData;
+        } else {
+            mediaBlocks.push(blockData);
+        }
+
+        closeMediaModal();
+        renderMediaBlocks();
+    }
+
+    function closeMediaModal() {
+        document.getElementById('media-modal').classList.add('hidden');
+        editingBlockIndex = null;
+    }
+
+    function previewBlock(index) {
+        const block = mediaBlocks[index];
+        const modal = document.getElementById('preview-modal');
+        const content = document.getElementById('preview-modal-content');
+        const title = document.getElementById('preview-modal-title');
+
+        title.textContent = block.caption_id || block.caption_en || 'Preview';
+
+        let contentHtml = '';
+
+        if (block.type === 'youtube' && block.youtube_id) {
+            contentHtml = `<div class="aspect-video"><iframe src="https://www.youtube.com/embed/${block.youtube_id}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        } else if (block.type === 'image' && block.url) {
+            contentHtml = `<img src="${block.url}" alt="${block.caption_en || ''}" class="max-w-full mx-auto rounded-lg" />`;
+        } else if (block.type === 'video' && block.url) {
+            contentHtml = `<video src="${block.url}" controls class="w-full rounded-lg"></video>`;
+        } else if (block.type === 'pdf' && block.url) {
+            contentHtml = `<iframe src="${block.url}" class="w-full h-96"></iframe>`;
+        } else {
+            contentHtml = `<p class="text-center text-gray-500">No content to preview</p>`;
+        }
+
+        if (block.caption_id || block.caption_en) {
+            contentHtml += `<p class="text-center text-sm text-gray-500 mt-4">${block.caption_id}</p><p class="text-center text-xs text-gray-400">${block.caption_en}</p>`;
+        }
+
+        content.innerHTML = contentHtml;
+        modal.classList.remove('hidden');
+    }
+
+    function closePreviewModal() {
+        document.getElementById('preview-modal').classList.add('hidden');
+    }
+
+    function deleteBlock(index) {
+        if (!confirm('Delete this media block?')) return;
+        mediaBlocks.splice(index, 1);
+        renderMediaBlocks();
+    }
+
+    function moveBlock(index, direction) {
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= mediaBlocks.length) return;
+
+        const temp = mediaBlocks[index];
+        mediaBlocks[index] = mediaBlocks[newIndex];
+        mediaBlocks[newIndex] = temp;
+        renderMediaBlocks();
+    }
+
+    document.getElementById('cover_image_url').addEventListener('change', function() {
+        const preview = document.getElementById('cover-preview');
+        const img = preview.querySelector('img');
+        if (this.value) {
+            img.src = this.value;
+            preview.classList.remove('hidden');
+        } else {
+            preview.classList.add('hidden');
+        }
+    });
+
+    initMediaBlocks();
+    </script>
 @endsection

@@ -14,11 +14,15 @@ class Article extends Model
         'category',
         'featured_image_url',
         'slug',
+        'meta_location_id',
+        'meta_location_en',
         'published',
+        'published_at',
     ];
 
     protected $casts = [
         'published' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public function getTitleAttribute($locale = null)

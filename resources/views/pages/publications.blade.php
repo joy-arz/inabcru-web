@@ -91,7 +91,11 @@
                 <div id="preview-content-{{ $idx }}" class="w-full h-full">
                   @foreach($contentBlocks as $blockIdx => $block)
                     <div class="preview-slide absolute inset-0 transition-opacity duration-300 {{ $blockIdx === 0 ? 'opacity-100' : 'opacity-0' }}" data-index="{{ $blockIdx }}">
-                      @if($block['type'] === 'pdf')
+                      @if($block['type'] === 'youtube' && !empty($block['youtube_id']))
+                        <div class="w-full h-full bg-dark flex items-center justify-center">
+                          <iframe src="https://www.youtube.com/embed/{{ $block['youtube_id'] }}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                      @elseif($block['type'] === 'pdf')
                         <iframe src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview"></iframe>
                       @elseif($block['type'] === 'video')
                         <div class="w-full h-full bg-dark flex items-center justify-center">

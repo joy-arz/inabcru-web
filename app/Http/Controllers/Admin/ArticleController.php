@@ -7,6 +7,7 @@ use App\Models\Article;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
@@ -30,10 +31,19 @@ class ArticleController extends Controller
             'content_en' => 'nullable|string',
             'category' => 'nullable|string',
             'featured_image_url' => 'nullable|string',
+            'slug' => 'nullable|string',
+            'meta_location_id' => 'nullable|string',
+            'meta_location_en' => 'nullable|string',
             'published' => 'nullable|boolean',
+            'published_at' => 'nullable|date',
         ]);
 
         $data['published'] = $request->has('published');
+
+        if (empty($data['slug']) && !empty($data['title_id'])) {
+            $data['slug'] = Str::slug($data['title_id']);
+        }
+
         Article::create($data);
         return redirect()->route('admin.articles.index')->with('success', 'Article created');
     }
@@ -54,10 +64,19 @@ class ArticleController extends Controller
             'content_en' => 'nullable|string',
             'category' => 'nullable|string',
             'featured_image_url' => 'nullable|string',
+            'slug' => 'nullable|string',
+            'meta_location_id' => 'nullable|string',
+            'meta_location_en' => 'nullable|string',
             'published' => 'nullable|boolean',
+            'published_at' => 'nullable|date',
         ]);
 
         $data['published'] = $request->has('published');
+
+        if (empty($data['slug']) && !empty($data['title_id'])) {
+            $data['slug'] = Str::slug($data['title_id']);
+        }
+
         $article->update($data);
         return redirect()->route('admin.articles.index')->with('success', 'Article updated');
     }

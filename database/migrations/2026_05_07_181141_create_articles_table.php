@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('category')->default('news');
             $table->string('featured_image_url')->nullable();
             $table->string('slug')->nullable();
+            $table->string('meta_location_id')->nullable();
+            $table->string('meta_location_en')->nullable();
             $table->boolean('published')->default(false);
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
     }

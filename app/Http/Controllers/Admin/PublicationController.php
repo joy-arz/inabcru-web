@@ -34,6 +34,8 @@ class PublicationController extends Controller
             'cover_image_url' => 'nullable|string',
         ]);
 
+        $data['content_blocks'] = json_decode($request->input('content_blocks', '[]'), true);
+
         Publication::create($data);
         return redirect()->route('admin.publications.index')->with('success', 'Publication created');
     }
@@ -57,6 +59,8 @@ class PublicationController extends Controller
             'doi' => 'nullable|string',
             'cover_image_url' => 'nullable|string',
         ]);
+
+        $data['content_blocks'] = json_decode($request->input('content_blocks', '[]'), true);
 
         $publication->update($data);
         return redirect()->route('admin.publications.index')->with('success', 'Publication updated');
