@@ -74,7 +74,11 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
     }
 
     if (in_array($page, $validPages)) {
-        return view("pages.{$page}", ['locale' => $locale]);
+        $data = ['locale' => $locale];
+        if ($page === 'team') {
+            $data['teamMembers'] = TeamMember::orderBy('display_order')->get();
+        }
+        return view("pages.{$page}", $data);
     }
 
     return redirect("/{$locale}");
