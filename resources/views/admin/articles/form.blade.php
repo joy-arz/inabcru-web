@@ -124,7 +124,7 @@
                     <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l4.586-4.586z"></path></svg>
                     <h2 class="font-heading text-lg font-semibold text-text-main">Article Content</h2>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Write content in both languages</p>
+                <p class="text-sm text-gray-500 mt-1">Write content in both languages using rich text editor</p>
             </div>
 
             <div class="grid grid-cols-2 divide-x">
@@ -133,7 +133,34 @@
                         <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="font-medium text-text-main">Bahasa Indonesia</span>
                     </div>
-                    <textarea name="content_id" rows="10" placeholder="Konten artikel dalam Bahasa Indonesia" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('content_id', $article->content_id ?? '') }}</textarea>
+                    <div class="border border-gray-300 rounded-lg overflow-hidden">
+                        <div class="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap gap-1">
+                            <button type="button" onclick="formatText('content_id', 'bold')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Bold">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"></path></svg>
+                            </button>
+                            <button type="button" onclick="formatText('content_id', 'italic')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Italic">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m-4 0h8"></path></svg>
+                            </button>
+                            <button type="button" onclick="formatText('content_id', 'underline')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Underline">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20h16M7 4v8a5 5 0 0010 0V4"></path></svg>
+                            </button>
+                            <span class="w-px h-6 bg-gray-300"></span>
+                            <button type="button" onclick="formatText('content_id', 'insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Bullet List">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                            </button>
+                            <button type="button" onclick="formatText('content_id', 'insertOrderedList')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Numbered List">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10M7 16h10"></path></svg>
+                            </button>
+                            <span class="w-px h-6 bg-gray-300"></span>
+                            <button type="button" onclick="formatText('content_id', 'createLink', prompt('Enter URL:'))" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Link">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                            </button>
+                            <button type="button" onclick="formatText('content_id', 'formatBlock', 'h2')" class="p-2 hover:bg-gray-200 rounded transition-colors font-bold" title="Heading">H2</button>
+                            <button type="button" onclick="formatText('content_id', 'formatBlock', 'h3')" class="p-2 hover:bg-gray-200 rounded transition-colors font-bold" title="Subheading">H3</button>
+                        </div>
+                        <div id="editor_id" class="prose prose-sm p-4 min-h-[200px] focus:outline-none" contenteditable="true" oninput="updateHiddenContent('content_id')">{{ old('content_id', $article->content_id ?? '') }}</div>
+                        <input type="hidden" name="content_id" id="content_id_input" value="{{ old('content_id', $article->content_id ?? '') }}">
+                    </div>
                 </div>
 
                 <div class="p-4 bg-gray-50/50">
@@ -141,7 +168,34 @@
                         <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="font-medium text-text-main">English</span>
                     </div>
-                    <textarea name="content_en" rows="10" placeholder="Article content in English" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">{{ old('content_en', $article->content_en ?? '') }}</textarea>
+                    <div class="border border-gray-300 rounded-lg overflow-hidden">
+                        <div class="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap gap-1">
+                            <button type="button" onclick="formatText('content_en', 'bold')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Bold">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"></path></svg>
+                            </button>
+                            <button type="button" onclick="formatText('content_en', 'italic')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Italic">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m-4 0h8"></path></svg>
+                            </button>
+                            <button type="button" onclick="formatText('content_en', 'underline')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Underline">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20h16M7 4v8a5 5 0 0010 0V4"></path></svg>
+                            </button>
+                            <span class="w-px h-6 bg-gray-300"></span>
+                            <button type="button" onclick="formatText('content_en', 'insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Bullet List">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                            </button>
+                            <button type="button" onclick="formatText('content_en', 'insertOrderedList')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Numbered List">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10M7 16h10"></path></svg>
+                            </button>
+                            <span class="w-px h-6 bg-gray-300"></span>
+                            <button type="button" onclick="formatText('content_en', 'createLink', prompt('Enter URL:'))" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Link">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                            </button>
+                            <button type="button" onclick="formatText('content_en', 'formatBlock', 'h2')" class="p-2 hover:bg-gray-200 rounded transition-colors font-bold" title="Heading">H2</button>
+                            <button type="button" onclick="formatText('content_en', 'formatBlock', 'h3')" class="p-2 hover:bg-gray-200 rounded transition-colors font-bold" title="Subheading">H3</button>
+                        </div>
+                        <div id="editor_en" class="prose prose-sm p-4 min-h-[200px] focus:outline-none" contenteditable="true" oninput="updateHiddenContent('content_en')">{{ old('content_en', $article->content_en ?? '') }}</div>
+                        <input type="hidden" name="content_en" id="content_en_input" value="{{ old('content_en', $article->content_en ?? '') }}">
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,6 +268,27 @@
         };
         reader.readAsDataURL(file);
     }
+
+    function formatText(editorId, command, value) {
+        event.preventDefault();
+        document.execCommand(command, false, value || null);
+        document.getElementById(editorId).focus();
+    }
+
+    function updateHiddenContent(lang) {
+        const editor = document.getElementById('editor_' + lang);
+        const hiddenInput = document.getElementById(lang + '_input');
+        if (editor && hiddenInput) {
+            hiddenInput.value = editor.innerHTML;
+        }
+    }
+
+    function initEditors() {
+        updateHiddenContent('content_id');
+        updateHiddenContent('content_en');
+    }
+
+    document.addEventListener('DOMContentLoaded', initEditors);
     </script>
 </div>
 @endsection
