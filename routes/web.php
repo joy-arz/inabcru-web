@@ -99,6 +99,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('publications', PublicationController::class)->except(['show']);
     Route::resource('articles', ArticleController::class)->except(['show']);
     Route::resource('team', TeamController::class)->except(['show']);
+    Route::resource('partners', PartnerController::class)->except(['show']);
+    Route::resource('site-images', SiteImageController::class)->only(['index', 'edit', 'update']);
     Route::match(['get', 'put'], '/stats', [StatsController::class, 'index'])->name('stats');
     Route::post('/team/reorder', [TeamController::class, 'reorder'])->name('team.reorder');
 });
