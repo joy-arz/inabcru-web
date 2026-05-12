@@ -9,9 +9,7 @@
         @php
         $navItems = [
           ['href' => "/{$locale}", 'label' => trans_for('nav.home', $locale), 'key' => 'home'],
-          ['href' => "/{$locale}/about", 'label' => trans_for('nav.about', $locale), 'key' => 'about'],
-          ['href' => "/{$locale}/vision-mission", 'label' => trans_for('nav.visionMission', $locale), 'key' => 'vision-mission'],
-          ['href' => "/{$locale}/team", 'label' => trans_for('nav.team', $locale), 'key' => 'team'],
+          ['href' => "/{$locale}/about-us", 'label' => trans_for('nav.about', $locale), 'key' => 'about-us'],
           ['href' => "/{$locale}/programs", 'label' => trans_for('nav.programs', $locale), 'key' => 'programs'],
           ['href' => "/{$locale}/publications", 'label' => trans_for('nav.publications', $locale), 'key' => 'publications'],
           ['href' => "/{$locale}/news", 'label' => trans_for('nav.news', $locale), 'key' => 'news'],

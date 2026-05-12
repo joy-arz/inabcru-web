@@ -57,7 +57,7 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
     }
     app()->setLocale($locale);
 
-    $validPages = ['about', 'team', 'donate', 'programs', 'impact', 'contact', 'vision-mission'];
+    $validPages = ['about-us', 'donate', 'programs', 'impact', 'contact'];
 
     if ($page === 'home') {
         return redirect("/{$locale}");
@@ -75,7 +75,7 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
 
     if (in_array($page, $validPages)) {
         $data = ['locale' => $locale];
-        if ($page === 'team') {
+        if ($page === 'about-us') {
             $data['teamMembers'] = TeamMember::orderBy('display_order')->get();
         }
         return view("pages.{$page}", $data);

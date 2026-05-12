@@ -13,8 +13,7 @@
         <h4 class="font-heading font-semibold text-base mb-4">{{ trans_for('footer.quickLinks', $locale) }}</h4>
         <ul class="space-y-2.5">
           <li><a href="/{{ $locale }}" class="text-gray-500 text-sm hover:text-primary transition-colors">{{ trans_for('nav.home', $locale) }}</a></li>
-          <li><a href="/{{ $locale }}/about" class="text-gray-500 text-sm hover:text-primary transition-colors">{{ trans_for('nav.about', $locale) }}</a></li>
-          <li><a href="/{{ $locale }}/team" class="text-gray-500 text-sm hover:text-primary transition-colors">{{ trans_for('nav.team', $locale) }}</a></li>
+          <li><a href="/{{ $locale }}/about-us" class="text-gray-500 text-sm hover:text-primary transition-colors">{{ trans_for('nav.about', $locale) }}</a></li>
           <li><a href="/{{ $locale }}/publications" class="text-gray-500 text-sm hover:text-primary transition-colors">{{ trans_for('nav.publications', $locale) }}</a></li>
           <li><a href="/{{ $locale }}/donate" class="text-gray-500 text-sm hover:text-primary transition-colors">{{ trans_for('nav.donate', $locale) }}</a></li>
         </ul>
