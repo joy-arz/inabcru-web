@@ -223,7 +223,7 @@
 
     const MEDIA_TYPES = {
         pdf: { label: 'PDF', color: 'bg-red-50 text-red-600', icon: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path></svg>' },
-        image: { label: 'Image', color: 'bg-blue-50 text-blue-600', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>' },
+        image: { label: 'Photo', color: 'bg-blue-50 text-blue-600', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>' },
         video: { label: 'Video', color: 'bg-purple-50 text-purple-600', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>' },
         youtube: { label: 'YouTube', color: 'bg-red-100 text-red-600', icon: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"></path></svg>' }
     };
@@ -322,16 +322,24 @@
         if (block.type === 'youtube') {
             inputFields = `
                 <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700">YouTube Video ID</label>
-                    <input type="text" id="block_youtube_id" value="${block.youtube_id || ''}" placeholder="dQw4w9WgXcQ" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-mono" />
-                    <p class="text-xs text-gray-500">Extract ID from URL: youtube.com/watch?v=<strong>ID</strong></p>
+                    <label class="text-sm font-medium text-gray-700">YouTube Video URL</label>
+                    <input type="url" id="block_url" value="${block.url || ''}" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
                 </div>
             `;
         } else {
             inputFields = `
                 <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700">${typeInfo.label} URL</label>
-                    <input type="url" id="block_url" value="${block.url || ''}" placeholder="https://..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                    <label class="text-sm font-medium text-gray-700">Upload ${typeInfo.label}</label>
+                    <div class="flex items-center gap-3">
+                        <label class="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            <span class="text-sm">Choose File</span>
+                            <input type="file" id="block_file" accept="${getAcceptType(block.type)}" class="hidden" onchange="handleFileUpload(this, '${block.type}')" />
+                        </label>
+                        <span id="file_name_${block.type}" class="text-xs text-gray-400"></span>
+                    </div>
+                    <input type="hidden" id="block_url" value="${block.url || ''}" />
+                    ${block.url ? '<p class="text-xs text-green-600">File uploaded: <a href="' + block.url + '" target="_blank" class="underline">View</a></p>' : ''}
                 </div>
             `;
         }
@@ -355,7 +363,6 @@
 
     function saveMediaBlock() {
         const url = document.getElementById('block_url')?.value || '';
-        const youtube_id = document.getElementById('block_youtube_id')?.value || '';
         const caption_id = document.getElementById('block_caption_id')?.value || '';
         const caption_en = document.getElementById('block_caption_en')?.value || '';
 
@@ -363,7 +370,7 @@
             id: editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].id : 'block-' + Date.now(),
             type: editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].type : 'image',
             url: url,
-            youtube_id: youtube_id,
+            youtube_id: '',
             caption_id: caption_id,
             caption_en: caption_en
         };
@@ -393,8 +400,13 @@
 
         let contentHtml = '';
 
-        if (block.type === 'youtube' && block.youtube_id) {
-            contentHtml = `<div class="aspect-video"><iframe src="https://www.youtube.com/embed/${block.youtube_id}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        if (block.type === 'youtube' && block.url) {
+            const youtubeId = extractYouTubeId(block.url);
+            if (youtubeId) {
+                contentHtml = `<div class="aspect-video"><iframe src="https://www.youtube.com/embed/${youtubeId}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+            } else {
+                contentHtml = `<p class="text-center text-gray-500">Invalid YouTube URL</p>`;
+            }
         } else if (block.type === 'image' && block.url) {
             contentHtml = `<img src="${block.url}" alt="${block.caption_en || ''}" class="max-w-full mx-auto rounded-lg" />`;
         } else if (block.type === 'video' && block.url) {
@@ -443,6 +455,75 @@
             preview.classList.add('hidden');
         }
     });
+
+    function extractYouTubeId(url) {
+        const patterns = [
+            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+            /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
+        ];
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match) return match[1];
+        }
+        return null;
+    }
+
+    function getAcceptType(type) {
+        if (type === 'image') return 'image/*';
+        if (type === 'video') return 'video/*';
+        if (type === 'pdf') return 'application/pdf';
+        return '*';
+    }
+
+    function handleFileUpload(input, type) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const maxSize = 50 * 1024 * 1024;
+        if (file.size > maxSize) {
+            alert('File size must be less than 50MB');
+            input.value = '';
+            return;
+        }
+
+        const fileName = document.getElementById('file_name_' + type);
+        if (fileName) fileName.textContent = file.name;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                if (type === 'image') {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        document.getElementById('block_url').value = url;
+                        document.getElementById('file_name_' + type).textContent = file.name + ' (Converted to WebP)';
+                    }, 'image/webp', 0.85);
+                } else if (type === 'video') {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        document.getElementById('block_url').value = url;
+                        document.getElementById('file_name_' + type).textContent = file.name + ' (Converted to WebP thumbnail)';
+                    }, 'image/webp', 0.85);
+                } else {
+                    const url = URL.createObjectURL(file);
+                    document.getElementById('block_url').value = url;
+                }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 
     initMediaBlocks();
     </script>

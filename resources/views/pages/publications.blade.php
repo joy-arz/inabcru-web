@@ -90,12 +90,27 @@
 
               <div class="flex-1 relative overflow-hidden">
                 <div id="preview-content-{{ $idx }}" class="w-full h-full">
-                  @foreach($contentBlocks as $blockIdx => $block)
+                  @php
+                  function extractYouTubeId($url) {
+                    $patterns = [
+                      '/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/',
+                      '/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/'
+                    ];
+                    foreach ($patterns as $pattern) {
+                      if (preg_match($pattern, $url, $matches)) return $matches[1];
+                    }
+                    return null;
+                  }
+                @endphp
+                @foreach($contentBlocks as $blockIdx => $block)
                     <div class="preview-slide absolute inset-0 transition-opacity duration-300 {{ $blockIdx === 0 ? 'opacity-100' : 'opacity-0' }}" data-index="{{ $blockIdx }}">
-                      @if($block['type'] === 'youtube' && !empty($block['youtube_id']))
-                        <div class="w-full h-full bg-dark flex items-center justify-center">
-                          <iframe src="https://www.youtube.com/embed/{{ $block['youtube_id'] }}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
+                      @if($block['type'] === 'youtube' && !empty($block['url']))
+                        @php $youtubeId = extractYouTubeId($block['url']); @endphp
+                        @if($youtubeId)
+                          <div class="w-full h-full bg-dark flex items-center justify-center">
+                            <iframe src="https://www.youtube.com/embed/{{ $youtubeId }}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                          </div>
+                        @endif
                       @elseif($block['type'] === 'pdf')
                         <iframe src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview"></iframe>
                       @elseif($block['type'] === 'video')
