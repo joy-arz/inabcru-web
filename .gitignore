@@ -1,9 +1,6 @@
 # Laravel
 /vendor/
 /node_modules/
-/.env
-/.env.backup
-/.env.production
 /.phpunit.result.cache
 /bootstrap/cache/
 /storage/*.key

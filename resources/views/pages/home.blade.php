@@ -13,7 +13,7 @@
     <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 0%, rgba(15, 23, 42, 0.4) 100%);"></div>
   </div>
 
-  <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 text-center">
+  <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
     <div class="animate-fade-up opacity-0">
       <p class="text-xs font-semibold uppercase tracking-[0.12em] text-white/60 mb-6">
         {{ $locale == 'id' ? 'Indonesia Bat Conservation Research Union' : 'Conservation Research Union' }}
