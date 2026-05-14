@@ -46,24 +46,14 @@
 <section class="py-10 overflow-hidden bg-surface-warm border-y border-border">
   <div class="marquee-container flex">
     @php
-    $partners = [
-      ['name' => 'BRIN', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Main_Logo_of_National_Research_and_Innovation_Agency_of_Indonesia.svg'],
-      ['name' => 'UGM', 'logo' => 'https://upload.wikimedia.org/wikipedia/id/9/9f/Emblem_of_Universitas_Gadjah_Mada.svg'],
-      ['name' => 'ITB', 'logo' => 'https://upload.wikimedia.org/wikipedia/id/9/95/Logo_Institut_Teknologi_Bandung.png'],
-      ['name' => 'IPB', 'logo' => 'https://upload.wikimedia.org/wikipedia/id/0/0f/Logo_IPB.png'],
-      ['name' => 'Unpad', 'logo' => 'https://upload.wikimedia.org/wikipedia/id/8/80/Lambang_Universitas_Padjadjaran.svg'],
-      ['name' => 'UNAIR', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Logo-Branding-UNAIR-biru.png/250px-Logo-Branding-UNAIR-biru.png'],
-      ['name' => 'UPI', 'logo' => 'https://upload.wikimedia.org/id/0/09/Logo_Almamater_UPI.svg'],
-      ['name' => 'LIPI', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Logo_LIPI_%282018%29.svg'],
-    ];
-    $allPartners = array_merge($partners, $partners);
+    $allPartners = $partners->merge($partners);
     @endphp
     @foreach($allPartners as $partner)
-      <div class="flex-shrink-0 mx-8 flex items-center justify-center group">
-        <div class="relative h-12 w-36 cursor-pointer">
-          <img src="{{ $partner['logo'] }}" alt="{{ $partner['name'] }}" class="h-full w-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.parentElement.parentElement.style.display='none'">
+      <a href="{{ $partner->website_url ?: '#' }}" target="_blank" class="flex-shrink-0 mx-8 flex items-center justify-center group">
+        <div class="relative h-12 w-36">
+          <img src="{{ $partner->logo_url }}" alt="{{ $partner->alt_text ?: $partner->name }}" class="h-full w-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.parentElement.parentElement.style.display='none'">
         </div>
-      </div>
+      </a>
     @endforeach
   </div>
 </section>
@@ -226,7 +216,7 @@
 
     <div class="grid md:grid-cols-3 gap-6 md:gap-8">
       @forelse($latestArticles as $idx => $article)
-        <div class="bg-surface-warm rounded-2xl p-6 border border-border hover:shadow-md transition-shadow duration-300 animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
+        <a href="/{{ $locale }}/news/{{ $article->slug }}" class="bg-surface-warm rounded-2xl p-6 border border-border hover:shadow-md transition-shadow duration-300 animate-fade-up opacity-0 cursor-pointer" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
           @if($article->featured_image_url)
             <img src="{{ $article->featured_image_url }}" alt="{{ $article->title_id }}" class="w-full h-40 object-cover rounded-lg mb-4">
           @endif
@@ -237,7 +227,7 @@
           <p class="text-muted text-sm line-clamp-2">
             {{ $locale == 'id' ? strip_tags($article->content_id) : strip_tags($article->content_en) }}
           </p>
-        </div>
+        </a>
       @empty
         <div class="col-span-3 text-center py-12">
           <p class="text-muted">{{ $locale == 'id' ? 'Belum ada berita' : 'No news yet' }}</p>

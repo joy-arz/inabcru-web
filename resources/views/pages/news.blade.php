@@ -39,7 +39,7 @@
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         @foreach($articles as $idx => $article)
           <div class="animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
-            <a href="#" class="group block bg-surface-warm rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+            <a href="/{{ $locale }}/news/{{ $article->slug }}" class="group block bg-surface-warm rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer">
               @if($article->featured_image_url)
                 <div class="relative aspect-[16/10] w-full overflow-hidden">
                   <img src="{{ $article->featured_image_url }}" alt="{{ $locale == 'id' ? $article->title_id : $article->title_en }}" class="w-full h-full object-cover">
@@ -56,9 +56,6 @@
                 @elseif($article->content_en)
                   <p class="text-muted text-sm mb-4 line-clamp-2">{{ \Illuminate\Support\Str::limit(strip_tags($article->content_en), 100) }}</p>
                 @endif
-                <span class="text-primary hover:underline text-sm font-medium">
-                  {{ $locale == 'id' ? 'Baca selengkapnya' : 'Read more' }} →
-                </span>
               </div>
             </a>
           </div>

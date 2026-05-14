@@ -98,5 +98,7 @@
     </main>
 
     @include('layouts.footer', ['locale' => $locale])
+
+    @stack('scripts')
 </body>
 </html>

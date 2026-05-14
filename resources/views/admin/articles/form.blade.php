@@ -115,7 +115,6 @@
             <div id="featured_preview" class="mt-2 {{ isset($article->featured_image_url) && $article->featured_image_url ? '' : 'hidden' }}">
                 <img src="{{ $article->featured_image_url ?? '' }}" alt="Cover preview" class="w-48 h-32 object-cover rounded-lg border border-gray-200" />
             </div>
-            @endif
         </div>
 
         <div class="bg-white rounded-xl shadow-md overflow-hidden">

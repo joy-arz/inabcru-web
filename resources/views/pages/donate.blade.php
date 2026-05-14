@@ -160,16 +160,41 @@
 <script>
 let toastTimeout;
 function copyAccount() {
-  navigator.clipboard.writeText('1234567890').then(() => {
-    const toast = document.getElementById('toast');
-    toast.style.display = 'flex';
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
-      toast.style.display = 'none';
-    }, 2000);
-  }).catch(err => {
-    console.error('Failed to copy:', err);
-  });
+  const accountNumber = '1234567890';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(accountNumber).then(() => {
+      showToast();
+    }).catch(() => {
+      fallbackCopy(accountNumber);
+    });
+  } else {
+    fallbackCopy(accountNumber);
+  }
+}
+
+function fallbackCopy(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    showToast();
+  } catch (err) {
+    alert('{{ $locale == "id" ? "Gagal menyalin nomor rekening" : "Failed to copy bank account" }}');
+  }
+  document.body.removeChild(textarea);
+}
+
+function showToast() {
+  const toast = document.getElementById('toast');
+  toast.style.display = 'flex';
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3000);
 }
 </script>
 @endpush

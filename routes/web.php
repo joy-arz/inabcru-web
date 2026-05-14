@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SiteImageController;
 use App\Models\Publication;
 use App\Models\Article;
 use App\Models\TeamMember;
+use App\Models\Partner;
 use Illuminate\Support\Facades\Route;
 
 function getTranslations(string $locale): array {
@@ -51,7 +52,8 @@ Route::get('/{locale}', function ($locale) {
     }
     app()->setLocale($locale);
     $latestArticles = Article::where('published', true)->orderBy('created_at', 'desc')->take(3)->get();
-    return view('pages.home', ['locale' => $locale, 'latestArticles' => $latestArticles]);
+    $partners = Partner::orderBy('display_order')->get();
+    return view('pages.home', ['locale' => $locale, 'latestArticles' => $latestArticles, 'partners' => $partners]);
 })->where('locale', 'id|en');
 
 Route::get('/{locale}/{page}', function ($locale, $page) {
@@ -85,6 +87,16 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
     }
 
     return redirect("/{$locale}");
+})->where('locale', 'id|en');
+
+Route::get('/{locale}/news/{slug}', function ($locale, $slug) {
+    if (!in_array($locale, ['id', 'en'])) {
+        return redirect('/id');
+    }
+    app()->setLocale($locale);
+
+    $article = Article::where('slug', $slug)->where('published', true)->firstOrFail();
+    return view('pages.news-detail', compact('locale', 'article'));
 })->where('locale', 'id|en');
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
