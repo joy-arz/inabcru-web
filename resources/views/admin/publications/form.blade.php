@@ -258,10 +258,10 @@
             return `
                 <div class="bg-white border rounded-lg p-4 flex items-center gap-3" data-index="${index}">
                     <div class="flex flex-col gap-1">
-                        <button onclick="moveBlock(${index}, -1)" class="p-1 hover:bg-gray-100 rounded {{ $loop->first ? 'opacity-30' : '' }}" ${index === 0 ? 'disabled' : ''}>
+                        <button onclick="moveBlock(${index}, -1)" class="p-1 hover:bg-gray-100 rounded" ${index === 0 ? 'disabled' : ''}>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                         </button>
-                        <button onclick="moveBlock(${index}, 1)" class="p-1 hover:bg-gray-100 rounded {{ $loop->last ? 'opacity-30' : '' }}" ${index === mediaBlocks.length - 1 ? 'disabled' : ''}>
+                        <button onclick="moveBlock(${index}, 1)" class="p-1 hover:bg-gray-100 rounded" ${index === mediaBlocks.length - 1 ? 'disabled' : ''}>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                     </div>
