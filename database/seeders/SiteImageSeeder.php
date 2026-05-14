@@ -11,6 +11,10 @@ class SiteImageSeeder extends Seeder
     public function run(): void
     {
         $slots = [
+            // Logo images
+            ['key' => 'logo_light', 'location' => 'layouts.navbar', 'category' => 'Logo', 'image_url' => '/images/Logo/InaBCRU_LOGO CERAH.webp', 'alt_text' => 'InaBCRU Logo (Light)', 'usage' => 'Navbar logo on dark backgrounds'],
+            ['key' => 'logo_dark', 'location' => 'layouts.footer', 'category' => 'Logo', 'image_url' => '/images/Logo/InaBCRU_LOGO GELAP A.webp', 'alt_text' => 'InaBCRU Logo (Dark)', 'usage' => 'Footer logo and navbar on light backgrounds'],
+
             // Hero backgrounds
             ['key' => 'hero_home', 'location' => 'pages.home', 'category' => 'Hero', 'image_url' => '/images/Field activity/IMG_9975.webp', 'alt_text' => 'Bat in natural habitat', 'usage' => 'Homepage hero background'],
             ['key' => 'hero_donate', 'location' => 'pages.donate', 'category' => 'Hero', 'image_url' => '/images/Field activity/IMG_2209.webp', 'alt_text' => 'Conservation effort', 'usage' => 'Donate page hero'],
