@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\PublicationController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\SiteImageController;
 use App\Models\Publication;
 use App\Models\Article;
 use App\Models\TeamMember;
@@ -48,7 +50,8 @@ Route::get('/{locale}', function ($locale) {
         return redirect('/id');
     }
     app()->setLocale($locale);
-    return view('pages.home', ['locale' => $locale]);
+    $latestArticles = Article::where('published', true)->orderBy('created_at', 'desc')->take(3)->get();
+    return view('pages.home', ['locale' => $locale, 'latestArticles' => $latestArticles]);
 })->where('locale', 'id|en');
 
 Route::get('/{locale}/{page}', function ($locale, $page) {

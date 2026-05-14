@@ -30,7 +30,7 @@
             {{ trans_for('home.hero.cta') }}
           </button>
         </a>
-        <a href="/{{ $locale }}/about">
+        <a href="/{{ $locale }}/about-us">
           <button class="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-200 cursor-pointer">
             {{ trans_for('nav.about') }}
           </button>
@@ -183,7 +183,7 @@
             : 'InaBCRU is a non-profit organization dedicated to bat conservation in Indonesia through scientific research, public education, and collaboration with various institutions.'
           }}
         </p>
-        <a href="/{{ $locale }}/about">
+        <a href="/{{ $locale }}/about-us">
           <button class="px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-colors duration-200 cursor-pointer">
             {{ $locale == 'id' ? 'Pelajari Lebih Lanjut' : 'Learn More' }}
           </button>
@@ -225,44 +225,24 @@
     </div>
 
     <div class="grid md:grid-cols-3 gap-6 md:gap-8">
-      <div class="bg-surface-warm rounded-2xl p-6 border border-border hover:shadow-md transition-shadow duration-300 animate-fade-up opacity-0" style="animation-delay: 0.1s;">
-        <p class="text-muted text-xs mb-2">2025-03-15</p>
-        <h3 class="font-heading text-lg font-semibold text-text mb-3">
-          {{ $locale == 'id' ? 'Penemuan Kelelawar Baru di Kalimantan' : 'New Bat Species Discovered in Kalimantan' }}
-        </h3>
-        <p class="text-muted text-sm line-clamp-2">
-          {{ $locale == 'id'
-            ? 'Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...'
-            : 'Our research team has just completed a bat survey in the Sulawesi forest region...'
-          }}
-        </p>
-      </div>
-
-      <div class="bg-surface-warm rounded-2xl p-6 border border-border hover:shadow-md transition-shadow duration-300 animate-fade-up opacity-0" style="animation-delay: 0.2s;">
-        <p class="text-muted text-xs mb-2">2025-03-10</p>
-        <h3 class="font-heading text-lg font-semibold text-text mb-3">
-          {{ $locale == 'id' ? 'Pelatihan Peneliti Muda di Yogyakarta' : 'Young Researcher Training in Yogyakarta' }}
-        </h3>
-        <p class="text-muted text-sm line-clamp-2">
-          {{ $locale == 'id'
-            ? 'Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...'
-            : 'Our research team has just completed a bat survey in the Sulawesi forest region...'
-          }}
-        </p>
-      </div>
-
-      <div class="bg-surface-warm rounded-2xl p-6 border border-border hover:shadow-md transition-shadow duration-300 animate-fade-up opacity-0" style="animation-delay: 0.3s;">
-        <p class="text-muted text-xs mb-2">2025-03-05</p>
-        <h3 class="font-heading text-lg font-semibold text-text mb-3">
-          {{ $locale == 'id' ? 'Kolaborasi Riset dengan Universitas Indonesia' : 'Research Collaboration with University of Indonesia' }}
-        </h3>
-        <p class="text-muted text-sm line-clamp-2">
-          {{ $locale == 'id'
-            ? 'Tim peneliti kami baru saja menyelesaikan survei kelelawar di kawasan hutan Sulawesi...'
-            : 'Our research team has just completed a bat survey in the Sulawesi forest region...'
-          }}
-        </p>
-      </div>
+      @forelse($latestArticles as $idx => $article)
+        <div class="bg-surface-warm rounded-2xl p-6 border border-border hover:shadow-md transition-shadow duration-300 animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
+          @if($article->featured_image_url)
+            <img src="{{ $article->featured_image_url }}" alt="{{ $article->title_id }}" class="w-full h-40 object-cover rounded-lg mb-4">
+          @endif
+          <p class="text-muted text-xs mb-2">{{ $article->published_at ? $article->published_at->format('Y-m-d') : $article->created_at->format('Y-m-d') }}</p>
+          <h3 class="font-heading text-lg font-semibold text-text mb-3">
+            {{ $locale == 'id' ? $article->title_id : $article->title_en }}
+          </h3>
+          <p class="text-muted text-sm line-clamp-2">
+            {{ $locale == 'id' ? strip_tags($article->content_id) : strip_tags($article->content_en) }}
+          </p>
+        </div>
+      @empty
+        <div class="col-span-3 text-center py-12">
+          <p class="text-muted">{{ $locale == 'id' ? 'Belum ada berita' : 'No news yet' }}</p>
+        </div>
+      @endforelse
     </div>
   </div>
 </section>

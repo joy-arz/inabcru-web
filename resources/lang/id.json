@@ -137,7 +137,12 @@
     },
     "contact": {
         "title": "Kontak",
-        "subtitle": "Hubungi kami untuk informasi lebih lanjut"
+        "subtitle": "Hubungi kami untuk informasi lebih lanjut",
+        "sendMessage": "Kirim Pesan",
+        "name": "Nama",
+        "location": "Lokasi",
+        "message": "Pesan",
+        "send": "Kirim"
     },
     "common": {
         "loading": "Memuat...",

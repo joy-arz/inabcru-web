@@ -137,7 +137,12 @@
     },
     "contact": {
         "title": "Contact",
-        "subtitle": "Get in touch with us for more information"
+        "subtitle": "Get in touch with us for more information",
+        "sendMessage": "Send Message",
+        "name": "Name",
+        "location": "Location",
+        "message": "Message",
+        "send": "Send"
     },
     "common": {
         "loading": "Loading...",
