@@ -5,14 +5,11 @@
 
 @section('content')
 {{-- Hero Section --}}
-<section class="pt-40 pb-20 relative overflow-hidden">
+<section class="relative min-h-[50svh] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0">
-    @if($article->featured_image_url)
-      <img src="{{ $article->featured_image_url }}" alt="{{ $locale == 'id' ? $article->title_id : $article->title_en }}" class="w-full h-full object-cover">
-    @else
-      <img src="/images/Field activity/IMG_0909.webp" alt="News" class="w-full h-full object-cover">
-    @endif
-    <div class="absolute inset-0 bg-dark/80"></div>
+    <img src="{{ $siteImages['hero_news_detail']->image_url ?? '/images/Field activity/IMG_0909.webp' }}" alt="{{ $siteImages['hero_news_detail']->alt_text ?? 'News article' }}" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-dark/70"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent"></div>
   </div>
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
     <a href="/{{ $locale }}/news" class="inline-flex items-center gap-2 text-white/60 hover:text-white mb-6 transition-colors">

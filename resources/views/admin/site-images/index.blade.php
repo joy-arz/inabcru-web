@@ -15,31 +15,48 @@
         </div>
     @endif
 
-    @forelse($grouped as $category => $images)
+    @php
+    $categories = $grouped->keys()->sortBy(function($cat) {
+        $order = ['Hero' => 1, 'About' => 2, 'Sections' => 3, 'Logo' => 4, 'Board member' => 5, 'Field activity' => 6];
+        return $order[$cat] ?? 99;
+    });
+    @endphp
+
+    @foreach($categories as $category)
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
             <div class="border-b bg-gray-50 px-6 py-4">
                 <h2 class="font-heading text-lg font-semibold text-text-main flex items-center gap-2">
                     <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                    {{ ucfirst($category) }}
+                    {{ $category }}
                 </h2>
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($images as $image)
+                    @foreach($grouped[$category] as $image)
                     <div class="border border-gray-200 rounded-lg p-4">
                         <div class="relative aspect-video mb-3 rounded-lg overflow-hidden bg-gray-50">
-                            <img src="{{ $image->image_url }}" alt="{{ $image->alt_text ?? $image->key }}" class="w-full h-full object-contain">
+                            <img src="{{ $image->image_url }}" alt="{{ $image->alt_text ?? $image->key }}" class="w-full h-full object-contain" onerror="this.src='/images/placeholder.webp'">
                         </div>
-                        <div class="space-y-2">
-                            <p class="text-xs font-mono text-gray-400 bg-gray-100 px-2 py-1 rounded">{{ $image->key }}</p>
-                            <input type="text" value="{{ $image->image_url }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono" readonly />
-                            <input type="text" value="{{ $image->alt_text ?? '' }}" placeholder="Alt text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                            <div class="flex gap-2">
-                                <label class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-sm">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                    Replace
-                                    <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(this, {{ $image->id }})" />
-                                </label>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-xs font-mono text-gray-400 bg-gray-100 px-2 py-1 rounded mb-1">{{ $image->key }}</p>
+                                @if($image->location)
+                                    <p class="text-xs text-gray-500">{{ $image->location }}</p>
+                                @endif
+                                @if($image->usage)
+                                    <p class="text-xs text-primary">{{ $image->usage }}</p>
+                                @endif
+                            </div>
+                            <input type="text" value="{{ $image->alt_text ?? '' }}" placeholder="Alt text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" onchange="updateAltText({{ $image->id }}, this.value)" />
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Replace Image</label>
+                                <div class="flex items-center gap-2">
+                                    <label class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        Upload
+                                        <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(this, {{ $image->id }})" />
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -47,14 +64,7 @@
                 </div>
             </div>
         </div>
-    @empty
-        <div class="bg-white rounded-xl shadow-md p-16 text-center">
-            <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-            </svg>
-            <p class="text-gray-500">No site images configured. Run the seeder to populate initial images.</p>
-        </div>
-    @endforelse
+    @endforeach
 </div>
 
 <script>
@@ -87,7 +97,12 @@ function handleImageUpload(input, imageId) {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Accept': 'application/json',
                     }
-                }).then(() => {
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
                     window.location.reload();
                 });
             }, 'image/webp', 0.85);
@@ -95,6 +110,20 @@ function handleImageUpload(input, imageId) {
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
+}
+
+function updateAltText(imageId, altText) {
+    fetch('/admin/site-images/' + imageId, {
+        method: 'PUT',
+        body: new URLSearchParams({
+            '_token': '{{ csrf_token() }}',
+            'alt_text': altText
+        }),
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        }
+    });
 }
 </script>
 @endsection

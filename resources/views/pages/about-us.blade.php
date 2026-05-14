@@ -5,10 +5,11 @@
 
 @section('content')
 {{-- Hero Section --}}
-<section class="pt-40 pb-20 relative overflow-hidden">
+<section class="relative min-h-[60svh] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0">
-    <img src="/images/Field activity/IMG_2175.webp" alt="Indonesian forest landscape" class="w-full h-full object-cover">
-    <div class="absolute inset-0 bg-dark/80"></div>
+    <img src="{{ $siteImages['hero_about_us']->image_url ?? '/images/Field activity/IMG_2175.webp' }}" alt="{{ $siteImages['hero_about_us']->alt_text ?? 'Indonesian forest landscape' }}" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-dark/70"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent"></div>
   </div>
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
     <div class="animate-fade-up opacity-0">
@@ -30,7 +31,7 @@
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center animate-fade-up opacity-0">
       <div class="relative aspect-[4/3] rounded-2xl overflow-hidden">
-        <img src="/images/Field activity/IMG_6290.webp" alt="Bat research in field" class="w-full h-full object-cover">
+        <img src="{{ $siteImages['about_section_team']->image_url ?? '/images/Field activity/IMG_6290.webp' }}" alt="{{ $siteImages['about_section_team']->alt_text ?? 'Bat research in field' }}" class="w-full h-full object-cover">
       </div>
       <div>
         <p class="text-xs font-semibold uppercase tracking-[0.12em] text-primary mb-4">

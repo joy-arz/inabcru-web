@@ -7,7 +7,7 @@
 {{-- Hero Section --}}
 <section class="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0">
-    <img src="/images/Field activity/IMG_9975.webp" alt="Bat in natural habitat" class="w-full h-full object-cover">
+    <img src="{{ $siteImages['hero_home']->image_url ?? '/images/Field activity/IMG_9975.webp' }}" alt="{{ $siteImages['hero_home']->alt_text ?? 'Bat in natural habitat' }}" class="w-full h-full object-cover">
     <div class="absolute inset-0 bg-dark/75"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent"></div>
     <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 0%, rgba(15, 23, 42, 0.4) 100%);"></div>
@@ -155,7 +155,7 @@
 {{-- About Section --}}
 <section class="py-24 bg-dark text-white relative overflow-hidden">
   <div class="absolute inset-0">
-    <img src="https://images.pexels.com/photos/1682705/pexels-photo-1682705.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Bat conservation" class="w-full h-full object-cover opacity-20" style="position: absolute; top: 0; left: 0; transform: translateZ(-1px);">
+    <img src="{{ $siteImages['home_about_background']->image_url ?? 'https://images.pexels.com/photos/1682705/pexels-photo-1682705.jpeg?auto=compress&cs=tinysrgb&w=1920' }}" alt="{{ $siteImages['home_about_background']->alt_text ?? 'Bat conservation' }}" class="w-full h-full object-cover opacity-20" style="position: absolute; top: 0; left: 0; transform: translateZ(-1px);">
   </div>
 
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
@@ -240,7 +240,7 @@
 {{-- Donate CTA Section --}}
 <section class="py-24 bg-dark text-white relative overflow-hidden">
   <div class="absolute inset-0 z-0">
-    <img src="/images/Field activity/IMG_9975.webp" alt="Bat conservation" class="w-full h-full object-cover opacity-30">
+    <img src="{{ $siteImages['donate_cta_background']->image_url ?? '/images/Field activity/IMG_9975.webp' }}" alt="{{ $siteImages['donate_cta_background']->alt_text ?? 'Bat conservation' }}" class="w-full h-full object-cover opacity-30">
   </div>
 
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 text-center">

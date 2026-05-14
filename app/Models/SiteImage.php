@@ -9,8 +9,10 @@ class SiteImage extends Model
     protected $fillable = [
         'key',
         'category',
+        'location',
         'image_url',
         'alt_text',
+        'usage',
         'folder_path',
     ];
 }
