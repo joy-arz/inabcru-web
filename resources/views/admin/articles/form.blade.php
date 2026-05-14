@@ -154,6 +154,9 @@
                             <button type="button" onclick="formatText('content_id', 'createLink', prompt('Enter URL:'))" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Link">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
                             </button>
+                            <button type="button" onclick="insertImage('content_id')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Insert Image">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                            </button>
                             <button type="button" onclick="formatText('content_id', 'formatBlock', 'h2')" class="p-2 hover:bg-gray-200 rounded transition-colors font-bold" title="Heading">H2</button>
                             <button type="button" onclick="formatText('content_id', 'formatBlock', 'h3')" class="p-2 hover:bg-gray-200 rounded transition-colors font-bold" title="Subheading">H3</button>
                         </div>
@@ -188,6 +191,9 @@
                             <span class="w-px h-6 bg-gray-300"></span>
                             <button type="button" onclick="formatText('content_en', 'createLink', prompt('Enter URL:'))" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Link">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                            </button>
+                            <button type="button" onclick="insertImage('content_en')" class="p-2 hover:bg-gray-200 rounded transition-colors" title="Insert Image">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                             </button>
                             <button type="button" onclick="formatText('content_en', 'formatBlock', 'h2')" class="p-2 hover:bg-gray-200 rounded transition-colors font-bold" title="Heading">H2</button>
                             <button type="button" onclick="formatText('content_en', 'formatBlock', 'h3')" class="p-2 hover:bg-gray-200 rounded transition-colors font-bold" title="Subheading">H3</button>
@@ -272,6 +278,41 @@
         event.preventDefault();
         document.execCommand(command, false, value || null);
         document.getElementById(editorId).focus();
+    }
+
+    function insertImage(editorId) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        const editor = document.getElementById('editor_' + editorId);
+                        const imgHtml = '<img src="' + url + '" alt="" style="max-width:100%;height:auto;border-radius:8px;margin:16px 0;" />';
+                        document.execCommand('insertHTML', false, imgHtml);
+                        updateHiddenContent(editorId);
+                    }, 'image/webp', 0.85);
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+        input.click();
     }
 
     function updateHiddenContent(lang) {
