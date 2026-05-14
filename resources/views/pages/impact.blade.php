@@ -5,7 +5,7 @@
 
 @section('content')
 {{-- Hero Section --}}
-<section class="relative min-h-[50svh] flex items-center justify-center overflow-hidden">
+<section class="relative min-h-[50svh] flex items-center justify-start overflow-hidden">
   <div class="absolute inset-0">
     <img src="{{ $siteImages['hero_impact']->image_url ?? '/images/Field activity/IMG_4469.webp' }}" alt="{{ $siteImages['hero_impact']->alt_text ?? 'Our impact' }}" class="w-full h-full object-cover">
     <div class="absolute inset-0 bg-dark/70"></div>
