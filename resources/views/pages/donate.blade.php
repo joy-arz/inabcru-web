@@ -11,7 +11,7 @@
     <div class="absolute inset-0 bg-dark/70"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent"></div>
   </div>
-  <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 text-center">
+  <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
     <div class="animate-fade-up opacity-0">
       <p class="text-xs font-semibold uppercase tracking-[0.12em] text-white/60 mb-4">
         {{ $locale == 'id' ? 'Dukung Kami' : 'Support Us' }}
