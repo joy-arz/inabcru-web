@@ -9,16 +9,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('articles', function (Blueprint $table) {
-            $table->string('meta_location_id')->nullable()->after('slug');
-            $table->string('meta_location_en')->nullable()->after('meta_location_id');
-            $table->timestamp('published_at')->nullable()->after('published');
+            if (!Schema::hasColumn('articles', 'meta_location_id')) {
+                $table->string('meta_location_id')->nullable()->after('slug');
+            }
+            if (!Schema::hasColumn('articles', 'meta_location_en')) {
+                $table->string('meta_location_en')->nullable()->after('meta_location_id');
+            }
+            if (!Schema::hasColumn('articles', 'published_at')) {
+                $table->timestamp('published_at')->nullable()->after('published');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('articles', function (Blueprint $table) {
-            $table->dropColumn(['meta_location_id', 'meta_location_en', 'published_at']);
+            if (Schema::hasColumn('articles', 'meta_location_id')) {
+                $table->dropColumn(['meta_location_id', 'meta_location_en', 'published_at']);
+            }
         });
     }
 };
