@@ -49,10 +49,7 @@
         .animate-scale-in { animation: scale-in 0.6s ease-out forwards; }
         .animate-float { animation: float 3s ease-in-out infinite; }
         .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-        .animate-marquee { animation: marquee 25s linear infinite; }
-        .marquee-content { display: flex; width: 200%; animation: marquee-scroll 15s linear infinite; }
-        .marquee-content:hover { animation-play-state: paused; }
-        @keyframes marquee-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes marquee-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         .animate-delay-100 { animation-delay: 0.1s; }
         .animate-delay-200 { animation-delay: 0.2s; }

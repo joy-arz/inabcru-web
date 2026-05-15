@@ -44,10 +44,9 @@
 
 {{-- Logo Marquee --}}
 <section class="py-10 overflow-hidden bg-surface-warm border-y border-border">
-  <div class="relative overflow-hidden">
-    @php $allPartners = $partners->merge($partners); @endphp
-    <div class="marquee-content" style="display: flex; width: 200%; animation: marquee-scroll 15s linear infinite;">
-      <div style="display: flex; width: 50%;">
+  <div id="partner-marquee-wrapper" class="relative overflow-hidden">
+    <div id="partner-marquee-track" style="display: flex; width: max-content; will-change: transform;">
+      @for ($i = 0; $i < 3; $i++)
         @foreach($partners as $partner)
           <a href="{{ $partner->website_url ?: '#' }}" target="_blank" class="flex-shrink-0 mx-8 flex items-center justify-center group">
             <div class="relative h-12 w-36">
@@ -55,16 +54,7 @@
             </div>
           </a>
         @endforeach
-      </div>
-      <div style="display: flex; width: 50%;" aria-hidden="true">
-        @foreach($partners as $partner)
-          <a href="{{ $partner->website_url ?: '#' }}" target="_blank" class="flex-shrink-0 mx-8 flex items-center justify-center group">
-            <div class="relative h-12 w-36">
-              <img src="{{ $partner->logo_url }}" alt="{{ $partner->alt_text ?: $partner->name }}" class="h-full w-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.onerror=null; this.style.display='none';">
-            </div>
-          </a>
-        @endforeach
-      </div>
+      @endfor
     </div>
   </div>
 </section>
@@ -268,3 +258,60 @@
   </div>
 </section>
 @endsection
+
+@push('scripts')
+<script>
+  (function () {
+    const wrapper = document.getElementById('partner-marquee-wrapper');
+    const track = document.getElementById('partner-marquee-track');
+    let pos = 0;
+    let paused = false;
+    let setWidth = 0;
+
+    function init() {
+      const imgs = track.querySelectorAll('img');
+      let loaded = 0;
+      const total = imgs.length;
+
+      function onLoad() {
+        loaded++;
+        if (loaded >= total) start();
+      }
+
+      if (total === 0) return start();
+
+      imgs.forEach(function (img) {
+        if (img.complete) {
+          onLoad();
+        } else {
+          img.addEventListener('load', onLoad);
+          img.addEventListener('error', onLoad);
+        }
+      });
+    }
+
+    function start() {
+      requestAnimationFrame(function () {
+        setWidth = track.scrollWidth / 3;
+        pos = -setWidth;
+        track.style.transform = 'translateX(' + pos + 'px)';
+        animate();
+      });
+    }
+
+    function animate() {
+      if (!paused) {
+        pos -= 0.5;
+        if (pos <= -setWidth * 2) pos += setWidth;
+        track.style.transform = 'translateX(' + pos + 'px)';
+      }
+      requestAnimationFrame(animate);
+    }
+
+    wrapper.addEventListener('mouseenter', function () { paused = true; });
+    wrapper.addEventListener('mouseleave', function () { paused = false; });
+
+    init();
+  })();
+</script>
+@endpush
