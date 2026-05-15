@@ -44,17 +44,27 @@
 
 {{-- Logo Marquee --}}
 <section class="py-10 overflow-hidden bg-surface-warm border-y border-border">
-  <div class="marquee-container flex">
-    @php
-    $allPartners = $partners->merge($partners);
-    @endphp
-    @foreach($allPartners as $partner)
-      <a href="{{ $partner->website_url ?: '#' }}" target="_blank" class="flex-shrink-0 mx-8 flex items-center justify-center group">
-        <div class="relative h-12 w-36">
-          <img src="{{ $partner->logo_url }}" alt="{{ $partner->alt_text ?: $partner->name }}" class="h-full w-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.parentElement.parentElement.style.display='none'">
-        </div>
-      </a>
-    @endforeach
+  <div class="relative overflow-hidden">
+    <div class="marquee-wrapper" style="display: flex; justify-content: center;">
+      <div class="marquee-left" style="display: flex;">
+        @foreach($partners as $partner)
+          <a href="{{ $partner->website_url ?: '#' }}" target="_blank" class="flex-shrink-0 mx-6 flex items-center justify-center group">
+            <div class="relative h-12 w-36">
+              <img src="{{ $partner->logo_url }}" alt="{{ $partner->alt_text ?: $partner->name }}" class="h-full w-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.parentElement.parentElement.style.display='none'">
+            </div>
+          </a>
+        @endforeach
+      </div>
+      <div class="marquee-right" style="display: flex;" aria-hidden="true">
+        @foreach($partners as $partner)
+          <a href="{{ $partner->website_url ?: '#' }}" target="_blank" class="flex-shrink-0 mx-6 flex items-center justify-center group">
+            <div class="relative h-12 w-36">
+              <img src="{{ $partner->logo_url }}" alt="{{ $partner->alt_text ?: $partner->name }}" class="h-full w-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.parentElement.parentElement.style.display='none'">
+            </div>
+          </a>
+        @endforeach
+      </div>
+    </div>
   </div>
 </section>
 
