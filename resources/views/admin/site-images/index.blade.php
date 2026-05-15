@@ -85,27 +85,26 @@ function handleImageUpload(input, imageId) {
             canvas.height = img.height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0);
-            canvas.toBlob(function(blob) {
-                const formData = new FormData();
-                formData.append('image_url', URL.createObjectURL(blob));
-                formData.append('_token', '{{ csrf_token() }}');
+            const dataUrl = canvas.toDataURL('image/webp', 0.85);
+            const formData = new FormData();
+            formData.append('image_url', dataUrl);
+            formData.append('_token', '{{ csrf_token() }}');
 
-                fetch('/admin/site-images/' + imageId, {
-                    method: 'PUT',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    }
-                }).then(response => response.json()).then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                }).catch(error => {
-                    console.error('Error:', error);
+            fetch('/admin/site-images/' + imageId, {
+                method: 'PUT',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                }
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
                     window.location.reload();
-                });
-            }, 'image/webp', 0.85);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                window.location.reload();
+            });
         };
         img.src = e.target.result;
     };

@@ -491,36 +491,32 @@
 
         const reader = new FileReader();
         reader.onload = function(e) {
-            const img = new Image();
-            img.onload = function() {
-                if (type === 'image') {
+            if (type === 'image') {
+                const img = new Image();
+                img.onload = function() {
                     const canvas = document.createElement('canvas');
                     canvas.width = img.width;
                     canvas.height = img.height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
-                    canvas.toBlob(function(blob) {
-                        const url = URL.createObjectURL(blob);
-                        document.getElementById('block_url').value = url;
-                        document.getElementById('file_name_' + type).textContent = file.name + ' (Converted to WebP)';
-                    }, 'image/webp', 0.85);
-                } else if (type === 'video') {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    canvas.toBlob(function(blob) {
-                        const url = URL.createObjectURL(blob);
-                        document.getElementById('block_url').value = url;
-                        document.getElementById('file_name_' + type).textContent = file.name + ' (Converted to WebP thumbnail)';
-                    }, 'image/webp', 0.85);
-                } else {
-                    const url = URL.createObjectURL(file);
-                    document.getElementById('block_url').value = url;
-                }
-            };
-            img.src = e.target.result;
+                    const dataUrl = canvas.toDataURL('image/webp', 0.85);
+                    document.getElementById('block_url').value = dataUrl;
+                    document.getElementById('file_name_' + type).textContent = file.name + ' (Converted to WebP)';
+                };
+                img.src = e.target.result;
+            } else if (type === 'video') {
+                const reader2 = new FileReader();
+                reader2.onload = function(ev) {
+                    document.getElementById('block_url').value = ev.target.result;
+                };
+                reader2.readAsDataURL(file);
+            } else {
+                const reader2 = new FileReader();
+                reader2.onload = function(ev) {
+                    document.getElementById('block_url').value = ev.target.result;
+                };
+                reader2.readAsDataURL(file);
+            }
         };
         reader.readAsDataURL(file);
     }

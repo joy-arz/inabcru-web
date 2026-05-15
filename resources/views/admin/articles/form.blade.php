@@ -258,16 +258,12 @@
                 canvas.height = img.height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
-
-                canvas.toBlob(function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    document.getElementById(targetInputId).value = url;
-
-                    const preview = document.getElementById(previewId);
-                    const previewImg = preview.querySelector('img');
-                    previewImg.src = url;
-                    preview.classList.remove('hidden');
-                }, 'image/webp', 0.85);
+                const dataUrl = canvas.toDataURL('image/webp', 0.85);
+                document.getElementById(targetInputId).value = dataUrl;
+                const preview = document.getElementById(previewId);
+                const previewImg = preview.querySelector('img');
+                previewImg.src = dataUrl;
+                preview.classList.remove('hidden');
             };
             img.src = e.target.result;
         };
@@ -300,13 +296,11 @@
                     canvas.height = img.height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
-                    canvas.toBlob(function(blob) {
-                        const url = URL.createObjectURL(blob);
-                        const editor = document.getElementById('editor_' + editorId);
-                        const imgHtml = '<img src="' + url + '" alt="" style="max-width:100%;height:auto;border-radius:8px;margin:16px 0;" />';
-                        document.execCommand('insertHTML', false, imgHtml);
-                        updateHiddenContent(editorId);
-                    }, 'image/webp', 0.85);
+                    const dataUrl = canvas.toDataURL('image/webp', 0.85);
+                    const editor = document.getElementById('editor_' + editorId);
+                    const imgHtml = '<img src="' + dataUrl + '" alt="" style="max-width:100%;height:auto;border-radius:8px;margin:16px 0;" />';
+                    document.execCommand('insertHTML', false, imgHtml);
+                    updateHiddenContent(editorId);
                 };
                 img.src = evt.target.result;
             };

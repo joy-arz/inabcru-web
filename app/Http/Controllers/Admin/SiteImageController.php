@@ -33,6 +33,11 @@ class SiteImageController extends Controller
         ]);
 
         $image->update($data);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
+
         return redirect()->route('admin.site-images.index')->with('success', 'Image updated');
     }
 }
