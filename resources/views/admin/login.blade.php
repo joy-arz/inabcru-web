@@ -84,6 +84,13 @@
                         />
                     </div>
 
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="remember" class="rounded border-gray-300 text-primary focus:ring-primary" />
+                            <span class="text-sm text-gray-600">Remember me on this device</span>
+                        </label>
+                    </div>
+
                     <button
                         type="submit"
                         class="w-full py-2.5 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 cursor-pointer"

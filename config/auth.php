@@ -20,6 +20,8 @@ return [
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
+    'remember' => env('AUTH_REMEMBER_MINUTES', 43200), // 30 days in minutes
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
