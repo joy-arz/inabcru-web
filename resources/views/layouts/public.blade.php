@@ -50,7 +50,7 @@
         .animate-float { animation: float 3s ease-in-out infinite; }
         .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
         .animate-marquee { animation: marquee 25s linear infinite; }
-        .marquee-container { display: flex; width: calc(200%); animation: marquee-scroll 30s linear infinite; }
+        .marquee-container { display: flex; width: calc(200%); animation: marquee-scroll 30s linear infinite; animation-delay: -15s; }
         .marquee-container:hover { animation-play-state: paused; }
         @keyframes marquee-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
