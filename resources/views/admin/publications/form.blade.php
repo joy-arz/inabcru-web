@@ -479,46 +479,37 @@
         const file = input.files[0];
         if (!file) return;
 
-        const maxSize = 50 * 1024 * 1024;
+        const maxSizes = { image: 10 * 1024 * 1024, video: 100 * 1024 * 1024, pdf: 50 * 1024 * 1024 };
+        const maxSize = maxSizes[type] || 10 * 1024 * 1024;
         if (file.size > maxSize) {
-            alert('File size must be less than 50MB');
+            alert('File too large. Max: ' + (maxSize / 1024 / 1024) + 'MB');
             input.value = '';
             return;
         }
 
-        const fileName = document.getElementById('file_name_' + type);
-        if (fileName) fileName.textContent = file.name;
+        const fileNameEl = document.getElementById('file_name_' + type);
+        if (fileNameEl) fileNameEl.textContent = 'Uploading...';
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            if (type === 'image') {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    const dataUrl = canvas.toDataURL('image/webp', 0.85);
-                    document.getElementById('block_url').value = dataUrl;
-                    document.getElementById('file_name_' + type).textContent = file.name + ' (Converted to WebP)';
-                };
-                img.src = e.target.result;
-            } else if (type === 'video') {
-                const reader2 = new FileReader();
-                reader2.onload = function(ev) {
-                    document.getElementById('block_url').value = ev.target.result;
-                };
-                reader2.readAsDataURL(file);
-            } else {
-                const reader2 = new FileReader();
-                reader2.onload = function(ev) {
-                    document.getElementById('block_url').value = ev.target.result;
-                };
-                reader2.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('type', type);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route('admin.upload') }}', {
+            method: 'POST',
+            body: formData
+        }).then(res => res.json()).then(data => {
+            if (data.error) {
+                alert(data.error);
+                if (fileNameEl) fileNameEl.textContent = '';
+                return;
             }
-        };
-        reader.readAsDataURL(file);
+            document.getElementById('block_url').value = data.url;
+            if (fileNameEl) fileNameEl.textContent = file.name + ' ✓';
+        }).catch(err => {
+            alert('Upload failed');
+            if (fileNameEl) fileNameEl.textContent = '';
+        });
     }
 
     initMediaBlocks();

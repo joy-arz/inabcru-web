@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\SiteImageController;
+use App\Http\Controllers\Admin\FileUploadController;
 use App\Models\Publication;
 use App\Models\Article;
 use App\Models\TeamMember;
@@ -118,6 +119,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('site-images', SiteImageController::class)->only(['index', 'edit', 'update']);
     Route::match(['get', 'put'], '/stats', [StatsController::class, 'index'])->name('stats');
     Route::post('/team/reorder', [TeamController::class, 'reorder'])->name('team.reorder');
+    Route::post('/upload', [FileUploadController::class, 'upload'])->name('upload');
 });
 
 Route::get('/admin', function () {

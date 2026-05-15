@@ -242,32 +242,26 @@
     function handleImageUpload(input, targetInputId, previewId) {
         const file = input.files[0];
         if (!file) return;
-
-        if (file.size > 5 * 1024 * 1024) {
-            alert('File size must be less than 5MB');
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File too large. Max 10MB');
             input.value = '';
             return;
         }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                const dataUrl = canvas.toDataURL('image/webp', 0.85);
-                document.getElementById(targetInputId).value = dataUrl;
-                const preview = document.getElementById(previewId);
-                const previewImg = preview.querySelector('img');
-                previewImg.src = dataUrl;
-                preview.classList.remove('hidden');
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('type', 'image');
+        formData.append('_token', '{{ csrf_token() }}');
+        fetch('{{ route('admin.upload') }}', {
+            method: 'POST',
+            body: formData
+        }).then(res => res.json()).then(data => {
+            if (data.error) { alert(data.error); return; }
+            document.getElementById(targetInputId).value = data.url;
+            const preview = document.getElementById(previewId);
+            const previewImg = preview.querySelector('img');
+            previewImg.src = data.url;
+            preview.classList.remove('hidden');
+        }).catch(() => alert('Upload failed'));
     }
 
     function formatText(editorId, command, value) {
@@ -283,28 +277,24 @@
         input.onchange = function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size must be less than 5MB');
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File too large. Max 10MB');
                 return;
             }
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    const dataUrl = canvas.toDataURL('image/webp', 0.85);
-                    const editor = document.getElementById('editor_' + editorId);
-                    const imgHtml = '<img src="' + dataUrl + '" alt="" style="max-width:100%;height:auto;border-radius:8px;margin:16px 0;" />';
-                    document.execCommand('insertHTML', false, imgHtml);
-                    updateHiddenContent(editorId);
-                };
-                img.src = evt.target.result;
-            };
-            reader.readAsDataURL(file);
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', 'image');
+            formData.append('_token', '{{ csrf_token() }}');
+            fetch('{{ route('admin.upload') }}', {
+                method: 'POST',
+                body: formData
+            }).then(res => res.json()).then(data => {
+                if (data.error) { alert(data.error); return; }
+                const editor = document.getElementById('editor_' + editorId);
+                const imgHtml = '<img src="' + data.url + '" alt="" style="max-width:100%;height:auto;border-radius:8px;margin:16px 0;" />';
+                document.execCommand('insertHTML', false, imgHtml);
+                updateHiddenContent(editorId);
+            }).catch(() => alert('Upload failed'));
         };
         input.click();
     }

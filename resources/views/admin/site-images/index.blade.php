@@ -72,43 +72,38 @@ function handleImageUpload(input, imageId) {
     const file = input.files[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-        alert('File size must be less than 5MB');
+        alert('File too large. Max 5MB');
         input.value = '';
         return;
     }
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            const dataUrl = canvas.toDataURL('image/webp', 0.85);
-            const formData = new FormData();
-            formData.append('image_url', dataUrl);
-            formData.append('_token', '{{ csrf_token() }}');
-
-            fetch('/admin/site-images/' + imageId, {
-                method: 'PUT',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                }
-            }).then(response => response.json()).then(data => {
-                if (data.success) {
-                    window.location.reload();
-                }
-            }).catch(error => {
-                console.error('Error:', error);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', 'image');
+    formData.append('_token', '{{ csrf_token() }}');
+    fetch('{{ route('admin.upload') }}', {
+        method: 'POST',
+        body: formData
+    }).then(res => res.json()).then(data => {
+        if (data.error) { alert(data.error); return; }
+        const formData2 = new FormData();
+        formData2.append('image_url', data.url);
+        formData2.append('_token', '{{ csrf_token() }}');
+        fetch('/admin/site-images/' + imageId, {
+            method: 'PUT',
+            body: formData2,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            }
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
                 window.location.reload();
-            });
-        };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            window.location.reload();
+        });
+    }).catch(() => alert('Upload failed'));
 }
 
 function updateAltText(imageId, altText) {
