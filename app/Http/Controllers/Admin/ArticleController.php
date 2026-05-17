@@ -34,11 +34,15 @@ class ArticleController extends Controller
             'slug' => 'nullable|string',
             'meta_location_id' => 'nullable|string',
             'meta_location_en' => 'nullable|string',
-            'published' => 'nullable|boolean',
-            'published_at' => 'nullable|date',
+            'published' => 'nullable|string',
         ]);
 
-        $data['published'] = $request->has('published');
+        $isPublishing = $request->input('published') === '1';
+        $data['published'] = $isPublishing;
+
+        if ($isPublishing && empty($data['published_at'])) {
+            $data['published_at'] = now();
+        }
 
         if (empty($data['slug']) && !empty($data['title_id'])) {
             $data['slug'] = Str::slug($data['title_id']);
@@ -67,11 +71,15 @@ class ArticleController extends Controller
             'slug' => 'nullable|string',
             'meta_location_id' => 'nullable|string',
             'meta_location_en' => 'nullable|string',
-            'published' => 'nullable|boolean',
-            'published_at' => 'nullable|date',
+            'published' => 'nullable|string',
         ]);
 
-        $data['published'] = $request->has('published');
+        $isPublishing = $request->input('published') === '1';
+        $data['published'] = $isPublishing;
+
+        if ($isPublishing && empty($article->published_at)) {
+            $data['published_at'] = now();
+        }
 
         if (empty($data['slug']) && !empty($data['title_id'])) {
             $data['slug'] = Str::slug($data['title_id']);
