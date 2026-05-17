@@ -241,6 +241,7 @@
     <script>
     let mediaBlocks = [];
     let editingBlockIndex = null;
+    let currentBlockType = 'image';
 
     const MEDIA_TYPES = {
         pdf: { label: 'PDF', color: 'bg-red-50 text-red-600', icon: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path></svg>' },
@@ -331,6 +332,7 @@
     }
 
     function showMediaModal(block) {
+        currentBlockType = block.type;
         const modal = document.getElementById('media-modal');
         const content = document.getElementById('media-modal-content');
         const title = document.getElementById('media-modal-title');
@@ -389,7 +391,7 @@
 
         const blockData = {
             id: editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].id : 'block-' + Date.now(),
-            type: (editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].type : null) || type,
+            type: editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].type : currentBlockType,
             url: url,
             youtube_id: '',
             caption_id: caption_id,
