@@ -129,16 +129,15 @@
 
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h2 class="font-heading text-lg font-semibold text-gray-900 mb-4">Publish</h2>
-                    <div class="space-y-4">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="published" id="published" value="1" {{ old('published', $article->published ?? false) ? 'checked' : '' }} class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary" />
-                            <span class="text-sm font-medium text-gray-700">Published</span>
-                        </label>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Publish Date</label>
-                            <input type="datetime-local" name="published_at" value="{{ old('published_at', isset($article->published_at) ? $article->published_at->format('Y-m-d\TH:i') : '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
-                        </div>
+                    <h2 class="font-heading text-lg font-semibold text-gray-900 mb-4">Actions</h2>
+                    <input type="hidden" name="published" id="published_value" value="{{ isset($id) && $article->published ? '1' : '0' }}">
+                    <div class="space-y-3">
+                        <button type="submit" onclick="setPublishAction('0')" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-center text-gray-600 text-sm font-medium transition-colors">
+                            Save as Draft
+                        </button>
+                        <button type="submit" onclick="setPublishAction('1')" class="w-full px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 text-center text-sm font-medium transition-colors">
+                            Publish
+                        </button>
                     </div>
                 </div>
 
@@ -146,9 +145,6 @@
                     <a href="{{ route('admin.articles.index') }}" class="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-center text-gray-600 text-sm font-medium transition-colors">
                         Cancel
                     </a>
-                    <button type="submit" class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 text-center text-sm font-medium transition-colors">
-                        {{ isset($id) ? 'Update' : 'Save' }}
-                    </button>
                 </div>
             </div>
         </div>
@@ -193,6 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('content_id_input').value = quillId.root.innerHTML;
         document.getElementById('content_en_input').value = quillEn.root.innerHTML;
     });
+
+    window.setPublishAction = function(value) {
+        document.getElementById('published_value').value = value;
+        document.getElementById('article-form').submit();
+    };
 });
 
 function handleImageUpload(input, targetInputId, previewId) {
