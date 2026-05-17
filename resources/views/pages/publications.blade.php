@@ -103,16 +103,16 @@
                   }
                 @endphp
                 @foreach($contentBlocks as $blockIdx => $block)
-                    <div class="preview-slide absolute inset-0 transition-opacity duration-300 {{ $blockIdx === 0 ? 'opacity-100' : 'opacity-0' }}" data-index="{{ $blockIdx }}">
+                    <div class="preview-slide absolute inset-0 transition-opacity duration-300 {{ $blockIdx === 0 ? 'opacity-100' : 'opacity-0' }}" data-index="{{ $blockIdx }}" data-type="{{ $block['type'] ?? '' }}" data-url="{{ $block['url'] ?? '' }}">
                       @if($block['type'] === 'youtube' && !empty($block['url']))
                         @php $youtubeId = extractYouTubeId($block['url']); @endphp
                         @if($youtubeId)
                           <div class="w-full h-full bg-dark flex items-center justify-center">
-                            <iframe src="https://www.youtube.com/embed/{{ $youtubeId }}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe data-src="https://www.youtube.com/embed/{{ $youtubeId }}?autoplay=0" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
                           </div>
                         @endif
                       @elseif($block['type'] === 'pdf')
-                        <iframe src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview"></iframe>
+                        <iframe data-src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview"></iframe>
                       @elseif($block['type'] === 'video')
                         <div class="w-full h-full bg-dark flex items-center justify-center">
                           <video controls class="max-w-full max-h-full">
@@ -163,12 +163,17 @@
 
 <script>
 let currentSlide = {};
+let lastSlide = {};
+let iframesLoaded = {}; // Track which iframes have been loaded
 
 function openPreviewModal(idx) {
   const modal = document.getElementById('preview-modal-' + idx);
   if (modal) {
     modal.classList.remove('hidden');
     currentSlide[idx] = 0;
+    lastSlide[idx] = -1;
+    iframesLoaded[idx] = iframesLoaded[idx] || {};
+    updateSlides(idx);
     updateSlideIndicator(idx);
   }
 }
@@ -177,6 +182,14 @@ function closePreviewModal(idx) {
   const modal = document.getElementById('preview-modal-' + idx);
   if (modal) {
     modal.classList.add('hidden');
+    // Stop videos and clear iframe sources
+    const videos = modal.querySelectorAll('video');
+    videos.forEach(v => v.pause());
+    const iframes = modal.querySelectorAll('iframe');
+    iframes.forEach(iframe => {
+      iframe.src = '';
+      iframe.dataset.src = '';
+    });
   }
 }
 
@@ -203,13 +216,35 @@ function updateSlides(idx) {
   if (!modal) return;
 
   const slides = modal.querySelectorAll('.preview-slide');
+  
+  // Pause all videos first
+  slides.forEach(slide => {
+    const video = slide.querySelector('video');
+    if (video) video.pause();
+  });
+  
+  // Show/hide slides
   slides.forEach((slide, i) => {
     if (i === currentSlide[idx]) {
       slide.classList.remove('opacity-0');
       slide.classList.add('opacity-100');
+      
+      // Load iframe lazy (only when shown)
+      if (!iframesLoaded[idx] || !iframesLoaded[idx][i]) {
+        const iframe = slide.querySelector('iframe[data-src]');
+        if (iframe && iframe.dataset.src) {
+          iframe.src = iframe.dataset.src;
+          iframesLoaded[idx] = iframesLoaded[idx] || {};
+          iframesLoaded[idx][i] = true;
+        }
+      }
     } else {
       slide.classList.remove('opacity-100');
       slide.classList.add('opacity-0');
+      
+      // Stop video when hidden
+      const video = slide.querySelector('video');
+      if (video) video.pause();
     }
   });
 }
@@ -240,6 +275,10 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.querySelectorAll('[id^="preview-modal-"]').forEach(modal => {
       modal.classList.add('hidden');
+      const videos = modal.querySelectorAll('video');
+      videos.forEach(v => v.pause());
+      const iframes = modal.querySelectorAll('iframe');
+      iframes.forEach(iframe => iframe.src = '');
     });
   }
 });
