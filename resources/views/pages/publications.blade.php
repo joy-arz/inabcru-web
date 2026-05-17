@@ -165,6 +165,7 @@ function openPreviewModal(idx) {
   if (modal) {
     modal.classList.remove('hidden');
     currentSlide[idx] = 0;
+    updateSlides(idx);
     updateSlideIndicator(idx);
     activateSlide(idx, 0);
   }
