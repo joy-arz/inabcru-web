@@ -20,9 +20,9 @@ class FileUploadController extends Controller
         $type = $request->input('type', 'image');
 
         $maxSizes = [
-            'image' => 10 * 1024 * 1024,
-            'video' => 100 * 1024 * 1024,
-            'pdf' => 50 * 1024 * 1024,
+            'image' => 20 * 1024 * 1024,
+            'video' => 500 * 1024 * 1024,
+            'pdf' => 250 * 1024 * 1024,
         ];
 
         $maxSize = $maxSizes[$type] ?? 10 * 1024 * 1024;

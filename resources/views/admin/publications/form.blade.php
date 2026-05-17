@@ -479,7 +479,7 @@
         const file = input.files[0];
         if (!file) return;
 
-        const maxSizes = { image: 10 * 1024 * 1024, video: 100 * 1024 * 1024, pdf: 50 * 1024 * 1024 };
+        const maxSizes = { image: 10 * 1024 * 1024, video: 500 * 1024 * 1024, pdf: 250 * 1024 * 1024 };
         const maxSize = maxSizes[type] || 10 * 1024 * 1024;
         if (file.size > maxSize) {
             alert('File too large. Max: ' + (maxSize / 1024 / 1024) + 'MB');
@@ -488,28 +488,50 @@
         }
 
         const fileNameEl = document.getElementById('file_name_' + type);
-        if (fileNameEl) fileNameEl.textContent = 'Uploading...';
+        if (fileNameEl) {
+            fileNameEl.innerHTML = '<div class="flex items-center gap-2"><span class="text-xs text-gray-500">Uploading...</span><div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden"><div id="upload_progress_bar" class="h-full bg-primary transition-all duration-200" style="width:0%"></div></div><span id="upload_percent" class="text-xs text-gray-400">0%</span></div>';
+        }
 
         const formData = new FormData();
         formData.append('file', file);
         formData.append('type', type);
         formData.append('_token', '{{ csrf_token() }}');
 
-        fetch('{{ route('admin.upload') }}', {
-            method: 'POST',
-            body: formData
-        }).then(res => res.json()).then(data => {
-            if (data.error) {
-                alert(data.error);
-                if (fileNameEl) fileNameEl.textContent = '';
-                return;
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '{{ route('admin.upload') }}', true);
+
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                const bar = document.getElementById('upload_progress_bar');
+                const pct = document.getElementById('upload_percent');
+                if (bar) bar.style.width = percent + '%';
+                if (pct) pct.textContent = percent + '%';
             }
-            document.getElementById('block_url').value = data.url;
-            if (fileNameEl) fileNameEl.textContent = file.name + ' ✓';
-        }).catch(err => {
+        });
+
+        xhr.addEventListener('load', function() {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                if (data.error) {
+                    alert(data.error);
+                    if (fileNameEl) fileNameEl.textContent = '';
+                } else {
+                    document.getElementById('block_url').value = data.url;
+                    if (fileNameEl) fileNameEl.innerHTML = '<span class="text-xs text-green-600">' + file.name + ' ✓</span>';
+                }
+            } else {
+                alert('Upload failed');
+                if (fileNameEl) fileNameEl.textContent = '';
+            }
+        });
+
+        xhr.addEventListener('error', function() {
             alert('Upload failed');
             if (fileNameEl) fileNameEl.textContent = '';
         });
+
+        xhr.send(formData);
     }
 
     initMediaBlocks();
