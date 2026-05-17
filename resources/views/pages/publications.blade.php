@@ -75,11 +75,11 @@
           $contentBlocks = is_array($pub->content_blocks) ? $pub->content_blocks : json_decode($pub->content_blocks ?? '[]', true);
           @endphp
 
-          @if(count($contentBlocks) > 0)
+@if(count($contentBlocks) > 0)
           <div id="preview-modal-{{ $idx }}" class="fixed inset-0 z-50 hidden">
             <div class="absolute inset-0 bg-dark/80 backdrop-blur-sm" onclick="closePreviewModal({{ $idx }})"></div>
             <div class="absolute inset-4 md:inset-8 lg:inset-16 bg-surface-warm rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-              <div class="flex items-center justify-between p-4 border-b border-border">
+              <div class="flex items-center justify-between p-4 border-b border-border flex-shrink-0">
                 <h3 class="font-heading text-lg font-semibold text-text">{{ $locale == 'id' ? $pub->title_id : $pub->title_en }}</h3>
                 <button onclick="closePreviewModal({{ $idx }})" class="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
                   <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,8 +88,9 @@
                 </button>
               </div>
 
-              <div class="flex-1 relative overflow-hidden">
-                <div id="preview-content-{{ $idx }}" class="w-full h-full">
+              <div class="flex-1 flex flex-col min-h-0">
+                {{-- Panel container --}}
+                <div id="panel-container-{{ $idx }}" class="flex-1 relative">
                   @php
                   function extractYouTubeId($url) {
                     $patterns = [
@@ -101,16 +102,55 @@
                     }
                     return null;
                   }
-                @endphp
-                @foreach($contentBlocks as $blockIdx => $block)
-                    <div class="preview-slide absolute inset-0 transition-opacity duration-300 {{ $blockIdx === 0 ? 'opacity-100' : 'opacity-0' }}" data-index="{{ $blockIdx }}" data-type="{{ $block['type'] ?? '' }}" style="pointer-events: {{ $blockIdx === 0 ? 'auto' : 'none' }};">
+                  @endphp
+                  @foreach($contentBlocks as $blockIdx => $block)
+                    <div id="slide-{{ $idx }}-{{ $blockIdx }}" class="slide-panel absolute inset-0 {{ $blockIdx === 0 ? '' : 'hidden' }}" data-type="{{ $block['type'] ?? '' }}">
                       @if($block['type'] === 'youtube' && !empty($block['url']))
                         @php $youtubeId = extractYouTubeId($block['url']); @endphp
                         @if($youtubeId)
                           <div class="w-full h-full bg-dark flex items-center justify-center">
-                            <iframe data-src="https://www.youtube.com/embed/{{ $youtubeId }}?autoplay=0" class="w-full h-full" frameborder="0" allowfullscreen style="pointer-events: auto;"></iframe>
+                            <iframe id="youtube-{{ $idx }}-{{ $blockIdx }}" data-src="https://www.youtube.com/embed/{{ $youtubeId }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
                           </div>
                         @endif
+                      @elseif($block['type'] === 'pdf')
+                        <iframe id="pdf-{{ $idx }}-{{ $blockIdx }}" data-src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview" style="overflow: auto;"></iframe>
+                      @elseif($block['type'] === 'video')
+                        <div class="w-full h-full bg-dark flex items-center justify-center">
+                          <video id="video-{{ $idx }}-{{ $blockIdx }}" controls class="max-w-full max-h-full">
+                            <source src="{{ $block['url'] }}" type="video/webm">
+                          </video>
+                        </div>
+                      @elseif($block['type'] === 'image')
+                        <img src="{{ $block['url'] }}" alt="Preview" class="w-full h-full object-contain">
+                      @endif
+                    </div>
+                  @endforeach
+                </div>
+
+                {{-- Navigation controls --}}
+                @if(count($contentBlocks) > 1)
+                <div class="flex items-center justify-center gap-4 py-3 bg-gray-100 flex-shrink-0">
+                  <button onclick="prevSlide({{ $idx }})" class="p-2 hover:bg-gray-200 rounded-full transition-colors cursor-pointer">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                  </button>
+                  <div class="flex items-center gap-2">
+                    @foreach($contentBlocks as $blockIdx => $block)
+                      <button onclick="goToSlide({{ $idx }}, {{ $blockIdx }})" id="dot-{{ $idx }}-{{ $blockIdx }}" class="w-2.5 h-2.5 rounded-full transition-colors {{ $blockIdx === 0 ? 'bg-primary' : 'bg-gray-300 hover:bg-gray-400' }} cursor-pointer"></button>
+                    @endforeach
+                  </div>
+                  <button onclick="nextSlide({{ $idx }})" class="p-2 hover:bg-gray-200 rounded-full transition-colors cursor-pointer">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </button>
+                </div>
+                @endif
+              </div>
+            </div>
+          </div>
+          @endif
                       @elseif($block['type'] === 'pdf')
                         <iframe data-src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview" style="overflow: auto; pointer-events: auto;"></iframe>
                       @elseif($block['type'] === 'video')
@@ -162,135 +202,121 @@
 </section>
 
 <script>
-let currentSlide = {};
-let lastSlide = {};
-let iframesLoaded = {}; // Track which iframes have been loaded
+let sliders = {}; // Track state per publication
 
 function openPreviewModal(idx) {
   const modal = document.getElementById('preview-modal-' + idx);
-  if (modal) {
-    modal.classList.remove('hidden');
-    currentSlide[idx] = 0;
-    lastSlide[idx] = -1;
-    iframesLoaded[idx] = iframesLoaded[idx] || {};
-    updateSlides(idx);
-    updateSlideIndicator(idx);
-  }
+  if (!modal) return;
+  
+  // Initialize slider state
+  sliders[idx] = {
+    current: 0,
+    total: modal.querySelectorAll('.slide-panel').length
+  };
+  
+  modal.classList.remove('hidden');
+  activateSlide(idx, 0);
 }
 
 function closePreviewModal(idx) {
   const modal = document.getElementById('preview-modal-' + idx);
-  if (modal) {
-    modal.classList.add('hidden');
-    // Stop videos and clear iframe sources
-    const videos = modal.querySelectorAll('video');
-    videos.forEach(v => v.pause());
-    const iframes = modal.querySelectorAll('iframe');
-    iframes.forEach(iframe => {
-      iframe.src = ''; // Clear src to stop playback
-      // Keep dataset.src intact so it reloads on next open
-    });
+  if (!modal) return;
+  
+  // Deactivate current slide to stop playback
+  const state = sliders[idx];
+  if (state !== undefined) {
+    deactivateSlide(idx, state.current);
   }
+  
+  modal.classList.add('hidden');
 }
 
-function switchSlide(idx, direction) {
-  const modal = document.getElementById('preview-modal-' + idx);
-  if (!modal) return;
+function prevSlide(idx) {
+  const state = sliders[idx];
+  if (!state) return;
+  const newIndex = (state.current - 1 + state.total) % state.total;
+  activateSlide(idx, newIndex);
+}
 
-  const slides = modal.querySelectorAll('.preview-slide');
-  if (slides.length === 0) return;
-
-  currentSlide[idx] = (currentSlide[idx] + direction + slides.length) % slides.length;
-  updateSlides(idx);
-  updateSlideIndicator(idx);
+function nextSlide(idx) {
+  const state = sliders[idx];
+  if (!state) return;
+  const newIndex = (state.current + 1) % state.total;
+  activateSlide(idx, newIndex);
 }
 
 function goToSlide(idx, slideIdx) {
-  currentSlide[idx] = slideIdx;
-  updateSlides(idx);
-  updateSlideIndicator(idx);
+  activateSlide(idx, slideIdx);
 }
 
-function updateSlides(idx) {
-  const modal = document.getElementById('preview-modal-' + idx);
-  if (!modal) return;
-
-  const slides = modal.querySelectorAll('.preview-slide');
+function activateSlide(idx, newIndex) {
+  const state = sliders[idx];
+  if (!state) return;
   
-  // Pause all media first
-  slides.forEach(slide => {
-    const video = slide.querySelector('video');
-    if (video) video.pause();
-  });
-  
-  // Show/hide slides and control pointer-events
-  slides.forEach((slide, i) => {
-    const iframe = slide.querySelector('iframe[data-src]');
-    const video = slide.querySelector('video');
-    
-    if (i === currentSlide[idx]) {
-      slide.classList.remove('opacity-0');
-      slide.classList.add('opacity-100');
-      slide.style.pointerEvents = 'auto';
-      slide.style.zIndex = '10';
-      
-      // Load iframe lazy (only when shown)
-      if (iframe && iframe.dataset.src && !iframe.src) {
-        iframe.src = iframe.dataset.src;
-      }
-      
-      // Ensure video can receive events
-      if (video) video.style.pointerEvents = 'auto';
-    } else {
-      slide.classList.remove('opacity-100');
-      slide.classList.add('opacity-0');
-      slide.style.pointerEvents = 'none';
-      slide.style.zIndex = '1';
-      
-      // Stop video when hidden
-      if (video) {
-        video.pause();
-        video.style.pointerEvents = 'none';
-      }
-      
-      // Clear iframe source to stop playback
-      if (iframe) {
-        iframe.src = '';
-      }
-    }
-  });
-}
-
-function updateSlideIndicator(idx) {
-  const modal = document.getElementById('preview-modal-' + idx);
-  if (!modal) return;
-
-  const counter = document.getElementById('slide-counter-' + idx);
-  const slides = modal.querySelectorAll('.preview-slide');
-  if (counter && slides.length > 0) {
-    counter.textContent = (currentSlide[idx] + 1) + ' / ' + slides.length;
+  // Deactivate old slide
+  if (state.current !== newIndex) {
+    deactivateSlide(idx, state.current);
   }
-
-  const dots = modal.querySelectorAll('.flex.gap-1 button');
-  dots.forEach((dot, i) => {
-    if (i === currentSlide[idx]) {
-      dot.classList.remove('bg-white/40', 'hover:bg-white/60');
-      dot.classList.add('bg-white');
+  
+  // Activate new slide
+  state.current = newIndex;
+  
+  const modal = document.getElementById('preview-modal-' + idx);
+  if (!modal) return;
+  
+  // Hide all slides, show target
+  modal.querySelectorAll('.slide-panel').forEach((panel, i) => {
+    if (i === newIndex) {
+      panel.classList.remove('hidden');
+      // Activate based on type
+      activatePanel(idx, i, panel.dataset.type);
     } else {
-      dot.classList.remove('bg-white');
-      dot.classList.add('bg-white/40', 'hover:bg-white/60');
+      panel.classList.add('hidden');
     }
   });
+  
+  // Update dots
+  modal.querySelectorAll('[id^="dot-"]').forEach((dot, i) => {
+    if (i === newIndex) {
+      dot.classList.remove('bg-gray-300', 'hover:bg-gray-400');
+      dot.classList.add('bg-primary');
+    } else {
+      dot.classList.remove('bg-primary');
+      dot.classList.add('bg-gray-300', 'hover:bg-gray-400');
+    }
+  });
+}
+
+function deactivateSlide(idx, slideIndex) {
+  const panel = document.getElementById('slide-' + idx + '-' + slideIndex);
+  if (!panel) return;
+  
+  const type = panel.dataset.type;
+  
+  if (type === 'youtube') {
+    const iframe = document.getElementById('youtube-' + idx + '-' + slideIndex);
+    if (iframe) iframe.src = '';
+  } else if (type === 'video') {
+    const video = document.getElementById('video-' + idx + '-' + slideIndex);
+    if (video) video.pause();
+  }
+}
+
+function activatePanel(idx, slideIndex, type) {
+  if (type === 'youtube') {
+    const iframe = document.getElementById('youtube-' + idx + '-' + slideIndex);
+    if (iframe && !iframe.src) {
+      iframe.src = iframe.dataset.src;
+    }
+  }
+  // Images and PDFs load immediately via src
 }
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.querySelectorAll('[id^="preview-modal-"]').forEach(modal => {
-      modal.classList.add('hidden');
-      const videos = modal.querySelectorAll('video');
-      videos.forEach(v => v.pause());
-      const iframes = modal.querySelectorAll('iframe');
-      iframes.forEach(iframe => iframe.src = '');
+      const match = modal.id.match(/preview-modal-(\d+)/);
+      if (match) closePreviewModal(parseInt(match[1]));
     });
   }
 });
