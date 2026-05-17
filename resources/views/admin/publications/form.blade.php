@@ -416,42 +416,50 @@
     }
 
     function previewBlock(index) {
-        const block = mediaBlocks[index];
-        console.log('Preview block:', index, block.type, block);
-        const modal = document.getElementById('preview-modal');
-        const content = document.getElementById('preview-modal-content');
-        const title = document.getElementById('preview-modal-title');
+        try {
+            const block = mediaBlocks[index];
+            console.error('=== PREVIEW BLOCK ===');
+            console.error('Index:', index);
+            console.error('Block type:', block.type);
+            console.error('Block url:', block.url);
+            console.error('Full block:', block);
+            
+            const modal = document.getElementById('preview-modal');
+            const content = document.getElementById('preview-modal-content');
+            const title = document.getElementById('preview-modal-title');
 
-        title.textContent = block.caption_id || block.caption_en || 'Preview';
+            title.textContent = block.caption_id || block.caption_en || 'Preview';
 
-        let contentHtml = '';
-        console.log('Block type:', block.type, 'Block url:', block.url);
+            let contentHtml = '';
 
-        if (block.type === 'pdf' && block.url) {
-            contentHtml = `<iframe src="${block.url}" class="w-full rounded-lg" style="height: 80vh;"></iframe>`;
-        } else if (block.type === 'video' && block.url) {
-            contentHtml = `<video src="${block.url}" controls class="w-full rounded-lg"></video>`;
-        } else if (block.type === 'youtube' && block.url) {
-            const youtubeId = extractYouTubeId(block.url);
-            if (youtubeId) {
-                contentHtml = `<div class="aspect-video"><iframe src="https://www.youtube.com/embed/${youtubeId}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+            if (block.type === 'pdf' && block.url) {
+                contentHtml = '<iframe src="' + block.url + '" class="w-full rounded-lg" style="height: 80vh;"></iframe>';
+            } else if (block.type === 'video' && block.url) {
+                contentHtml = '<video src="' + block.url + '" controls class="w-full rounded-lg"></video>';
+            } else if (block.type === 'youtube' && block.url) {
+                const youtubeId = extractYouTubeId(block.url);
+                if (youtubeId) {
+                    contentHtml = '<div class="aspect-video"><iframe src="https://www.youtube.com/embed/' + youtubeId + '" class="w-full h-full" frameborder="0" allowfullscreen></iframe></div>';
+                } else {
+                    contentHtml = '<p class="text-center text-gray-500">Invalid YouTube URL</p>';
+                }
+            } else if (block.type === 'image' && block.url) {
+                contentHtml = '<img src="' + block.url + '" alt="" class="max-w-full mx-auto rounded-lg" />';
             } else {
-                contentHtml = `<p class="text-center text-gray-500">Invalid YouTube URL</p>`;
+                contentHtml = '<p class="text-center text-gray-500">No content to preview (type=' + block.type + ', url=' + block.url + ')</p>';
             }
-        } else if (block.type === 'image' && block.url) {
-            contentHtml = `<img src="${block.url}" alt="${block.caption_en || ''}" class="max-w-full mx-auto rounded-lg" />`;
-        } else {
-            contentHtml = `<p class="text-center text-gray-500">No content to preview</p>`;
-        }
 
-        if (block.caption_id || block.caption_en) {
-            contentHtml += `<p class="text-center text-sm text-gray-500 mt-4">${block.caption_id}</p><p class="text-center text-xs text-gray-400">${block.caption_en}</p>`;
-        }
+            if (block.caption_id || block.caption_en) {
+                contentHtml += '<p class="text-center text-sm text-gray-500 mt-4">' + (block.caption_id || '') + '</p><p class="text-center text-xs text-gray-400">' + (block.caption_en || '') + '</p>';
+            }
 
-        console.log('Content HTML:', contentHtml);
-        content.innerHTML = contentHtml;
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+            console.error('Content HTML:', contentHtml);
+            content.innerHTML = contentHtml;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        } catch (e) {
+            console.error('Preview error:', e);
+        }
     }
 
     function closePreviewModal() {
