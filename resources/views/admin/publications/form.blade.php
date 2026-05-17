@@ -389,7 +389,7 @@
 
         const blockData = {
             id: editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].id : 'block-' + Date.now(),
-            type: editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].type : 'image',
+            type: (editingBlockIndex !== null ? mediaBlocks[editingBlockIndex].type : null) || type,
             url: url,
             youtube_id: '',
             caption_id: caption_id,
