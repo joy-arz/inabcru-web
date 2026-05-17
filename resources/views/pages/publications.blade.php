@@ -103,24 +103,24 @@
                   }
                 @endphp
                 @foreach($contentBlocks as $blockIdx => $block)
-                    <div class="preview-slide absolute inset-0 transition-opacity duration-300 {{ $blockIdx === 0 ? 'opacity-100' : 'opacity-0' }}" data-index="{{ $blockIdx }}" data-type="{{ $block['type'] ?? '' }}" data-url="{{ $block['url'] ?? '' }}">
+                    <div class="preview-slide absolute inset-0 transition-opacity duration-300 {{ $blockIdx === 0 ? 'opacity-100' : 'opacity-0' }}" data-index="{{ $blockIdx }}" data-type="{{ $block['type'] ?? '' }}" style="pointer-events: {{ $blockIdx === 0 ? 'auto' : 'none' }};">
                       @if($block['type'] === 'youtube' && !empty($block['url']))
                         @php $youtubeId = extractYouTubeId($block['url']); @endphp
                         @if($youtubeId)
                           <div class="w-full h-full bg-dark flex items-center justify-center">
-                            <iframe data-src="https://www.youtube.com/embed/{{ $youtubeId }}?autoplay=0" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                            <iframe data-src="https://www.youtube.com/embed/{{ $youtubeId }}?autoplay=0" class="w-full h-full" frameborder="0" allowfullscreen style="pointer-events: auto;"></iframe>
                           </div>
                         @endif
                       @elseif($block['type'] === 'pdf')
-                        <iframe data-src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview"></iframe>
+                        <iframe data-src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview" style="overflow: auto; pointer-events: auto;"></iframe>
                       @elseif($block['type'] === 'video')
-                        <div class="w-full h-full bg-dark flex items-center justify-center">
-                          <video controls class="max-w-full max-h-full">
-                            <source src="{{ $block['url'] }}" type="video/mp4">
+                        <div class="w-full h-full bg-dark flex items-center justify-center" style="pointer-events: auto;">
+                          <video controls class="max-w-full max-h-full" style="pointer-events: auto;">
+                            <source src="{{ $block['url'] }}" type="video/webm">
                           </video>
                         </div>
                       @elseif($block['type'] === 'image')
-                        <img src="{{ $block['url'] }}" alt="Preview" class="w-full h-full object-contain">
+                        <img src="{{ $block['url'] }}" alt="Preview" class="w-full h-full object-contain" style="pointer-events: auto;">
                       @endif
                     </div>
                   @endforeach
@@ -217,34 +217,46 @@ function updateSlides(idx) {
 
   const slides = modal.querySelectorAll('.preview-slide');
   
-  // Pause all videos first
+  // Pause all media first
   slides.forEach(slide => {
     const video = slide.querySelector('video');
     if (video) video.pause();
   });
   
-  // Show/hide slides
+  // Show/hide slides and control pointer-events
   slides.forEach((slide, i) => {
+    const iframe = slide.querySelector('iframe[data-src]');
+    const video = slide.querySelector('video');
+    
     if (i === currentSlide[idx]) {
       slide.classList.remove('opacity-0');
       slide.classList.add('opacity-100');
+      slide.style.pointerEvents = 'auto';
+      slide.style.zIndex = '10';
       
       // Load iframe lazy (only when shown)
-      if (!iframesLoaded[idx] || !iframesLoaded[idx][i]) {
-        const iframe = slide.querySelector('iframe[data-src]');
-        if (iframe && iframe.dataset.src) {
-          iframe.src = iframe.dataset.src;
-          iframesLoaded[idx] = iframesLoaded[idx] || {};
-          iframesLoaded[idx][i] = true;
-        }
+      if (iframe && iframe.dataset.src && !iframe.src) {
+        iframe.src = iframe.dataset.src;
       }
+      
+      // Ensure video can receive events
+      if (video) video.style.pointerEvents = 'auto';
     } else {
       slide.classList.remove('opacity-100');
       slide.classList.add('opacity-0');
+      slide.style.pointerEvents = 'none';
+      slide.style.zIndex = '1';
       
       // Stop video when hidden
-      const video = slide.querySelector('video');
-      if (video) video.pause();
+      if (video) {
+        video.pause();
+        video.style.pointerEvents = 'none';
+      }
+      
+      // Clear iframe source to stop playback
+      if (iframe) {
+        iframe.src = '';
+      }
     }
   });
 }
