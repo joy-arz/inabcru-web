@@ -512,7 +512,8 @@ function uploadFile(file, type, prefix) {
                 alert(data.error);
                 resetUI(prefix);
             } else {
-                document.getElementById(prefix + '_url').value = data.url;
+                const urlInput = document.getElementById(prefix + '_url') || document.getElementById(prefix + 'image_url');
+                if (urlInput) urlInput.value = data.url;
                 showPreviewUI(prefix, data.url);
             }
         } else {
@@ -530,16 +531,25 @@ function uploadFile(file, type, prefix) {
 }
 
 function showUploadUI(prefix) {
-    document.getElementById(prefix + '-placeholder').classList.add('hidden');
-    document.getElementById(prefix + '-uploading').classList.remove('hidden');
-    document.getElementById(prefix + '-preview').classList.add('hidden');
+    const placeholder = document.getElementById(prefix + '-placeholder');
+    const uploading = document.getElementById(prefix + '-uploading');
+    const preview = document.getElementById(prefix + '-preview');
+    if (placeholder) placeholder.classList.add('hidden');
+    if (uploading) uploading.classList.remove('hidden');
+    if (preview) preview.classList.add('hidden');
 }
 
 function showPreviewUI(prefix, url) {
-    document.getElementById(prefix + '-placeholder').classList.add('hidden');
-    document.getElementById(prefix + '-uploading').classList.add('hidden');
-    document.getElementById(prefix + '-preview').classList.remove('hidden');
-    document.getElementById(prefix + '-preview-img').src = url;
+    const placeholder = document.getElementById(prefix + '-placeholder');
+    const uploading = document.getElementById(prefix + '-uploading');
+    const preview = document.getElementById(prefix + '-preview');
+    if (placeholder) placeholder.classList.add('hidden');
+    if (uploading) uploading.classList.add('hidden');
+    if (preview) {
+        preview.classList.remove('hidden');
+        const img = preview.querySelector('img');
+        if (img) img.src = url;
+    }
 }
 
 function updateProgress(prefix, percent) {
@@ -550,9 +560,12 @@ function updateProgress(prefix, percent) {
 }
 
 function resetUI(prefix) {
-    document.getElementById(prefix + '-placeholder').classList.remove('hidden');
-    document.getElementById(prefix + '-uploading').classList.add('hidden');
-    document.getElementById(prefix + '-preview').classList.add('hidden');
+    const placeholder = document.getElementById(prefix + '-placeholder');
+    const uploading = document.getElementById(prefix + '-uploading');
+    const preview = document.getElementById(prefix + '-preview');
+    if (placeholder) placeholder.classList.remove('hidden');
+    if (uploading) uploading.classList.add('hidden');
+    if (preview) preview.classList.add('hidden');
 }
 
 function removeCover() {
