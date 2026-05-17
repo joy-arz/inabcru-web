@@ -1,5 +1,15 @@
 @extends('layouts.admin')
 
+@push('styles')
+<style>
+.upload-area { border: 2px dashed #d1d5db; border-radius: 8px; transition: all 0.2s; }
+.upload-area:hover { border-color: #2B3984; background: #f9fafb; }
+.upload-area.dragover { border-color: #2B3984; background: #eef2ff; }
+.progress-bar { height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: #2B3984; transition: width 0.3s; }
+</style>
+@endpush
+
 @section('content')
 <div class="space-y-6">
     <div class="flex items-center justify-between">
@@ -153,15 +163,26 @@
             </div>
 
             <div class="space-y-6">
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl shadow-sm p-6">
                     <h2 class="font-heading text-lg font-semibold text-text-main mb-4">Cover Image</h2>
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-gray-700">Image URL</label>
-                        <input type="url" name="cover_image_url" id="cover_image_url" value="{{ old('cover_image_url', $publication->cover_image_url ?? '') }}" placeholder="https://..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                    <input type="hidden" name="cover_image_url" id="cover_image_url" value="{{ old('cover_image_url', $publication->cover_image_url ?? '') }}">
+                    <div id="cover-upload-area" class="upload-area p-4 text-center cursor-pointer rounded-lg">
+                        <div id="cover-placeholder">
+                            <svg class="w-6 h-6 mx-auto text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            <p class="text-xs text-gray-500">Click or drag to upload</p>
+                        </div>
+                        <div id="cover-uploading" class="hidden">
+                            <p class="text-xs text-gray-500 mb-1">Uploading...</p>
+                            <div class="progress-bar w-32 mx-auto"><div id="cover-progress" class="progress-bar-fill" style="width:0%"></div></div>
+                        </div>
+                        <div id="cover-preview" class="{{ isset($publication->cover_image_url) && $publication->cover_image_url ? '' : 'hidden' }}">
+                            <img src="{{ $publication->cover_image_url ?? '' }}" alt="" class="max-h-32 mx-auto rounded border">
+                            <button type="button" onclick="removeCover()" class="mt-1 text-xs text-red-500 hover:text-red-700">Remove</button>
+                        </div>
                     </div>
-                    <div id="cover-preview" class="mt-3 {{ isset($publication->cover_image_url) && $publication->cover_image_url ? '' : 'hidden' }}">
-                        <img src="{{ $publication->cover_image_url ?? '' }}" alt="Cover preview" class="w-full h-40 object-cover rounded-lg border border-gray-200" />
-                    </div>
+                    <input type="file" id="cover-file-input" accept="image/*" class="hidden" onchange="handleCoverUpload(this)">
                 </div>
 
                 <div class="bg-white rounded-xl shadow-md p-6">
@@ -445,95 +466,177 @@
         renderMediaBlocks();
     }
 
-    document.getElementById('cover_image_url').addEventListener('change', function() {
-        const preview = document.getElementById('cover-preview');
-        const img = preview.querySelector('img');
-        if (this.value) {
-            img.src = this.value;
-            preview.classList.remove('hidden');
-        } else {
-            preview.classList.add('hidden');
+    document.getElementById('cover-upload-area').addEventListener('click', function() {
+    document.getElementById('cover-file-input').click();
+});
+
+document.getElementById('cover-file-input').addEventListener('change', function() {
+    if (this.files[0]) uploadFile(this.files[0], 'image', 'cover');
+});
+
+document.getElementById('cover_image_url').addEventListener('change', function() {
+    const preview = document.getElementById('cover-preview');
+    const img = preview.querySelector('img');
+    if (this.value) {
+        img.src = this.value;
+        preview.classList.remove('hidden');
+    } else {
+        preview.classList.add('hidden');
+    }
+});
+
+function uploadFile(file, type, prefix) {
+    var formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', type);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    showUploadUI(prefix);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{{ route('admin.upload') }}', true);
+
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            var percent = Math.round((e.loaded / e.total) * 100);
+            updateProgress(prefix, percent);
         }
     });
 
-    function extractYouTubeId(url) {
-        const patterns = [
-            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-            /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
-        ];
-        for (const pattern of patterns) {
-            const match = url.match(pattern);
-            if (match) return match[1];
-        }
-        return null;
-    }
-
-    function getAcceptType(type) {
-        if (type === 'image') return 'image/*';
-        if (type === 'video') return 'video/*';
-        if (type === 'pdf') return 'application/pdf';
-        return '*';
-    }
-
-    function handleFileUpload(input, type) {
-        const file = input.files[0];
-        if (!file) return;
-
-        const maxSizes = { image: 10 * 1024 * 1024, video: 500 * 1024 * 1024, pdf: 250 * 1024 * 1024 };
-        const maxSize = maxSizes[type] || 10 * 1024 * 1024;
-        if (file.size > maxSize) {
-            alert('File too large. Max: ' + (maxSize / 1024 / 1024) + 'MB');
-            input.value = '';
-            return;
-        }
-
-        const fileNameEl = document.getElementById('file_name_' + type);
-        if (fileNameEl) {
-            fileNameEl.innerHTML = '<div class="flex items-center gap-2"><span class="text-xs text-gray-500">Uploading...</span><div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden"><div id="upload_progress_bar" class="h-full bg-primary transition-all duration-200" style="width:0%"></div></div><span id="upload_percent" class="text-xs text-gray-400">0%</span></div>';
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('type', type);
-        formData.append('_token', '{{ csrf_token() }}');
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '{{ route('admin.upload') }}', true);
-
-        xhr.upload.addEventListener('progress', function(e) {
-            if (e.lengthComputable) {
-                const percent = Math.round((e.loaded / e.total) * 100);
-                const bar = document.getElementById('upload_progress_bar');
-                const pct = document.getElementById('upload_percent');
-                if (bar) bar.style.width = percent + '%';
-                if (pct) pct.textContent = percent + '%';
-            }
-        });
-
-        xhr.addEventListener('load', function() {
-            if (xhr.status === 200) {
-                const data = JSON.parse(xhr.responseText);
-                if (data.error) {
-                    alert(data.error);
-                    if (fileNameEl) fileNameEl.textContent = '';
-                } else {
-                    document.getElementById('block_url').value = data.url;
-                    if (fileNameEl) fileNameEl.innerHTML = '<span class="text-xs text-green-600">' + file.name + ' ✓</span>';
-                }
+    xhr.addEventListener('load', function() {
+        if (xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            if (data.error) {
+                alert(data.error);
+                resetUI(prefix);
             } else {
-                alert('Upload failed');
-                if (fileNameEl) fileNameEl.textContent = '';
+                document.getElementById(prefix + '_url').value = data.url;
+                showPreviewUI(prefix, data.url);
             }
-        });
+        } else {
+            alert('Upload failed');
+            resetUI(prefix);
+        }
+    });
 
-        xhr.addEventListener('error', function() {
+    xhr.addEventListener('error', function() {
+        alert('Upload failed');
+        resetUI(prefix);
+    });
+
+    xhr.send(formData);
+}
+
+function showUploadUI(prefix) {
+    document.getElementById(prefix + '-placeholder').classList.add('hidden');
+    document.getElementById(prefix + '-uploading').classList.remove('hidden');
+    document.getElementById(prefix + '-preview').classList.add('hidden');
+}
+
+function showPreviewUI(prefix, url) {
+    document.getElementById(prefix + '-placeholder').classList.add('hidden');
+    document.getElementById(prefix + '-uploading').classList.add('hidden');
+    document.getElementById(prefix + '-preview').classList.remove('hidden');
+    document.getElementById(prefix + '-preview-img').src = url;
+}
+
+function updateProgress(prefix, percent) {
+    document.getElementById(prefix + '-progress').style.width = percent + '%';
+    document.getElementById(prefix + '-percent').textContent = percent + '%';
+}
+
+function resetUI(prefix) {
+    document.getElementById(prefix + '-placeholder').classList.remove('hidden');
+    document.getElementById(prefix + '-uploading').classList.add('hidden');
+    document.getElementById(prefix + '-preview').classList.add('hidden');
+}
+
+function removeCover() {
+    document.getElementById('cover_image_url').value = '';
+    document.getElementById('cover-file-input').value = '';
+    resetUI('cover');
+}
+
+function handleCoverUpload(input) {
+    if (input.files[0]) uploadFile(input.files[0], 'image', 'cover');
+}
+
+function extractYouTubeId(url) {
+    const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+        /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
+    ];
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match) return match[1];
+    }
+    return null;
+}
+
+function getAcceptType(type) {
+    if (type === 'image') return 'image/*';
+    if (type === 'video') return 'video/*';
+    if (type === 'pdf') return 'application/pdf';
+    return '*';
+}
+
+function handleFileUpload(input, type) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const fileNameEl = document.getElementById('file_name_' + type);
+    if (fileNameEl) {
+        fileNameEl.innerHTML = '<div class="flex items-center gap-2"><span class="text-xs text-gray-500">Uploading...</span><div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden"><div id="upload_progress_bar" class="h-full bg-primary transition-all duration-200" style="width:0%"></div></div><span id="upload_percent" class="text-xs text-gray-400">0%</span></div>';
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', type);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '{{ route('admin.upload') }}', true);
+
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            const bar = document.getElementById('upload_progress_bar');
+            const pct = document.getElementById('upload_percent');
+            if (bar) bar.style.width = percent + '%';
+            if (pct) pct.textContent = percent + '%';
+        }
+    });
+
+    xhr.addEventListener('load', function() {
+        if (xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
+            if (data.error) {
+                alert(data.error);
+                if (fileNameEl) fileNameEl.textContent = '';
+            } else {
+                document.getElementById('block_url').value = data.url;
+                if (fileNameEl) fileNameEl.innerHTML = '<span class="text-xs text-green-600">' + file.name + ' ✓</span>';
+            }
+        } else {
             alert('Upload failed');
             if (fileNameEl) fileNameEl.textContent = '';
-        });
+        }
+    });
 
-        xhr.send(formData);
-    }
+    xhr.addEventListener('error', function() {
+        alert('Upload failed');
+        if (fileNameEl) fileNameEl.textContent = '';
+    });
 
-    initMediaBlocks();
-    </script>
+    xhr.send(formData);
+}
+
+initMediaBlocks();
+</script>
+
+@if(isset($publication->cover_image_url) && $publication->cover_image_url)
+<script>
+showPreviewUI('cover', '{{ $publication->cover_image_url }}');
+</script>
+@endif
 @endsection
