@@ -242,6 +242,7 @@
     let mediaBlocks = [];
     let editingBlockIndex = null;
     let currentBlockType = 'image';
+    let pendingBlockId = null;
 
     const MEDIA_TYPES = {
         pdf: { label: 'PDF', color: 'bg-red-50 text-red-600', icon: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path></svg>' },
@@ -411,10 +412,12 @@
     function closeMediaModal() {
         document.getElementById('media-modal').classList.add('hidden');
         editingBlockIndex = null;
+        document.body.style.overflow = '';
     }
 
     function previewBlock(index) {
         const block = mediaBlocks[index];
+        console.log('Preview block:', index, block.type, block);
         const modal = document.getElementById('preview-modal');
         const content = document.getElementById('preview-modal-content');
         const title = document.getElementById('preview-modal-title');
@@ -422,6 +425,7 @@
         title.textContent = block.caption_id || block.caption_en || 'Preview';
 
         let contentHtml = '';
+        console.log('Block type:', block.type, 'Block url:', block.url);
 
         if (block.type === 'pdf' && block.url) {
             contentHtml = `<iframe src="${block.url}" class="w-full rounded-lg" style="height: 80vh;"></iframe>`;
@@ -444,14 +448,17 @@
             contentHtml += `<p class="text-center text-sm text-gray-500 mt-4">${block.caption_id}</p><p class="text-center text-xs text-gray-400">${block.caption_en}</p>`;
         }
 
+        console.log('Content HTML:', contentHtml);
         content.innerHTML = contentHtml;
         modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
 
     function closePreviewModal() {
         const content = document.getElementById('preview-modal-content');
         content.innerHTML = '';
         document.getElementById('preview-modal').classList.add('hidden');
+        document.body.style.overflow = '';
     }
 
     function deleteBlock(index) {
