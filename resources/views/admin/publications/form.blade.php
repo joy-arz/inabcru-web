@@ -512,7 +512,7 @@ function uploadFile(file, type, prefix) {
                 alert(data.error);
                 resetUI(prefix);
             } else {
-                const urlInput = document.getElementById(prefix + '_url') || document.getElementById(prefix + 'image_url');
+                const urlInput = document.getElementById(prefix + '_url') || document.getElementById(prefix + 'image_url') || document.getElementById('cover_image_url');
                 if (urlInput) urlInput.value = data.url;
                 showPreviewUI(prefix, data.url);
             }
