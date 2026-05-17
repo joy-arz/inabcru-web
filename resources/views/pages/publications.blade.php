@@ -109,11 +109,11 @@ function extractYouTubeId($url) {
                         @php $youtubeId = extractYouTubeId($block['url']); @endphp
                         @if($youtubeId)
                           <div class="w-full h-full bg-dark flex items-center justify-center">
-                            <iframe src="https://www.youtube.com/embed/{{ $youtubeId }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                            <iframe data-src="https://www.youtube.com/embed/{{ $youtubeId }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
                           </div>
                         @endif
                       @elseif($block['type'] == 'pdf')
-                        <iframe src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview" style="overflow: auto;"></iframe>
+                        <iframe data-src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview" style="overflow: auto; width: 100%; height: 100%;"></iframe>
                       @elseif($block['type'] == 'video')
                         <div class="w-full h-full bg-dark flex items-center justify-center">
                           <video controls class="max-w-full max-h-full">
@@ -166,6 +166,7 @@ function openPreviewModal(idx) {
     modal.classList.remove('hidden');
     currentSlide[idx] = 0;
     updateSlideIndicator(idx);
+    activateSlide(idx, 0);
   }
 }
 
@@ -173,6 +174,19 @@ function closePreviewModal(idx) {
   const modal = document.getElementById('preview-modal-' + idx);
   if (modal) {
     modal.classList.add('hidden');
+  }
+}
+
+function activateSlide(idx, slideIdx) {
+  const modal = document.getElementById('preview-modal-' + idx);
+  if (!modal) return;
+  
+  const slide = modal.querySelector('.preview-slide[data-index="' + slideIdx + '"]');
+  if (!slide) return;
+  
+  const iframe = slide.querySelector('iframe');
+  if (iframe && !iframe.src) {
+    iframe.src = iframe.dataset.src;
   }
 }
 
@@ -186,10 +200,7 @@ function switchSlide(idx, direction) {
   const oldSlide = modal.querySelector('.preview-slide[data-index="' + currentSlide[idx] + '"]');
   if (oldSlide) {
     const oldType = oldSlide.dataset.type;
-    if (oldType == 'youtube') {
-      const iframe = oldSlide.querySelector('iframe');
-      if (iframe) iframe.src = '';
-    } else if (oldType == 'video') {
+    if (oldType == 'video') {
       const video = oldSlide.querySelector('video');
       if (video) video.pause();
     }
@@ -198,6 +209,7 @@ function switchSlide(idx, direction) {
   currentSlide[idx] = (currentSlide[idx] + direction + slides.length) % slides.length;
   updateSlides(idx);
   updateSlideIndicator(idx);
+  activateSlide(idx, currentSlide[idx]);
 }
 
 function goToSlide(idx, slideIdx) {
@@ -207,10 +219,7 @@ function goToSlide(idx, slideIdx) {
   const oldSlide = modal.querySelector('.preview-slide[data-index="' + currentSlide[idx] + '"]');
   if (oldSlide) {
     const oldType = oldSlide.dataset.type;
-    if (oldType == 'youtube') {
-      const iframe = oldSlide.querySelector('iframe');
-      if (iframe) iframe.src = '';
-    } else if (oldType == 'video') {
+    if (oldType == 'video') {
       const video = oldSlide.querySelector('video');
       if (video) video.pause();
     }
@@ -219,6 +228,7 @@ function goToSlide(idx, slideIdx) {
   currentSlide[idx] = slideIdx;
   updateSlides(idx);
   updateSlideIndicator(idx);
+  activateSlide(idx, currentSlide[idx]);
 }
 
 function updateSlides(idx) {
