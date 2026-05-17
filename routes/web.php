@@ -97,7 +97,12 @@ Route::get('/{locale}/news/{slug}', function ($locale, $slug) {
     app()->setLocale($locale);
 
     $article = Article::where('slug', $slug)->where('published', true)->firstOrFail();
-    return view('pages.news-detail', compact('locale', 'article'));
+    $sidebarArticles = Article::where('published', true)
+        ->where('id', '!=', $article->id)
+        ->orderBy('created_at', 'desc')
+        ->take(3)
+        ->get();
+    return view('pages.news-detail', compact('locale', 'article', 'sidebarArticles'));
 })->where('locale', 'id|en');
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
