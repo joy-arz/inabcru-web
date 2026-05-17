@@ -416,6 +416,7 @@
     }
 
     function previewBlock(index) {
+        alert('previewBlock called with index=' + index + ', type=' + mediaBlocks[index].type);
         try {
             const block = mediaBlocks[index];
             console.error('=== PREVIEW BLOCK ===');
