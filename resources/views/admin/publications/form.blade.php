@@ -541,8 +541,10 @@ function showPreviewUI(prefix, url) {
 }
 
 function updateProgress(prefix, percent) {
-    document.getElementById(prefix + '-progress').style.width = percent + '%';
-    document.getElementById(prefix + '-percent').textContent = percent + '%';
+    const progressEl = document.getElementById(prefix + '-progress');
+    const percentEl = document.getElementById(prefix + '-percent');
+    if (progressEl) progressEl.style.width = percent + '%';
+    if (percentEl) percentEl.textContent = percent + '%';
 }
 
 function resetUI(prefix) {
@@ -600,8 +602,9 @@ function handleFileUpload(input, type) {
     xhr.upload.addEventListener('progress', function(e) {
         if (e.lengthComputable) {
             const percent = Math.round((e.loaded / e.total) * 100);
-            const bar = document.getElementById('upload_progress_bar');
-            const pct = document.getElementById('upload_percent');
+            const container = fileNameEl || document;
+            const bar = container.querySelector('#upload_progress_bar');
+            const pct = container.querySelector('#upload_percent');
             if (bar) bar.style.width = percent + '%';
             if (pct) pct.textContent = percent + '%';
         }
@@ -614,7 +617,8 @@ function handleFileUpload(input, type) {
                 alert(data.error);
                 if (fileNameEl) fileNameEl.textContent = '';
             } else {
-                document.getElementById('block_url').value = data.url;
+                const blockUrl = document.getElementById('block_url');
+                if (blockUrl) blockUrl.value = data.url;
                 if (fileNameEl) fileNameEl.innerHTML = '<span class="text-xs text-green-600">' + file.name + ' ✓</span>';
             }
         } else {
