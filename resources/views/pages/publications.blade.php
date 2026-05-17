@@ -174,6 +174,17 @@ function openPreviewModal(idx) {
 function closePreviewModal(idx) {
   const modal = document.getElementById('preview-modal-' + idx);
   if (modal) {
+    const slide = modal.querySelector('.preview-slide[data-index="' + (currentSlide[idx] || 0) + '"]');
+    if (slide) {
+      const type = slide.dataset.type;
+      if (type === 'youtube') {
+        const iframe = slide.querySelector('iframe');
+        if (iframe) iframe.src = '';
+      } else if (type === 'video') {
+        const video = slide.querySelector('video');
+        if (video) video.pause();
+      }
+    }
     modal.classList.add('hidden');
   }
 }
