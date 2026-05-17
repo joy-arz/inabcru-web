@@ -279,10 +279,10 @@
             return `
                 <div class="bg-white border rounded-lg p-4 flex items-center gap-3" data-index="${index}">
                     <div class="flex flex-col gap-1">
-                        <button onclick="moveBlock(${index}, -1)" class="p-1 hover:bg-gray-100 rounded" ${index === 0 ? 'disabled' : ''}>
+                        <button type="button" onclick="moveBlock(${index}, -1)" class="p-1 hover:bg-gray-100 rounded" ${index === 0 ? 'disabled' : ''}>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                         </button>
-                        <button onclick="moveBlock(${index}, 1)" class="p-1 hover:bg-gray-100 rounded" ${index === mediaBlocks.length - 1 ? 'disabled' : ''}>
+                        <button type="button" onclick="moveBlock(${index}, 1)" class="p-1 hover:bg-gray-100 rounded" ${index === mediaBlocks.length - 1 ? 'disabled' : ''}>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                     </div>
@@ -294,13 +294,13 @@
                         <p class="text-xs text-gray-500 truncate">${caption}</p>
                     </div>
                     <div class="flex items-center gap-1">
-                        <button onclick="previewBlock(${index})" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Preview">
+                        <button type="button" onclick="previewBlock(${index})" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Preview">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
-                        <button onclick="editBlock(${index})" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Edit">
+                        <button type="button" onclick="editBlock(${index})" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Edit">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
-                        <button onclick="deleteBlock(${index})" class="p-2 hover:bg-red-50 rounded-lg text-red-500 hover:text-red-600" title="Delete">
+                        <button type="button" onclick="deleteBlock(${index})" class="p-2 hover:bg-red-50 rounded-lg text-red-500 hover:text-red-600" title="Delete">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
                         </button>
                     </div>
