@@ -39,9 +39,9 @@
     @else
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         @foreach($publications as $idx => $pub)
-          <div class="bg-surface-warm rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
+          <div class="bg-surface-warm rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 animate-fade-up opacity-0 cursor-pointer" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;" onclick="openPreviewModal({{ $idx }})">
             @if($pub->cover_image_url)
-              <div class="aspect-video overflow-hidden relative group cursor-pointer" onclick="openPreviewModal({{ $idx }})">
+              <div class="aspect-video overflow-hidden relative group">
                 <img src="{{ $pub->cover_image_url }}" alt="{{ $locale == 'id' ? $pub->title_id : $pub->title_en }}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div class="bg-white/90 rounded-full p-3">
