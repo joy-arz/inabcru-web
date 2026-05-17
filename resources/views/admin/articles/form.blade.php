@@ -1,13 +1,15 @@
 @extends('layouts.admin')
 
-@push('styles')
+@section('styles')
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <style>
 .ql-toolbar { border-radius: 8px 8px 0 0; }
-.ql-container { border-radius: 0 0 8px 8px; font-family: Inter, sans-serif; font-size: 15px; }
-.ql-editor { min-height: 250px; }
+.ql-container { border-radius: 0 0 8px 8px; font-family: Inter, sans-serif; font-size: 15px; border: 1px solid #e5e7eb !important; }
+.ql-container:focus-within { border-color: #2B3984 !important; box-shadow: 0 0 0 3px rgba(43,57,132,0.1); }
+.ql-editor { min-height: 300px; }
+.ql-editor.ql-blank::before { color: #9ca3af; font-style: normal; }
 </style>
-@endpush
+@endsection
 
 @section('content')
 <div class="space-y-6">
@@ -132,26 +134,30 @@
                     <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l4.586-4.586z"></path></svg>
                     <h2 class="font-heading text-lg font-semibold text-text-main">Article Content</h2>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Write content in both languages</p>
+                <p class="text-sm text-gray-500 mt-1">Write content in both languages using the rich text editor</p>
             </div>
 
-            <div class="grid grid-cols-2 divide-x">
-                <div class="p-4">
-                    <div class="flex items-center gap-2 mb-4">
-                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="font-medium text-text-main">Bahasa Indonesia</span>
+            <div class="grid grid-cols-2 divide-x divide-gray-200">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-xl">🇮🇩</span>
+                        <span class="font-semibold text-text-main text-lg">Bahasa Indonesia</span>
                     </div>
-                    <div id="editor_id">{!! old('content_id', $article->content_id ?? '') !!}</div>
-                    <input type="hidden" name="content_id" id="content_id_input">
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div id="editor_id" class="bg-white">{!! old('content_id', $article->content_id ?? '') !!}</div>
+                        <input type="hidden" name="content_id" id="content_id_input">
+                    </div>
                 </div>
 
-                <div class="p-4 bg-gray-50/50">
-                    <div class="flex items-center gap-2 mb-4">
-                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="font-medium text-text-main">English</span>
+                <div class="p-6 bg-gray-50/50">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-xl">🇬🇧</span>
+                        <span class="font-semibold text-text-main text-lg">English</span>
                     </div>
-                    <div id="editor_en">{!! old('content_en', $article->content_en ?? '') !!}</div>
-                    <input type="hidden" name="content_en" id="content_en_input">
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div id="editor_en" class="bg-white">{!! old('content_en', $article->content_en ?? '') !!}</div>
+                        <input type="hidden" name="content_en" id="content_en_input">
+                    </div>
                 </div>
             </div>
         </div>
@@ -180,14 +186,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     var quillOptions = {
         theme: 'snow',
+        placeholder: 'Write your content here...',
         modules: {
             toolbar: [
-                ['bold', 'italic', 'underline', 'strike'],
                 [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                 [{ 'indent': '-1' }, { 'indent': '+1' }],
                 ['link', 'image'],
                 [{ 'align': [] }],
+                ['blockquote'],
                 ['clean']
             ]
         }
