@@ -255,8 +255,12 @@
         try {
             const jsonEl = document.getElementById('content_blocks_json');
             const existingData = jsonEl ? jsonEl.value : '[]';
+            console.error('=== INIT MEDIA BLOCKS ===');
+            console.error('Raw JSON:', existingData);
             mediaBlocks = JSON.parse(existingData) || [];
+            console.error('Parsed blocks:', mediaBlocks);
         } catch (e) {
+            console.error('Init error:', e);
             mediaBlocks = [];
         }
         renderMediaBlocks();
