@@ -187,8 +187,8 @@ function closePreviewModal(idx) {
     videos.forEach(v => v.pause());
     const iframes = modal.querySelectorAll('iframe');
     iframes.forEach(iframe => {
-      iframe.src = '';
-      iframe.dataset.src = '';
+      iframe.src = ''; // Clear src to stop playback
+      // Keep dataset.src intact so it reloads on next open
     });
   }
 }
