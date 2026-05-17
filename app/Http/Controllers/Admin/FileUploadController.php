@@ -87,6 +87,7 @@ class FileUploadController extends Controller
                     ];
                 }
             } catch (\Exception $e) {
+                \Log::error('Imagick image processing failed: ' . $e->getMessage());
             }
         }
 
@@ -127,10 +128,10 @@ class FileUploadController extends Controller
 
                     imagealphablending($image, false);
                     imagesavealpha($image, true);
-                    imagewebp($image, $webpPath, 85);
+                    $saved = imagewebp($image, $webpPath, 85);
                     imagedestroy($image);
 
-                    if (file_exists($webpPath)) {
+                    if ($saved && file_exists($webpPath)) {
                         return [
                             'path' => "{$folder}/{$uuid}.webp",
                             'url' => asset('storage/' . "{$folder}/{$uuid}.webp")
@@ -138,6 +139,7 @@ class FileUploadController extends Controller
                     }
                 }
             } catch (\Exception $e) {
+                \Log::error('GD image processing failed: ' . $e->getMessage());
             }
         }
 
