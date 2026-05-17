@@ -221,18 +221,22 @@
         </div>
     </div>
 
-    <div id="preview-modal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/50" onclick="closePreviewModal()"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl w-full max-w-3xl shadow-xl overflow-hidden">
-                <div class="flex items-center justify-between p-4 border-b">
-                    <h3 class="font-heading text-lg font-semibold" id="preview-modal-title">Preview</h3>
-                    <button onclick="closePreviewModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+<div id="preview-modal" class="fixed inset-0 z-50 hidden" style="overscroll-behavior: contain;">
+        <div class="absolute inset-0 bg-black/50" onclick="closePreviewModal()" style="cursor: pointer;"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4" style="pointer-events: none;">
+            <div class="bg-white rounded-2xl w-full max-w-3xl shadow-xl overflow-hidden" style="pointer-events: auto; max-height: 90vh; display: flex; flex-direction: column;">
+                <div class="flex items-center justify-between p-4 border-b flex-shrink-0">
+                    <h3 class="font-heading text-lg font-semibold text-text" id="preview-modal-title">Preview</h3>
+                    <button onclick="closePreviewModal()" class="p-2 hover:bg-gray-100 rounded-lg cursor-pointer">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
+                <div id="preview-modal-content" class="flex-1 overflow-y-auto p-4" style="overflow-y: auto; -webkit-overflow-scrolling: touch;"></div>
+            </div>
+        </div>
+    </div>
                 <div class="p-4" id="preview-modal-content" style="max-height: 60vh; overflow-y: auto;"></div>
             </div>
         </div>
@@ -282,36 +286,34 @@
             const displayUrl = block.type === 'youtube' ? (block.youtube_id || '') : (block.url || 'No URL');
             const caption = block.caption_id || block.caption_en || 'No caption';
 
-            return `
-                <div class="bg-white border rounded-lg p-4 flex items-center gap-3" data-index="${index}">
-                    <div class="flex flex-col gap-1">
-                        <button type="button" onclick="moveBlock(${index}, -1)" class="p-1 hover:bg-gray-100 rounded" ${index === 0 ? 'disabled' : ''}>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                        </button>
-                        <button type="button" onclick="moveBlock(${index}, 1)" class="p-1 hover:bg-gray-100 rounded" ${index === mediaBlocks.length - 1 ? 'disabled' : ''}>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                    </div>
-                    <div class="${type.color} p-2 rounded-lg">
-                        <span class="text-base">${type.icon}</span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-medium text-gray-900 truncate text-sm">${block.type === 'youtube' ? 'YouTube: ' + displayUrl : displayUrl}</p>
-                        <p class="text-xs text-gray-500 truncate">${caption}</p>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <button type="button" data-action="preview" data-index="${index}" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Preview">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                        </button>
-                        <button type="button" data-action="edit" data-index="${index}" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Edit">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </button>
-                        <button type="button" data-action="delete" data-index="${index}" class="p-2 hover:bg-red-50 rounded-lg text-red-500 hover:text-red-600" title="Delete">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
-                        </button>
-                    </div>
-                </div>
-            `;
+            return '<div class="bg-white border rounded-lg p-4 flex items-center gap-3" data-index="' + index + '">' +
+                '<div class="flex flex-col gap-1">' +
+                '<button type="button" data-action="moveup" data-index="' + index + '" class="p-1 hover:bg-gray-100 rounded"' + (index === 0 ? ' disabled' : '') + '>' +
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>' +
+                '</button>' +
+                '<button type="button" data-action="movedown" data-index="' + index + '" class="p-1 hover:bg-gray-100 rounded"' + (index === mediaBlocks.length - 1 ? ' disabled' : '') + '>' +
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>' +
+                '</button>' +
+                '</div>' +
+                '<div class="' + type.color + ' p-2 rounded-lg">' +
+                '<span class="text-base">' + type.icon + '</span>' +
+                '</div>' +
+                '<div class="flex-1 min-w-0">' +
+                '<p class="font-medium text-gray-900 truncate text-sm">' + (block.type === 'youtube' ? 'YouTube: ' + displayUrl : displayUrl) + '</p>' +
+                '<p class="text-xs text-gray-500 truncate">' + caption + '</p>' +
+                '</div>' +
+                '<div class="flex items-center gap-1">' +
+                '<button type="button" data-action="preview" data-index="' + index + '" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Preview">' +
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>' +
+                '</button>' +
+                '<button type="button" data-action="edit" data-index="' + index + '" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Edit">' +
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' +
+                '</button>' +
+                '<button type="button" data-action="delete" data-index="' + index + '" class="p-2 hover:bg-red-50 rounded-lg text-red-500 hover:text-red-600" title="Delete">' +
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>' +
+                '</button>' +
+                '</div>' +
+                '</div>';
         }).join('');
 
         document.getElementById('content_blocks_json').value = JSON.stringify(mediaBlocks);
@@ -462,6 +464,18 @@
             content.innerHTML = contentHtml;
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            
+            // Force iframe isolation
+            const iframes = content.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+                iframe.style.pointerEvents = 'auto';
+            });
+            
+            const videos = content.querySelectorAll('video');
+            videos.forEach(video => {
+                video.style.pointerEvents = 'auto';
+            });
         } catch (e) {
             console.error('Preview error:', e);
         }
@@ -675,6 +689,8 @@ function handleFileUpload(input, type) {
 initMediaBlocks();
 
 document.addEventListener('click', function(e) {
+    console.error('Click target:', e.target.tagName, e.target.className, e.target.closest('[data-action]')?.getAttribute('data-action'));
+    
     const previewBtn = e.target.closest('[data-action="preview"]');
     if (previewBtn) {
         e.preventDefault();
@@ -702,7 +718,25 @@ document.addEventListener('click', function(e) {
         deleteBlock(index);
         return;
     }
-});
+
+    const moveUpBtn = e.target.closest('[data-action="moveup"]');
+    if (moveUpBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const index = parseInt(moveUpBtn.getAttribute('data-index'), 10);
+        moveBlock(index, -1);
+        return;
+    }
+
+    const moveDownBtn = e.target.closest('[data-action="movedown"]');
+    if (moveDownBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const index = parseInt(moveDownBtn.getAttribute('data-index'), 10);
+        moveBlock(index, 1);
+        return;
+    }
+}, true); // Use capture phase
 </script>
 
 @if(isset($publication->cover_image_url) && $publication->cover_image_url)
