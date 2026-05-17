@@ -113,7 +113,7 @@ function extractYouTubeId($url) {
                           </div>
                         @endif
                       @elseif($block['type'] == 'pdf')
-                        <iframe data-src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview" style="overflow: auto; width: 100%; height: 100%;"></iframe>
+                        <iframe src="{{ $block['url'] }}" class="w-full h-full" title="PDF Preview" style="display: block; width: 100%; height: 100%;"></iframe>
                       @elseif($block['type'] == 'video')
                         <div class="w-full h-full bg-dark flex items-center justify-center">
                           <video controls class="max-w-full max-h-full">
@@ -184,8 +184,14 @@ function activateSlide(idx, slideIdx) {
   const slide = modal.querySelector('.preview-slide[data-index="' + slideIdx + '"]');
   if (!slide) return;
   
+  const type = slide.dataset.type;
   const iframe = slide.querySelector('iframe');
-  if (iframe && !iframe.src) {
+  
+  if (iframe && type !== 'pdf') {
+    if (!iframe.src) {
+      iframe.src = iframe.dataset.src;
+    }
+  } else if (iframe && type === 'pdf' && !iframe.src) {
     iframe.src = iframe.dataset.src;
   }
 }
