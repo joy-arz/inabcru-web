@@ -154,6 +154,13 @@ class FileUploadController extends Controller
 
         $filename = $uuid . '.' . $extension;
         $path = $file->storeAs($folder, $filename, 'public');
+
+        \Log::info('Video processed', [
+            'path' => $path,
+            'original_size' => $file->getSize(),
+            'extension' => $extension
+        ]);
+
         return ['path' => $path, 'url' => asset('storage/' . $path)];
     }
 
@@ -163,6 +170,12 @@ class FileUploadController extends Controller
 
         $filename = $uuid . '.pdf';
         $path = $file->storeAs($folder, $filename, 'public');
+
+        \Log::info('PDF processed', [
+            'path' => $path,
+            'original_size' => $file->getSize()
+        ]);
+
         return ['path' => $path, 'url' => asset('storage/' . $path)];
     }
 
