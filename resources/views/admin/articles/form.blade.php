@@ -213,8 +213,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var contentIdInput = document.getElementById('content_id_input');
     var contentEnInput = document.getElementById('content_en_input');
-    var contentIdSaved = {!! json_encode(old('content_id', $article->content_id ?? '')) !!};
-    var contentEnSaved = {!! json_encode(old('content_en', $article->content_en ?? '')) !!};
+    var contentIdSaved = {!! json_encode(old('content_id', $article->content_id ?? '') ?? '') !!};
+    var contentEnSaved = {!! json_encode(old('content_en', $article->content_en ?? '') ?? '') !!};
 
     if (contentIdSaved) quillId.root.innerHTML = contentIdSaved;
     if (contentEnSaved) quillEn.root.innerHTML = contentEnSaved;
