@@ -128,30 +128,25 @@ function extractYouTubeId($url) {
                 </div>
 
                 @if(count($contentBlocks) > 1)
-                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-dark/50 backdrop-blur-sm rounded-full px-4 py-2">
-                  <button onclick="switchSlide({{ $idx }}, -1)" class="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-dark/50 backdrop-blur-sm rounded-full px-4 py-2">
+                  <button onclick="switchSlide({{ $idx }}, -1)" class="p-1.5 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                   </button>
+                  <span id="slide-counter-{{ $idx }}" class="text-white text-xs font-medium px-2">1 / {{ count($contentBlocks) }}</span>
                   <div class="flex gap-1">
                     @foreach($contentBlocks as $blockIdx => $block)
                       <button onclick="goToSlide({{ $idx }}, {{ $blockIdx }})" class="w-2 h-2 rounded-full transition-colors {{ $blockIdx == 0 ? 'bg-white' : 'bg-white/40 hover:bg-white/60' }} cursor-pointer"></button>
                     @endforeach
                   </div>
-                  <button onclick="switchSlide({{ $idx }}, 1)" class="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
+                  <button onclick="switchSlide({{ $idx }}, 1)" class="p-1.5 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                   </button>
                 </div>
                 @endif
-
-                <div class="absolute top-1/2 -translate-y-1/2 left-2">
-                  <div class="bg-dark/50 backdrop-blur-sm rounded-full px-3 py-1 text-xs text-white">
-                    <span id="slide-counter-{{ $idx }}">1 / {{ count($contentBlocks) }}</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
