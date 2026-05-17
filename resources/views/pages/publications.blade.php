@@ -198,7 +198,7 @@ function activateSlide(idx, slideIdx) {
   if (!slide) return;
   
   const type = slide.dataset.type;
-  if (type == 'youtube') {
+  if (type == 'youtube' || type == 'pdf') {
     const iframe = slide.querySelector('iframe');
     if (iframe && !iframe.src) {
       iframe.src = iframe.dataset.src;
