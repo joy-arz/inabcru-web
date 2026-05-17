@@ -300,13 +300,13 @@
                         <p class="text-xs text-gray-500 truncate">${caption}</p>
                     </div>
                     <div class="flex items-center gap-1">
-                        <button type="button" onclick="previewBlock(${index})" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Preview">
+                        <button type="button" data-action="preview" data-index="${index}" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Preview">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
-                        <button type="button" onclick="editBlock(${index})" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Edit">
+                        <button type="button" data-action="edit" data-index="${index}" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700" title="Edit">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
-                        <button type="button" onclick="deleteBlock(${index})" class="p-2 hover:bg-red-50 rounded-lg text-red-500 hover:text-red-600" title="Delete">
+                        <button type="button" data-action="delete" data-index="${index}" class="p-2 hover:bg-red-50 rounded-lg text-red-500 hover:text-red-600" title="Delete">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
                         </button>
                     </div>
@@ -673,6 +673,36 @@ function handleFileUpload(input, type) {
 }
 
 initMediaBlocks();
+
+document.addEventListener('click', function(e) {
+    const previewBtn = e.target.closest('[data-action="preview"]');
+    if (previewBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const index = parseInt(previewBtn.getAttribute('data-index'), 10);
+        alert('click detected on preview, index=' + index);
+        previewBlock(index);
+        return;
+    }
+
+    const editBtn = e.target.closest('[data-action="edit"]');
+    if (editBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const index = parseInt(editBtn.getAttribute('data-index'), 10);
+        editBlock(index);
+        return;
+    }
+
+    const deleteBtn = e.target.closest('[data-action="delete"]');
+    if (deleteBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const index = parseInt(deleteBtn.getAttribute('data-index'), 10);
+        deleteBlock(index);
+        return;
+    }
+});
 </script>
 
 @if(isset($publication->cover_image_url) && $publication->cover_image_url)
