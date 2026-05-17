@@ -76,7 +76,7 @@ class FileUploadController extends Controller
                 }
 
                 $image->setImageFormat('webp');
-                $image->setImageQuality(85);
+                $image->setImageCompressionQuality(85);
                 $image->writeImage($webpPath);
                 $image->destroy();
 
