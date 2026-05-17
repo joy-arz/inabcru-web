@@ -6,6 +6,7 @@
 .article-form .ql-toolbar { border-radius: 6px 6px 0 0; background: #f9fafb; }
 .article-form .ql-container { border-radius: 0 0 6px 6px; font-size: 14px; }
 .article-form .ql-editor { min-height: 180px; max-height: 320px; overflow-y: auto; }
+.article-form .ql-editor iframe { width: 100%; aspect-ratio: 16/9; border-radius: 8px; }
 </style>
 @endpush
 
@@ -154,6 +155,31 @@
 @push('scripts')
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>
+function extractYouTubeId(url) {
+  var patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
+  ];
+  for (var i = 0; i < patterns.length; i++) {
+    var match = url.match(patterns[i]);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function convertYoutubeLinksToEmbeds(content) {
+  var patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/gi,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/gi
+  ];
+  for (var i = 0; i < patterns.length; i++) {
+    content = content.replace(patterns[i], function(match, id) {
+      return '<p><iframe src="https://www.youtube.com/embed/' + id + '" class="w-full aspect-video" frameborder="0" allowfullscreen></iframe></p>';
+    });
+  }
+  return content;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     var quillOptions = {
         theme: 'snow',
@@ -165,13 +191,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 ['link', 'image'],
                 [{ 'align': [] }],
                 ['blockquote'],
-                ['clean']
+                ['clean', 'insertYoutube']
             ]
         }
     };
 
     var quillId = new Quill('#editor_id', quillOptions);
     var quillEn = new Quill('#editor_en', quillOptions);
+    
+    var youtubeButton = document.querySelector('.ql-insertYoutube');
+    if (youtubeButton) {
+        youtubeButton.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>';
+        youtubeButton.title = 'Insert YouTube Video';
+        youtubeButton.addEventListener('click', function() {
+            var url = prompt('Enter YouTube URL:');
+            if (url) {
+                var id = extractYouTubeId(url);
+                if (id) {
+                    var iframe = '<p><iframe src="https://www.youtube.com/embed/' + id + '" class="w-full aspect-video" frameborder="0" allowfullscreen></iframe></p>';
+                    var range = quillId.getSelection() || { index: 0 };
+                    quillId.clipboard.dangerouslyPasteHTML(range.index, iframe);
+                    range = quillEn.getSelection() || { index: 0 };
+                    quillEn.clipboard.dangerouslyPasteHTML(range.index, iframe);
+                } else {
+                    alert('Invalid YouTube URL');
+                }
+            }
+        });
+    }
+
+    quillId.on('text-change', function() {
+        var html = quillId.root.innerHTML;
+        var corrected = convertYoutubeLinksToEmbeds(html);
+        if (html !== corrected) {
+            var delta = quillId.getContents();
+            quillEn.updateContents(delta);
+        }
+    });
+
+    quillEn.on('text-change', function() {
+        var html = quillEn.root.innerHTML;
+        var corrected = convertYoutubeLinksToEmbeds(html);
+        if (html !== corrected) {
+            var delta = quillEn.getContents();
+            quillId.updateContents(delta);
+        }
+    });
 
     document.getElementById('title_id').addEventListener('input', function() {
         var slug = document.getElementById('slug');
@@ -186,8 +251,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('article-form').addEventListener('submit', function() {
-        document.getElementById('content_id_input').value = quillId.root.innerHTML;
-        document.getElementById('content_en_input').value = quillEn.root.innerHTML;
+        var idContent = quillId.root.innerHTML;
+        var enContent = quillEn.root.innerHTML;
+        idContent = convertYoutubeLinksToEmbeds(idContent);
+        enContent = convertYoutubeLinksToEmbeds(enContent);
+        document.getElementById('content_id_input').value = idContent;
+        document.getElementById('content_en_input').value = enContent;
     });
 
     window.setPublishAction = function(value) {
