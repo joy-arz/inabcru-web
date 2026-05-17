@@ -423,7 +423,11 @@
 
         let contentHtml = '';
 
-        if (block.type === 'youtube' && block.url) {
+        if (block.type === 'pdf' && block.url) {
+            contentHtml = `<iframe src="${block.url}" class="w-full rounded-lg" style="height: 80vh;"></iframe>`;
+        } else if (block.type === 'video' && block.url) {
+            contentHtml = `<video src="${block.url}" controls class="w-full rounded-lg"></video>`;
+        } else if (block.type === 'youtube' && block.url) {
             const youtubeId = extractYouTubeId(block.url);
             if (youtubeId) {
                 contentHtml = `<div class="aspect-video"><iframe src="https://www.youtube.com/embed/${youtubeId}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
@@ -432,10 +436,6 @@
             }
         } else if (block.type === 'image' && block.url) {
             contentHtml = `<img src="${block.url}" alt="${block.caption_en || ''}" class="max-w-full mx-auto rounded-lg" />`;
-        } else if (block.type === 'video' && block.url) {
-            contentHtml = `<video src="${block.url}" controls class="w-full rounded-lg"></video>`;
-        } else if (block.type === 'pdf' && block.url) {
-            contentHtml = `<iframe src="${block.url}" class="w-full h-96"></iframe>`;
         } else {
             contentHtml = `<p class="text-center text-gray-500">No content to preview</p>`;
         }
@@ -449,6 +449,8 @@
     }
 
     function closePreviewModal() {
+        const content = document.getElementById('preview-modal-content');
+        content.innerHTML = '';
         document.getElementById('preview-modal').classList.add('hidden');
     }
 
