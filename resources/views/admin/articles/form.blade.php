@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ['link', 'image'],
                 [{ 'align': [] }],
                 ['blockquote'],
-                ['clean', 'insertYoutube']
+                ['clean']
             ]
         }
     };
@@ -199,31 +199,42 @@ document.addEventListener('DOMContentLoaded', function() {
     var quillId = new Quill('#editor_id', quillOptions);
     var quillEn = new Quill('#editor_en', quillOptions);
     
-    var youtubeButtonId = document.querySelector('#editor_id .ql-toolbar .ql-insertYoutube');
-    var youtubeButtonEn = document.querySelector('#editor_en .ql-toolbar .ql-insertYoutube');
-    
-    function setupYoutubeButton(btn, quill) {
-        if (!btn) return;
+    function insertYoutubeButton(editorSelector, quillInstance) {
+        var editorContainer = document.querySelector(editorSelector);
+        if (!editorContainer) return;
+        var toolbar = editorContainer.previousElementSibling;
+        if (!toolbar || !toolbar.classList.contains('ql-toolbar')) return;
+        
+        var btn = document.createElement('button');
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>';
         btn.title = 'Insert YouTube Video';
-        btn.style.cssText = 'background: none; border: none; cursor: pointer;';
+        btn.className = 'ql-insertYoutube';
+        btn.type = 'button';
+        btn.style.cssText = 'background: none; border: none; cursor: pointer; padding: 0 4px;';
         btn.addEventListener('click', function() {
             var url = prompt('Enter YouTube URL:');
             if (url) {
                 var id = extractYouTubeId(url);
                 if (id) {
                     var iframe = '<p><iframe src="https://www.youtube.com/embed/' + id + '" class="w-full aspect-video" frameborder="0" allowfullscreen></iframe></p>';
-                    var range = quill.getSelection(true) || { index: quill.getLength() };
-                    quill.clipboard.dangerouslyPasteHTML(range.index, iframe);
+                    var range = quillInstance.getSelection(true) || { index: quillInstance.getLength() };
+                    quillInstance.clipboard.dangerouslyPasteHTML(range.index, iframe);
                 } else {
                     alert('Invalid YouTube URL');
                 }
             }
         });
+        
+        var cleanBtn = toolbar.querySelector('.ql-clean');
+        if (cleanBtn) {
+            toolbar.insertBefore(btn, cleanBtn);
+        } else {
+            toolbar.appendChild(btn);
+        }
     }
     
-    setupYoutubeButton(youtubeButtonId, quillId);
-    setupYoutubeButton(youtubeButtonEn, quillEn);
+    insertYoutubeButton('#editor_id', quillId);
+    insertYoutubeButton('#editor_en', quillEn);
 
     document.getElementById('title_id').addEventListener('input', function() {
         var slug = document.getElementById('slug');
