@@ -200,13 +200,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     function addYoutubeButton(quillInstance, label) {
-        var container = quillInstance.container;
-        var toolbar = container.previousElementSibling;
-        if (!toolbar || !toolbar.classList.contains('ql-toolbar')) return;
+        var toolbar = quillInstance.getModule('toolbar').container;
         
         var btn = document.createElement('button');
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>';
-        btn.title = 'Insert YouTube Video';
+        btn.title = 'Insert YouTube Video (' + label + ')';
         btn.className = 'ql-insertYoutube';
         btn.type = 'button';
         btn.style.cssText = 'background: none; border: none; cursor: pointer; padding: 0 4px;';
@@ -225,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         var cleanBtn = toolbar.querySelector('.ql-clean');
-        if (cleanBtn) {
+        if (cleanBtn && cleanBtn.parentNode === toolbar) {
             toolbar.insertBefore(btn, cleanBtn);
         } else {
             toolbar.appendChild(btn);
