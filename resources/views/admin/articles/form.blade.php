@@ -167,14 +167,6 @@ function extractYouTubeId(url) {
 }
 
 function convertYoutubeLinksToEmbeds(content) {
-  var patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/gi
-  ];
-  for (var i = 0; i < patterns.length; i++) {
-    content = content.replace(patterns[i], function(match, id) {
-      return '<p><iframe src="https://www.youtube.com/embed/' + id + '" class="w-full aspect-video" frameborder="0" allowfullscreen></iframe></p>';
-    });
-  }
   return content;
 }
 
@@ -265,10 +257,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('article-form').addEventListener('submit', function() {
-        var idContent = quillId.root.innerHTML;
-        var enContent = quillEn.root.innerHTML;
-        idContent = convertYoutubeLinksToEmbeds(idContent);
-        enContent = convertYoutubeLinksToEmbeds(enContent);
+        var idContent = convertYoutubeLinksToEmbeds(quillId.root.innerHTML);
+        var enContent = convertYoutubeLinksToEmbeds(quillEn.root.innerHTML);
         document.getElementById('content_id_input').value = idContent;
         document.getElementById('content_en_input').value = enContent;
     });
