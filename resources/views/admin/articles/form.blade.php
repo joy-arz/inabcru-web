@@ -93,8 +93,14 @@
                                 <div class="flex items-center gap-3">
                                     <label class="px-4 py-2.5 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 text-sm">
                                         Choose File
-                                        <input type="file" name="featured_image_file" id="featured_image_file" accept="image/*" class="hidden" onchange="handleImageUpload(this, 'featured_image_url', 'featured_preview')" />
+                                        <input type="file" name="featured_image_file" id="featured_image_file" accept="image/*" class="hidden" onchange="handleImageUpload(this, 'featured_image_url', 'featured_preview', 'featured_progress')" />
                                     </label>
+                                </div>
+                                <div id="featured_progress" class="mt-2 hidden">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="featured_progress_bar" class="bg-primary h-2.5 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1" id="featured_progress_text">Uploading 0%</p>
                                 </div>
                                 <input type="hidden" name="featured_image_url" id="featured_image_url" value="{{ old('featured_image_url', $article->featured_image_url ?? '') }}">
                                 <div id="featured_preview" class="mt-2 {{ isset($article->featured_image_url) && $article->featured_image_url ? '' : 'hidden' }}">
@@ -277,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 
-function handleImageUpload(input, targetInputId, previewId) {
+function handleImageUpload(input, targetInputId, previewId, progressId) {
     var file = input.files[0];
     if (!file) return;
     if (file.size > 10 * 1024 * 1024) {
@@ -285,20 +291,53 @@ function handleImageUpload(input, targetInputId, previewId) {
         input.value = '';
         return;
     }
+    
+    var progressContainer = progressId ? document.getElementById(progressId) : null;
+    var progressBar = progressId ? document.getElementById(progressId + '_bar') : null;
+    var progressText = progressId ? document.getElementById(progressId + '_text') : null;
+    
+    if (progressContainer) {
+        progressContainer.classList.remove('hidden');
+        if (progressBar) progressBar.style.width = '0%';
+        if (progressText) progressText.textContent = 'Uploading 0%';
+    }
+    
     var formData = new FormData();
     formData.append('file', file);
     formData.append('type', 'image');
     formData.append('_token', '{{ csrf_token() }}');
-    fetch('{{ route('admin.upload') }}', {
-        method: 'POST',
-        body: formData
-    }).then(function(res) { return res.json(); }).then(function(data) {
-        if (data.error) { alert(data.error); return; }
-        document.getElementById(targetInputId).value = data.url;
-        var preview = document.getElementById(previewId);
-        preview.querySelector('img').src = data.url;
-        preview.classList.remove('hidden');
-    }).catch(function() { alert('Upload failed'); });
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{{ route('admin.upload') }}', true);
+    
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable && progressBar && progressText) {
+            var percent = Math.round((e.loaded / e.total) * 100);
+            progressBar.style.width = percent + '%';
+            progressText.textContent = 'Uploading ' + percent + '%';
+        }
+    });
+    
+    xhr.addEventListener('load', function() {
+        if (progressContainer) progressContainer.classList.add('hidden');
+        if (xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            if (data.error) { alert(data.error); return; }
+            document.getElementById(targetInputId).value = data.url;
+            var preview = document.getElementById(previewId);
+            preview.querySelector('img').src = data.url;
+            preview.classList.remove('hidden');
+        } else {
+            alert('Upload failed');
+        }
+    });
+    
+    xhr.addEventListener('error', function() {
+        if (progressContainer) progressContainer.classList.add('hidden');
+        alert('Upload failed');
+    });
+    
+    xhr.send(formData);
 }
 </script>
 @endpush
