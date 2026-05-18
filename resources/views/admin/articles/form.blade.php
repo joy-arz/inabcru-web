@@ -157,8 +157,7 @@
 <script>
 function extractYouTubeId(url) {
   var patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/
   ];
   for (var i = 0; i < patterns.length; i++) {
     var match = url.match(patterns[i]);
@@ -169,8 +168,7 @@ function extractYouTubeId(url) {
 
 function convertYoutubeLinksToEmbeds(content) {
   var patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/gi,
-    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/gi
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/gi
   ];
   for (var i = 0; i < patterns.length; i++) {
     content = content.replace(patterns[i], function(match, id) {
@@ -234,6 +232,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     addYoutubeButton(quillId, 'Indonesian');
     addYoutubeButton(quillEn, 'English');
+
+    function handlePaste(e, quillInstance) {
+        var clipboardData = e.originalEvent.clipboardData;
+        if (!clipboardData) return;
+        
+        var text = clipboardData.getData('text');
+        if (!text) return;
+        
+        var id = extractYouTubeId(text.trim());
+        if (id && text.trim().match(/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v|youtu\.be|youtube\.com\/embed|youtube\.com\/shorts)\/.+/)) {
+            e.preventDefault();
+            var iframe = '<p><iframe src="https://www.youtube.com/embed/' + id + '" class="w-full aspect-video" frameborder="0" allowfullscreen></iframe></p>';
+            var range = quillInstance.getSelection(true) || { index: quillInstance.getLength() };
+            quillInstance.clipboard.dangerouslyPasteHTML(range.index, iframe);
+        }
+    }
+    
+    quillId.container.addEventListener('paste', function(e) { handlePaste(e, quillId); });
+    quillEn.container.addEventListener('paste', function(e) { handlePaste(e, quillEn); });
 
     document.getElementById('title_id').addEventListener('input', function() {
         var slug = document.getElementById('slug');
