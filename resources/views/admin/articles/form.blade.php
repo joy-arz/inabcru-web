@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ['link', 'image'],
                 [{ 'align': [] }],
                 ['blockquote'],
-                ['clean']
+                ['clean', 'insertYoutube']
             ]
         }
     };
@@ -199,8 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var quillId = new Quill('#editor_id', quillOptions);
     var quillEn = new Quill('#editor_en', quillOptions);
     
-    var youtubeButtonId = document.querySelector('#editor_id + .ql-toolbar .ql-insertYoutube, #editor_id ~ .ql-toolbar .ql-insertYoutube');
-    var youtubeButtonEn = document.querySelector('#editor_en + .ql-toolbar .ql-insertYoutube, #editor_en ~ .ql-toolbar .ql-insertYoutube');
+    var youtubeButtonId = document.querySelector('#editor_id .ql-toolbar .ql-insertYoutube');
+    var youtubeButtonEn = document.querySelector('#editor_en .ql-toolbar .ql-insertYoutube');
     
     function setupYoutubeButton(btn, quill) {
         if (!btn) return;
