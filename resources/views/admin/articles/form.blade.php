@@ -189,6 +189,16 @@ document.addEventListener('DOMContentLoaded', function() {
     var quillId = new Quill('#editor_id', quillOptions);
     var quillEn = new Quill('#editor_en', quillOptions);
     
+    quillId.root.style.textAlign = 'justify';
+    quillEn.root.style.textAlign = 'justify';
+    
+    quillId.on('text-change', function() {
+        quillId.root.style.textAlign = 'justify';
+    });
+    quillEn.on('text-change', function() {
+        quillEn.root.style.textAlign = 'justify';
+    });
+    
     function addYoutubeButton(quillInstance, label) {
         var container = quillInstance.container;
         var toolbar = container.previousElementSibling;
