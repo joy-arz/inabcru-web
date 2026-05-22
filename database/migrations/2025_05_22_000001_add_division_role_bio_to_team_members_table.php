@@ -11,14 +11,13 @@ return new class extends Migration
         Schema::table('team_members', function (Blueprint $table) {
             $table->string('division', 50)->nullable()->after('linkedin_url');
             $table->string('role', 100)->nullable()->after('division');
-            $table->text('bio')->nullable()->after('bio_en');
         });
     }
 
     public function down(): void
     {
         Schema::table('team_members', function (Blueprint $table) {
-            $table->dropColumn(['division', 'role', 'bio']);
+            $table->dropColumn(['division', 'role']);
         });
     }
 };

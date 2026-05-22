@@ -1,4 +1,4 @@
-<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 shadow-lg shadow-black/5" style="background: rgba(15, 23, 31, 0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.1);">
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 shadow-lg shadow-black/5" style="background: rgba(15, 23, 31, 0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.1);">
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 md:h-20">
       <a href="/{{ $locale }}" class="flex items-center gap-3 cursor-pointer">

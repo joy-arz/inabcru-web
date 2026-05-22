@@ -81,11 +81,6 @@
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700">Bio (unified, shown on public page)</label>
-                <textarea name="bio" rows="3" placeholder="Biography text shown on public page" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none">{{ old('bio', $member->bio ?? '') }}</textarea>
-            </div>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-2">
                     <label class="text-sm font-medium text-gray-700">Bio (ID)</label>

@@ -174,8 +174,8 @@
         </h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           @foreach($division['members'] as $idx => $member)
-          <div class="text-center group cursor-pointer animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;" onclick="toggleBio(this)">
-            <div class="relative w-24 h-24 mx-auto mb-4 rounded-full bg-surface-warm overflow-hidden border-2 border-border group-hover:border-primary transition-colors duration-300">
+          <div class="text-center animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
+            <div class="relative w-24 h-24 mx-auto mb-4 rounded-full bg-surface-warm overflow-hidden border-2 border-border group-hover:border-primary transition-colors duration-300 cursor-pointer" onclick="toggleBio(this)">
               @if($member->photo_url)
                 <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-full h-full object-cover">
               @else
@@ -187,12 +187,23 @@
             <h4 class="font-heading text-lg font-semibold text-text mb-1">
               {{ $member->name }}
             </h4>
-            <p class="text-cta text-sm font-medium mb-2">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
-            <div class="member-bio hidden text-left mt-4 p-4 bg-surface-warm rounded-xl border border-border text-sm text-muted">
-              <p class="mb-2">{{ $locale == 'id' ? ($member->bio ?: $member->bio_id) : ($member->bio ?: $member->bio_en) }}</p>
-              @if($member->linkedin_url)
-              <a href="{{ $member->linkedin_url }}" target="_blank" class="text-primary hover:underline text-xs">LinkedIn</a>
-              @endif
+            <p class="text-cta text-sm font-medium mb-1">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
+            <p class="text-muted text-xs">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
+            <div class="member-bio hidden mt-4 mx-auto max-w-xs px-4 py-4 bg-surface-warm rounded-xl border border-border text-left">
+              <div class="flex items-start gap-3">
+                @if($member->photo_url)
+                <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-12 h-12 rounded-full object-cover flex-shrink-0">
+                @endif
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-text leading-relaxed mb-2">{{ $locale == 'id' ? ($member->bio ?: $member->bio_id) : ($member->bio ?: $member->bio_en) }}</p>
+                  @if($member->linkedin_url)
+                  <a href="{{ $member->linkedin_url }}" target="_blank" class="text-primary hover:underline text-xs inline-flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    LinkedIn
+                  </a>
+                  @endif
+                </div>
+              </div>
             </div>
           </div>
           @endforeach
