@@ -52,8 +52,10 @@ Route::get('/{locale}', function ($locale) {
         return redirect('/id');
     }
     app()->setLocale($locale);
+    $latestArticles = Article::where('published', true)->orderBy('created_at', 'desc')->take(3)->get();
+    $partners = Partner::orderBy('display_order')->get();
     $donationEnabled = false;
-    return view('pages.home', ['locale' => $locale, 'donationEnabled' => $donationEnabled]);
+    return view('pages.home', ['locale' => $locale, 'latestArticles' => $latestArticles, 'partners' => $partners, 'donationEnabled' => $donationEnabled]);
 })->where('locale', 'id|en');
 
 Route::get('/{locale}/{page}', function ($locale, $page) {
@@ -62,7 +64,7 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
     }
     app()->setLocale($locale);
 
-    $validPages = ['about-us', 'donate', 'programs', 'contact'];
+    $validPages = ['about-us', 'donate', 'programs', 'impact', 'contact'];
 
     if ($page === 'home') {
         return redirect("/{$locale}");
