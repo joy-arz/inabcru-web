@@ -5,7 +5,7 @@
 
 @section('content')
 {{-- Hero Section --}}
-<section class="relative min-h-[40svh] flex items-center justify-start overflow-hidden pt-20 md:pt-24">
+<section class="relative min-h-[40svh] flex items-center justify-start overflow-hidden">
   <div class="absolute inset-0">
     <img src="{{ $siteImages['hero_about_us']->image_url ?? '/images/Field activity/IMG_2175.webp' }}" alt="{{ $siteImages['hero_about_us']->alt_text ?? 'Indonesian forest landscape' }}" class="w-full h-full object-cover">
     <div class="absolute inset-0 bg-dark/70"></div>
@@ -30,7 +30,7 @@
 <section class="py-24 bg-background">
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     @forelse($partners as $idx => $partner)
-      <div class="bg-surface-warm rounded-2xl p-8 border border-border animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
+      <div class="bg-surface-warm rounded-2xl p-8 border border-border mb-8 animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
         <div class="flex flex-col md:flex-row gap-8 items-center">
           @if($partner->logo_url)
           <div class="w-full md:w-48 flex-shrink-0">
