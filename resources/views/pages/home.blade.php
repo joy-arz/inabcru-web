@@ -54,8 +54,13 @@
           {{ trans_for('about.description') }}
         </p>
         <a href="/{{ $locale }}/about-us">
-          <button class="px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-colors duration-200 cursor-pointer">
-            {{ $locale == 'id' ? 'Pelajari Lebih Lanjut' : 'Learn More' }}
+          <button class="px-6 py-3 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 transition-colors duration-200 cursor-pointer">
+            {{ $locale == 'id' ? 'Tentang Kami' : 'About Us' }}
+          </button>
+        </a>
+        <a href="/{{ $locale }}/contact">
+          <button class="px-6 py-3 bg-cta text-white font-semibold rounded-xl hover:bg-cta/90 transition-colors duration-200 cursor-pointer">
+            {{ $locale == 'id' ? 'Hubungi Kami' : 'Contact Us' }}
           </button>
         </a>
       </div>
