@@ -3,8 +3,7 @@
     <div class="grid md:grid-cols-2 gap-12 mb-12">
       <div>
         <a href="/{{ $locale }}" class="flex items-center gap-3 mb-4">
-          <img src="{{ $siteImages['logo_dark']->image_url ?? '/images/Logo/InaBCRU_LOGO GELAP A HORIZONTAL.webp' }}" alt="{{ $siteImages['logo_dark']->alt_text ?? 'InaBCRU' }}" class="h-16 w-auto object-contain">
-          <span class="font-heading font-bold text-xl">InaBCRU</span>
+          <img src="{{ $siteImages['logo_light']->image_url ?? '/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.png' }}" alt="{{ $siteImages['logo_light']->alt_text ?? 'InaBCRU' }}" class="h-20 w-auto object-contain">
         </a>
         <p class="text-gray-500 text-sm leading-relaxed">{{ trans_for('footer.tagline', $locale) }}</p>
       </div>

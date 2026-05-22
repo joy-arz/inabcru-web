@@ -93,20 +93,27 @@
       </h2>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
       @forelse($latestArticles as $idx => $article)
-        <a href="/{{ $locale }}/news/{{ $article->slug }}" class="bg-background rounded-2xl p-6 border border-border hover:shadow-md transition-shadow duration-300 animate-fade-up opacity-0 cursor-pointer" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
-          @if($article->featured_image_url)
-            <img src="{{ $article->featured_image_url }}" alt="{{ $article->title_id }}" class="w-full h-40 object-cover rounded-lg mb-4">
-          @endif
-          <p class="text-muted text-xs mb-2">{{ $article->published_at ? $article->published_at->format('Y-m-d') : $article->created_at->format('Y-m-d') }}</p>
-          <h3 class="font-heading text-lg font-semibold text-text mb-3">
-            {{ $locale == 'id' ? $article->title_id : $article->title_en }}
-          </h3>
-          <p class="text-muted text-sm line-clamp-2">
-            {{ $locale == 'id' ? strip_tags($article->content_id) : strip_tags($article->content_en) }}
-          </p>
-        </a>
+        <div class="animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
+          <a href="/{{ $locale }}/news/{{ $article->slug }}" class="group block bg-surface-warm rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+            @if($article->featured_image_url)
+              <div class="relative aspect-[16/10] w-full overflow-hidden">
+                <img src="{{ $article->featured_image_url }}" alt="{{ $locale == 'id' ? $article->title_id : $article->title_en }}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-300"></div>
+              </div>
+            @endif
+            <div class="p-6">
+              <p class="text-muted text-xs mb-2">{{ $article->published_at ? $article->published_at->format('Y-m-d') : $article->created_at->format('Y-m-d') }}</p>
+              <h3 class="font-heading text-lg font-semibold text-text mb-3">
+                {{ $locale == 'id' ? $article->title_id : $article->title_en }}
+              </h3>
+              <p class="text-muted text-sm line-clamp-2">
+                {{ $locale == 'id' ? strip_tags($article->content_id) : strip_tags($article->content_en) }}
+              </p>
+            </div>
+          </a>
+        </div>
       @empty
         <div class="col-span-3 text-center py-12">
           <p class="text-muted">{{ $locale == 'id' ? 'Belum ada berita' : 'No news yet' }}</p>
