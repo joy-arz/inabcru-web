@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "title": "InaBCRU - Indonesia Bat Conservation Research Union",
-        "description": "Indonesia Bat Conservation Research Union - Building institutional donor credibility for bat conservation in Indonesia"
+        "title": "InaBCRU - Indonesian Bat Conservation Research Union",
+        "description": "Indonesian Bat Conservation Research Union - Building institutional donor credibility for bat conservation in Indonesia"
     },
     "nav": {
         "home": "Home",
@@ -9,16 +9,16 @@
         "visionMission": "Vision & Mission",
         "team": "Team",
         "programs": "Programs",
-        "publications": "Publications",
+        "archive": "Archive",
         "news": "News",
-        "impact": "Impact",
-        "donate": "Donate",
-        "contact": "Contact"
+        "partners": "Partners",
+        "contact": "Contact",
+        "support": "Support",
+        "membership": "Membership",
+        "donate": "Donate"
     },
     "footer": {
-        "tagline": "Protecting bats to maintain the balance of Indonesia's ecosystem",
-        "quickLinks": "Quick Links",
-        "resources": "Resources",
+        "tagline": "Building a network of researchers, observers and practitioners of bat conservation in Indonesia",
         "contactInfo": "Contact Information",
         "email": "Email",
         "founded": "Founded",
@@ -27,8 +27,8 @@
     },
     "home": {
         "hero": {
-            "title": "Indonesia Bat Conservation Research Union",
-            "subtitle": "Building institutional donor credibility for bat conservation NGO in Indonesia",
+            "title": "Indonesian Bat Conservation Research Union",
+            "subtitle": "Building a network of researchers, observers and practitioners of bat conservation in Indonesia",
             "cta": "Support Us"
         },
         "stats": {
@@ -40,7 +40,7 @@
         },
         "mission": {
             "title": "Our Mission",
-            "description": "Building institutional donor credibility for bat conservation non-profit organization in Indonesia."
+            "description": "Building a network of researchers, observers and practitioners of bat conservation in Indonesia."
         },
         "programs": {
             "title": "Our Programs",
@@ -57,8 +57,8 @@
     },
     "about": {
         "title": "About InaBCRU",
-        "description": "InaBCRU is an organization dedicated to bat conservation in Indonesia through research, education, and collaboration with various stakeholders.",
-        "subtitle": "Building institutional donor credibility for bat conservation in Indonesia",
+        "description": "InaBCRU is an organization dedicated to the preservation of bats in Indonesia through research, education, conservation and collaboration with various parties.",
+        "subtitle": "Building a network of researchers, observers and practitioners of bat conservation in Indonesia",
         "founded": "Founded on February 5, 2025 in Yogyakarta",
         "legalId": "AHU-0009178.AH.01.07.TAHUN 2025"
     },
@@ -67,7 +67,7 @@
         "subtitle": "Our mission for bat conservation in Indonesia",
         "vision": {
             "title": "Vision",
-            "description": "To become a leading organization in bat conservation in Indonesia by building donor institutional credibility and trust."
+            "description": "To become a leading organization in bat conservation in Indonesia by building credible and trustworthy institutional donors."
         },
         "mission": {
             "title": "Mission",
@@ -118,7 +118,7 @@
         "ctaQuote": "Bats protect our forests, food, and health — help us protect them."
     },
     "publications": {
-        "title": "Publications",
+        "title": "Archive",
         "subtitle": "Our scientific publications and research findings",
         "filterByYear": "Filter by year",
         "allYears": "All years"
@@ -134,6 +134,10 @@
     "impact": {
         "title": "Impact",
         "subtitle": "Our impact on Indonesian bat conservation"
+    },
+    "mitra": {
+        "title": "InaBCRU Partners",
+        "subtitle": "Institutions and organizations that collaborate with InaBCRU or provide support for our activities."
     },
     "contact": {
         "title": "Contact",

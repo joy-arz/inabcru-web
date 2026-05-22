@@ -33,9 +33,14 @@
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($grouped[$category] as $image)
+                    @php $imgType = $image->type ?? 'image'; @endphp
                     <div class="border border-gray-200 rounded-lg p-4">
                         <div class="relative aspect-video mb-3 rounded-lg overflow-hidden bg-gray-50">
+                            @if($imgType === 'video')
+                            <video src="{{ $image->image_url }}" class="w-full h-full object-contain" muted></video>
+                            @else
                             <img src="{{ $image->image_url }}" alt="{{ $image->alt_text ?? $image->key }}" class="w-full h-full object-contain" onerror="this.src='/images/placeholder.webp'">
+                            @endif
                         </div>
                         <div class="space-y-3">
                             <div>
@@ -48,15 +53,27 @@
                                 @endif
                             </div>
                             <input type="text" value="{{ $image->alt_text ?? '' }}" placeholder="Alt text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" onchange="updateAltText({{ $image->id }}, this.value)" />
+                            <div class="flex items-center gap-2 mt-2">
+                                <label class="text-xs font-medium text-gray-500">Type:</label>
+                                <select onchange="updateType({{ $image->id }}, this.value)" class="text-xs border border-gray-300 rounded px-2 py-1">
+                                    <option value="image" {{ $image->type == 'image' || !$image->type ? 'selected' : '' }}>Image</option>
+                                    <option value="video" {{ $image->type == 'video' ? 'selected' : '' }}>Video</option>
+                                </select>
+                            </div>
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Replace Image</label>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">{{ $image->type == 'video' ? 'Replace Video' : 'Replace Image' }}</label>
                                 <div class="flex items-center gap-2">
                                     <label class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-sm">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                        Upload
-                                        <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(this, {{ $image->id }})" />
+                                        {{ $image->type == 'video' ? 'Upload Video' : 'Upload' }}
+                                        <input type="file" accept="{{ $image->type == 'video' ? 'video/*' : 'image/*' }}" class="hidden" onchange="handleImageUpload(this, {{ $image->id }}, '{{ $image->type }}')" />
                                     </label>
                                 </div>
+                                @if($image->type == 'video' && $image->image_url)
+                                <div class="mt-2">
+                                    <video src="{{ $image->image_url }}" class="w-full h-24 object-cover rounded-lg bg-black" controls></video>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -68,17 +85,18 @@
 </div>
 
 <script>
-function handleImageUpload(input, imageId) {
+function handleImageUpload(input, imageId, type) {
     const file = input.files[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-        alert('File too large. Max 5MB');
+    const maxSize = type === 'video' ? 100 * 1024 * 1024 : 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+        alert('File too large. Max ' + (type === 'video' ? '100MB' : '5MB'));
         input.value = '';
         return;
     }
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('type', 'image');
+    formData.append('type', type === 'video' ? 'video' : 'image');
     formData.append('_token', '{{ csrf_token() }}');
     fetch('{{ route('admin.upload') }}', {
         method: 'POST',
@@ -112,6 +130,20 @@ function updateAltText(imageId, altText) {
         body: new URLSearchParams({
             '_token': '{{ csrf_token() }}',
             'alt_text': altText
+        }),
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        }
+    });
+}
+
+function updateType(imageId, type) {
+    fetch('/admin/site-images/' + imageId, {
+        method: 'PUT',
+        body: new URLSearchParams({
+            '_token': '{{ csrf_token() }}',
+            'type': type
         }),
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',

@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 md:h-20">
       <a href="/{{ $locale }}" class="flex items-center gap-3 cursor-pointer">
-        <img id="navbar-logo" src="{{ $siteImages['logo_light']->image_url ?? '/images/Logo/InaBCRU_LOGO CERAH.webp' }}" alt="{{ $siteImages['logo_light']->alt_text ?? 'InaBCRU' }}" class="h-20 md:h-24 w-auto object-contain transition-opacity duration-300">
+        <img id="navbar-logo" src="{{ $siteImages['logo_light']->image_url ?? '/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp' }}" alt="{{ $siteImages['logo_light']->alt_text ?? 'InaBCRU' }}" class="h-12 md:h-16 w-auto object-contain transition-opacity duration-300">
       </a>
 
       <div class="hidden xl:flex items-center gap-1">
@@ -11,10 +11,9 @@
           ['href' => "/{$locale}", 'label' => trans_for('nav.home', $locale), 'key' => 'home'],
           ['href' => "/{$locale}/about-us", 'label' => trans_for('nav.about', $locale), 'key' => 'about-us'],
           ['href' => "/{$locale}/programs", 'label' => trans_for('nav.programs', $locale), 'key' => 'programs'],
-          ['href' => "/{$locale}/publications", 'label' => trans_for('nav.publications', $locale), 'key' => 'publications'],
           ['href' => "/{$locale}/news", 'label' => trans_for('nav.news', $locale), 'key' => 'news'],
-          ['href' => "/{$locale}/impact", 'label' => trans_for('nav.impact', $locale), 'key' => 'impact'],
-          ['href' => "/{$locale}/donate", 'label' => trans_for('nav.donate', $locale), 'key' => 'donate', 'cta' => true],
+          ['href' => "/{$locale}/publications", 'label' => trans_for('nav.archive', $locale), 'key' => 'publications'],
+          ['href' => "/{$locale}/mitra", 'label' => trans_for('nav.partners', $locale), 'key' => 'mitra'],
           ['href' => "/{$locale}/contact", 'label' => trans_for('nav.contact', $locale), 'key' => 'contact'],
         ];
 
@@ -22,18 +21,30 @@
         $isHomePage = preg_match('#^' . $locale . '$#', $currentPath) || $currentPath === $locale;
         @endphp
 
+        <div class="relative" id="supportDropdown">
+          <button onclick="toggleSupportDropdown()" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-white hover:text-primary hover:bg-white/10 transition-all duration-200 whitespace-nowrap flex items-center gap-1">
+            {{ $locale == 'id' ? 'Dukungan' : 'Support' }}
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div id="supportDropdownContent" class="hidden absolute top-full left-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
+            <a href="/{{ $locale }}/membership" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
+              {{ $locale == 'id' ? 'Keanggotaan' : 'Membership' }}
+            </a>
+            @if($donationEnabled ?? false)
+            <a href="/{{ $locale }}/donate" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
+              {{ trans_for('nav.donate', $locale) }}
+            </a>
+            @endif
+          </div>
+        </div>
+
         @foreach($navItems as $item)
-          @if(isset($item['cta']) && $item['cta'])
-            <a href="{{ $item['href'] }}"
-               class="px-3 py-2 rounded-lg text-sm font-medium bg-cta text-white hover:bg-cta/90 transition-all duration-200 whitespace-nowrap">
-              {{ $item['label'] }}
-            </a>
-          @else
-            <a href="{{ $item['href'] }}"
-               class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-white hover:text-primary hover:bg-white/10 transition-all duration-200 whitespace-nowrap {{ request()->path() == $item['href'] || ($isHomePage && $item['key'] == 'home') ? 'text-orange-500 bg-orange-500/10' : '' }}">
-              {{ $item['label'] }}
-            </a>
-          @endif
+          <a href="{{ $item['href'] }}"
+             class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-white hover:text-primary hover:bg-white/10 transition-all duration-200 whitespace-nowrap {{ request()->path() == $item['href'] || ($isHomePage && $item['key'] == 'home') ? 'text-orange-500 bg-orange-500/10' : '' }}">
+            {{ $item['label'] }}
+          </a>
         @endforeach
       </div>
 
@@ -76,23 +87,22 @@
     <div class="max-w-6xl mx-auto px-6 py-4">
       <div class="flex flex-col gap-1 max-h-[60vh] overflow-y-auto pb-4">
         @foreach($navItems as $item)
-          @if(!isset($item['cta']))
-            <a href="{{ $item['href'] }}"
-               class="px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 {{ request()->path() == $item['href'] ? 'text-primary bg-primary/10' : 'text-text hover:text-primary hover:bg-primary/5' }}">
-              {{ $item['label'] }}
-            </a>
-          @endif
+          <a href="{{ $item['href'] }}"
+             class="px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 {{ request()->path() == $item['href'] ? 'text-primary bg-primary/10' : 'text-text hover:text-primary hover:bg-primary/5' }}">
+            {{ $item['label'] }}
+          </a>
         @endforeach
       </div>
       <div class="pt-4 border-t border-border">
-        @foreach($navItems as $item)
-          @if(isset($item['cta']))
-            <a href="{{ $item['href'] }}"
-               class="block px-4 py-3 rounded-lg text-base font-medium bg-cta text-white text-center">
-              {{ $item['label'] }}
-            </a>
-          @endif
-        @endforeach
+        <p class="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400">{{ $locale == 'id' ? 'Dukungan' : 'Support' }}</p>
+        <a href="/{{ $locale }}/membership" class="block px-4 py-3 rounded-lg text-base font-medium text-text hover:text-primary hover:bg-primary/5 transition-colors">
+          {{ $locale == 'id' ? 'Keanggotaan' : 'Membership' }}
+        </a>
+        @if($donationEnabled ?? false)
+        <a href="/{{ $locale }}/donate" class="block px-4 py-3 rounded-lg text-base font-medium text-text hover:text-primary hover:bg-primary/5 transition-colors">
+          {{ trans_for('nav.donate', $locale) }}
+        </a>
+        @endif
       </div>
     </div>
   </div>
@@ -101,6 +111,7 @@
 <script>
   let isMenuOpen = false;
   let isLangOpen = false;
+  let isSupportOpen = false;
   let isScrolled = false;
 
   function toggleMobileMenu() {
@@ -126,6 +137,12 @@
     content.classList.toggle('hidden', !isLangOpen);
   }
 
+  function toggleSupportDropdown() {
+    isSupportOpen = !isSupportOpen;
+    const content = document.getElementById('supportDropdownContent');
+    content.classList.toggle('hidden', !isSupportOpen);
+  }
+
   function handleScroll() {
     const navbar = document.getElementById('navbar');
     const navbarLogo = document.getElementById('navbar-logo');
@@ -139,7 +156,7 @@
       navbar.style.borderBottom = '1px solid #E8E6E1';
       navbar.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
       if (navbarLogo) {
-        navbarLogo.src = '{{ $siteImages["logo_dark"]->image_url ?? '/images/Logo/InaBCRU_LOGO GELAP A.webp' }}';
+        navbarLogo.src = '{{ $siteImages["logo_dark"]->image_url ?? '/images/Logo/InaBCRU_LOGO GELAP A HORIZONTAL.webp' }}';
         navbarLogo.alt = '{{ $siteImages["logo_dark"]->alt_text ?? 'InaBCRU' }}';
       }
       navLinks.forEach(link => {
@@ -165,7 +182,7 @@
       navbar.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
       navbar.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
       if (navbarLogo) {
-        navbarLogo.src = '{{ $siteImages["logo_light"]->image_url ?? '/images/Logo/InaBCRU_LOGO CERAH.webp' }}';
+        navbarLogo.src = '{{ $siteImages["logo_light"]->image_url ?? '/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp' }}';
         navbarLogo.alt = '{{ $siteImages["logo_light"]->alt_text ?? 'InaBCRU' }}';
       }
       navLinks.forEach(link => {
@@ -192,6 +209,11 @@
     if (!dropdown.contains(e.target) && isLangOpen) {
       isLangOpen = false;
       document.getElementById('langDropdownContent').classList.add('hidden');
+    }
+    const supportDropdown = document.getElementById('supportDropdown');
+    if (!supportDropdown.contains(e.target) && isSupportOpen) {
+      isSupportOpen = false;
+      document.getElementById('supportDropdownContent').classList.add('hidden');
     }
   });
 </script>

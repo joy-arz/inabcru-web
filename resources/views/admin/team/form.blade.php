@@ -45,6 +45,26 @@
                     <input type="text" name="name" value="{{ old('name', $member->name ?? '') }}" placeholder="Dr. John Doe" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" required />
                 </div>
                 <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Division</label>
+                    <select name="division" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                        <option value="">Select division</option>
+                        <option value="executive_board" {{ (old('division', $member->division ?? '') == 'executive_board') ? 'selected' : '' }}>Executive Board</option>
+                        <option value="divisi_riset" {{ (old('division', $member->division ?? '') == 'divisi_riset') ? 'selected' : '' }}>Divisi Riset</option>
+                        <option value="divisi_konservasi" {{ (old('division', $member->division ?? '') == 'divisi_konservasi') ? 'selected' : '' }}>Divisi Konservasi</option>
+                        <option value="divisi_pendidikan" {{ (old('division', $member->division ?? '') == 'divisi_pendidikan') ? 'selected' : '' }}>Divisi Pendidikan & Pelatihan</option>
+                        <option value="database_data_sains" {{ (old('division', $member->division ?? '') == 'database_data_sains') ? 'selected' : '' }}>Database & Data Sains</option>
+                        <option value="dewan_pengawas" {{ (old('division', $member->division ?? '') == 'dewan_pengawas') ? 'selected' : '' }}>Dewan Pengawas</option>
+                        <option value="students_voluntary" {{ (old('division', $member->division ?? '') == 'students_voluntary') ? 'selected' : '' }}>Students & Voluntary</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Role/Title (e.g., Chief of Research)</label>
+                    <input type="text" name="role" value="{{ old('role', $member->role ?? '') }}" placeholder="Chief of Research" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                </div>
+                <div class="space-y-2">
                     <label class="text-sm font-medium text-gray-700">LinkedIn URL</label>
                     <input type="url" name="linkedin_url" value="{{ old('linkedin_url', $member->linkedin_url ?? '') }}" placeholder="https://linkedin.com/in/..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
                 </div>
@@ -59,6 +79,11 @@
                     <label class="text-sm font-medium text-gray-700">Position (EN)</label>
                     <input type="text" name="title_en" value="{{ old('title_en', $member->title_en ?? '') }}" placeholder="Position title in English" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" required />
                 </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-700">Bio (unified, shown on public page)</label>
+                <textarea name="bio" rows="3" placeholder="Biography text shown on public page" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none">{{ old('bio', $member->bio ?? '') }}</textarea>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

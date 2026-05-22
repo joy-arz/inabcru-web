@@ -36,9 +36,21 @@
                 Partner Details
             </h2>
 
+            <div class="flex items-center gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" name="active" value="1" {{ old('active', $partner->active ?? true) ? 'checked' : '' }} class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                    <span class="text-sm font-medium text-gray-700">Show on website</span>
+                </label>
+            </div>
+
             <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700">Partner Name</label>
                 <input type="text" name="name" value="{{ old('name', $partner->name ?? '') }}" placeholder="e.g., Ministry of Environment" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-700">Description</label>
+                <textarea name="description" rows="3" placeholder="Brief description of the partner (1-3 sentences)" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none">{{ old('description', $partner->description ?? '') }}</textarea>
             </div>
 
             <div class="space-y-2">

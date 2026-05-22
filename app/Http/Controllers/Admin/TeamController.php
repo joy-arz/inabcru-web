@@ -29,8 +29,11 @@ class TeamController extends Controller
             'title_en' => 'required|string',
             'bio_id' => 'nullable|string',
             'bio_en' => 'nullable|string',
+            'bio' => 'nullable|string',
             'photo_url' => 'nullable|string',
             'linkedin_url' => 'nullable|string',
+            'division' => 'nullable|string',
+            'role' => 'nullable|string',
         ]);
 
         $data['display_order'] = TeamMember::max('display_order') + 1;
@@ -53,8 +56,11 @@ class TeamController extends Controller
             'title_en' => 'sometimes|string',
             'bio_id' => 'nullable|string',
             'bio_en' => 'nullable|string',
+            'bio' => 'nullable|string',
             'photo_url' => 'nullable|string',
             'linkedin_url' => 'nullable|string',
+            'division' => 'nullable|string',
+            'role' => 'nullable|string',
         ]);
 
         $member->update($data);

@@ -52,9 +52,8 @@ Route::get('/{locale}', function ($locale) {
         return redirect('/id');
     }
     app()->setLocale($locale);
-    $latestArticles = Article::where('published', true)->orderBy('created_at', 'desc')->take(3)->get();
-    $partners = Partner::orderBy('display_order')->get();
-    return view('pages.home', ['locale' => $locale, 'latestArticles' => $latestArticles, 'partners' => $partners]);
+    $donationEnabled = false;
+    return view('pages.home', ['locale' => $locale, 'donationEnabled' => $donationEnabled]);
 })->where('locale', 'id|en');
 
 Route::get('/{locale}/{page}', function ($locale, $page) {
@@ -63,7 +62,7 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
     }
     app()->setLocale($locale);
 
-    $validPages = ['about-us', 'donate', 'programs', 'impact', 'contact'];
+    $validPages = ['about-us', 'donate', 'programs', 'contact'];
 
     if ($page === 'home') {
         return redirect("/{$locale}");
@@ -77,6 +76,11 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
     if ($page === 'news') {
         $articles = Article::where('published', true)->orderBy('created_at', 'desc')->get();
         return view('pages.news', compact('locale', 'articles'));
+    }
+
+    if ($page === 'mitra') {
+        $partners = Partner::where('active', true)->orderBy('display_order')->get();
+        return view('pages.mitra', compact('locale', 'partners'));
     }
 
     if (in_array($page, $validPages)) {

@@ -11,10 +11,13 @@ class Partner extends Model
         'logo_url',
         'alt_text',
         'website_url',
+        'description',
         'display_order',
+        'active',
     ];
 
     protected $casts = [
         'display_order' => 'integer',
+        'active' => 'boolean',
     ];
 }

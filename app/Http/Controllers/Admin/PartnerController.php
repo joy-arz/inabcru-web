@@ -28,9 +28,12 @@ class PartnerController extends Controller
             'logo_url' => 'nullable|string',
             'alt_text' => 'nullable|string',
             'website_url' => 'nullable|string',
+            'description' => 'nullable|string',
+            'active' => 'boolean',
         ]);
 
         $data['display_order'] = Partner::max('display_order') + 1;
+        $data['active'] = $data['active'] ?? true;
         Partner::create($data);
         return redirect()->route('admin.partners.index')->with('success', 'Partner added');
     }
@@ -49,6 +52,8 @@ class PartnerController extends Controller
             'logo_url' => 'nullable|string',
             'alt_text' => 'nullable|string',
             'website_url' => 'nullable|string',
+            'description' => 'nullable|string',
+            'active' => 'boolean',
         ]);
 
         $partner->update($data);

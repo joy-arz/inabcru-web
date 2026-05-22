@@ -30,6 +30,7 @@ class SiteImageController extends Controller
         $data = $request->validate([
             'image_url' => 'sometimes|string',
             'alt_text' => 'nullable|string',
+            'type' => 'sometimes|string|in:image,video',
         ]);
 
         $image->update($data);

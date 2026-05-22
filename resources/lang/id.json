@@ -9,16 +9,16 @@
         "visionMission": "Visi & Misi",
         "team": "Tim",
         "programs": "Program",
-        "publications": "Publikasi",
+        "archive": "Arsip",
         "news": "Berita",
-        "impact": "Dampak",
-        "donate": "Donasi",
-        "contact": "Kontak"
+        "partners": "Mitra",
+        "contact": "Kontak",
+        "support": "Dukungan",
+        "membership": "Keanggotaan",
+        "donate": "Donasi"
     },
     "footer": {
-        "tagline": "Melindungi kelelawar untuk menjaga keseimbangan ekosistem Indonesia",
-        "quickLinks": "Tautan Cepat",
-        "resources": "Sumber Daya",
+        "tagline": "Membangun jejaring peneliti, pemerhati dan pegiat konservasi kelelawar di Indonesia",
         "contactInfo": "Informasi Kontak",
         "email": "Email",
         "founded": "Didirikan",
@@ -27,8 +27,8 @@
     },
     "home": {
         "hero": {
-            "title": "Indonesia Bat Conservation Research Union",
-            "subtitle": "Membangun kredibilitas institusi untuk konservasi kelelawar di Indonesia",
+            "title": "Indonesian Bat Conservation Research Union",
+            "subtitle": "Membangun jejaring peneliti, pemerhati dan pegiat konservasi kelelawar di Indonesia",
             "cta": "Dukung Kami"
         },
         "stats": {
@@ -40,7 +40,7 @@
         },
         "mission": {
             "title": "Misi Kami",
-            "description": "Membangun kredibilitas donor institusi untuk organisasi non-profit konservasi kelelawar di Indonesia."
+            "description": "Membangun jejaring peneliti, pemerhati dan pegiat konservasi kelelawar di Indonesia."
         },
         "programs": {
             "title": "Program Kami",
@@ -57,8 +57,8 @@
     },
     "about": {
         "title": "Tentang InaBCRU",
-        "description": "InaBCRU adalah organisasi yang didedikasikan untuk konservasi kelelawar di Indonesia melalui penelitian, edukasi, dan kolaborasi dengan berbagai pihak.",
-        "subtitle": "Membangun kredibilitas institusi untuk konservasi kelelawar di Indonesia",
+        "description": "InaBCRU adalah organisasi yang didedikasikan untuk pelestarian kelelawar di Indonesia melalui penelitian, edukasi, konservasi dan kolaborasi dengan berbagai pihak.",
+        "subtitle": "Membangun jejaring peneliti, pemerhati dan pegiat konservasi kelelawar di Indonesia",
         "founded": "Didirikan pada 5 Februari 2025 di Yogyakarta",
         "legalId": "AHU-0009178.AH.01.07.TAHUN 2025"
     },
@@ -67,7 +67,7 @@
         "subtitle": "Misi kami untuk konservasi kelelawar di Indonesia",
         "vision": {
             "title": "Visi",
-            "description": "Menjadi organisasi terdepan dalam konservasi kelelawar di Indonesia dengan membangun kredibilitas dan kepercayaan donor institusi."
+            "description": "Menjadi organisasi terdepan dalam konservasi kelelawar di Indonesia dengan membangun donor institusional yang kredibel dan terpercaya."
         },
         "mission": {
             "title": "Misi",
@@ -118,7 +118,7 @@
         "ctaQuote": "Kelelawar melindungi hutan, pangan, dan kesehatan kita — bantu kami melindungi mereka."
     },
     "publications": {
-        "title": "Publikasi",
+        "title": "Arsip",
         "subtitle": "Publikasi ilmiah dan hasil penelitian kami",
         "filterByYear": "Filter berdasarkan tahun",
         "allYears": "Semua tahun"
@@ -134,6 +134,10 @@
     "impact": {
         "title": "Dampak",
         "subtitle": "Dampak kami dalam konservasi kelelawar Indonesia"
+    },
+    "mitra": {
+        "title": "Mitra InaBCRU",
+        "subtitle": "Lembaga dan institusi yang bekerja sama dengan InaBCRU atau memberikan dukungan terhadap kegiatan kami."
     },
     "contact": {
         "title": "Kontak",
