@@ -64,6 +64,7 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
     }
     app()->setLocale($locale);
 
+    $donationEnabled = false;
     $validPages = ['about-us', 'donate', 'programs', 'impact', 'contact'];
 
     if ($page === 'home') {
@@ -72,21 +73,21 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
 
     if ($page === 'publications') {
         $publications = Publication::orderBy('year', 'desc')->get();
-        return view('pages.publications', compact('locale', 'publications'));
+        return view('pages.publications', compact('locale', 'publications', 'donationEnabled'));
     }
 
     if ($page === 'news') {
         $articles = Article::where('published', true)->orderBy('created_at', 'desc')->get();
-        return view('pages.news', compact('locale', 'articles'));
+        return view('pages.news', compact('locale', 'articles', 'donationEnabled'));
     }
 
     if ($page === 'mitra') {
         $partners = Partner::where('active', true)->orderBy('display_order')->get();
-        return view('pages.mitra', compact('locale', 'partners'));
+        return view('pages.mitra', compact('locale', 'partners', 'donationEnabled'));
     }
 
     if (in_array($page, $validPages)) {
-        $data = ['locale' => $locale];
+        $data = ['locale' => $locale, 'donationEnabled' => $donationEnabled];
         if ($page === 'about-us') {
             $data['teamMembers'] = TeamMember::orderBy('display_order')->get();
         }
@@ -101,6 +102,7 @@ Route::get('/{locale}/news/{slug}', function ($locale, $slug) {
         return redirect('/id');
     }
     app()->setLocale($locale);
+    $donationEnabled = false;
 
     $article = Article::where('slug', $slug)->where('published', true)->firstOrFail();
     $sidebarArticles = Article::where('published', true)
@@ -108,7 +110,7 @@ Route::get('/{locale}/news/{slug}', function ($locale, $slug) {
         ->orderBy('created_at', 'desc')
         ->take(3)
         ->get();
-    return view('pages.news-detail', compact('locale', 'article', 'sidebarArticles'));
+    return view('pages.news-detail', compact('locale', 'article', 'sidebarArticles', 'donationEnabled'));
 })->where('locale', 'id|en');
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {

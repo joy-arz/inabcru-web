@@ -21,6 +21,7 @@
         $isHomePage = preg_match('#^' . $locale . '$#', $currentPath) || $currentPath === $locale;
         @endphp
 
+        @if($donationEnabled ?? false)
         <div class="relative" id="supportDropdown">
           <button onclick="toggleSupportDropdown()" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-white hover:text-primary hover:bg-white/10 transition-all duration-200 whitespace-nowrap flex items-center gap-1">
             {{ $locale == 'id' ? 'Dukungan' : 'Support' }}
@@ -32,13 +33,12 @@
             <a href="/{{ $locale }}/membership" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
               {{ $locale == 'id' ? 'Keanggotaan' : 'Membership' }}
             </a>
-            @if($donationEnabled ?? false)
             <a href="/{{ $locale }}/donate" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
               {{ trans_for('nav.donate', $locale) }}
             </a>
-            @endif
           </div>
         </div>
+        @endif
 
         @foreach($navItems as $item)
           <a href="{{ $item['href'] }}"
@@ -94,11 +94,11 @@
         @endforeach
       </div>
       <div class="pt-4 border-t border-border">
+        @if($donationEnabled ?? false)
         <p class="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400">{{ $locale == 'id' ? 'Dukungan' : 'Support' }}</p>
         <a href="/{{ $locale }}/membership" class="block px-4 py-3 rounded-lg text-base font-medium text-text hover:text-primary hover:bg-primary/5 transition-colors">
           {{ $locale == 'id' ? 'Keanggotaan' : 'Membership' }}
         </a>
-        @if($donationEnabled ?? false)
         <a href="/{{ $locale }}/donate" class="block px-4 py-3 rounded-lg text-base font-medium text-text hover:text-primary hover:bg-primary/5 transition-colors">
           {{ trans_for('nav.donate', $locale) }}
         </a>
