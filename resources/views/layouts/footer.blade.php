@@ -2,11 +2,10 @@
   <div class="max-w-6xl mx-auto">
     <div class="flex flex-col md:flex-row items-center md:items-start justify-between mb-12 gap-8">
       <div class="flex flex-col items-center md:items-start gap-1.5">
-        <img
+<img
           src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp"
           alt="InaBCRU"
-          class="w-[180px] md:w-[300px] h-[130px] md:h-[200px]"
-          style="object-fit: cover; object-position: left center;"
+          style="width: 220px; height: auto;"
         >
         <p class="text-gray-500 text-sm leading-relaxed">{{ trans_for('footer.tagline', $locale) }}</p>
       </div>
