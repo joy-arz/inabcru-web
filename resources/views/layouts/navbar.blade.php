@@ -1,8 +1,8 @@
 <nav id="navbar" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 shadow-lg shadow-black/5" style="background: rgba(15, 23, 31, 0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.1);">
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
-    <div class="flex items-center justify-between h-20 md:h-28">
+    <div class="flex items-center justify-between h-16 md:h-20">
       <a href="/{{ $locale }}" class="flex items-center gap-3 cursor-pointer">
-        <img id="navbar-logo" src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="h-20 md:h-24 w-auto object-contain transition-opacity duration-300">
+        <img id="navbar-logo" src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="h-24 md:h-28 w-auto transition-opacity duration-300" style="object-fit: contain; object-position: left center;">
       </a>
 
       <div class="hidden xl:flex items-center gap-1">
