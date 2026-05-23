@@ -239,7 +239,7 @@ function uploadCarouselFiles(files) {
 
     var currentImages = JSON.parse(document.getElementById('carousel_images').value || '[]');
     var total = files.length;
-    var uploaded = 0;
+    var completed = 0;
 
     function uploadNext(index) {
         if (index >= total) {
@@ -257,10 +257,11 @@ function uploadCarouselFiles(files) {
 
         xhr.upload.addEventListener('progress', function(e) {
             if (e.lengthComputable) {
-                var fileProgress = Math.round((e.loaded / e.total) * 100);
-                var overallProgress = Math.round(((uploaded + fileProgress) / total) * 100);
-                progressBar.style.width = overallProgress + '%';
-                progressText.textContent = overallProgress + '%';
+                var filePercent = Math.round((e.loaded / e.total) * 100);
+                var overallPercent = Math.round(((completed * 100 + filePercent) / total));
+                var clampedPercent = Math.min(overallPercent, 100);
+                progressBar.style.width = clampedPercent + '%';
+                progressText.textContent = clampedPercent + '%';
             }
         });
 
@@ -275,13 +276,15 @@ function uploadCarouselFiles(files) {
                     renderCarouselPreviews(currentImages);
                 }
             }
-            uploaded++;
+            completed++;
+            progressBar.style.width = Math.round((completed / total) * 100) + '%';
+            progressText.textContent = Math.round((completed / total) * 100) + '%';
             uploadNext(index + 1);
         });
 
         xhr.addEventListener('error', function() {
             alert('Upload failed for file ' + (index + 1));
-            uploaded++;
+            completed++;
             uploadNext(index + 1);
         });
 

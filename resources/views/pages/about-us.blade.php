@@ -165,22 +165,21 @@
               <p class="text-muted text-xs mt-1">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
             </div>
             <div class="member-bio hidden mt-6 w-full bg-surface-warm rounded-xl border border-border p-6 text-left">
-              <div class="flex items-start gap-4">
-                @if($member->photo_url)
-                <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-16 h-16 rounded-full object-cover flex-shrink-0">
-                @endif
-                <div class="flex-1 min-w-0">
-                  <h5 class="font-heading text-lg font-semibold text-text mb-2">{{ $member->name }}</h5>
-                  <p class="text-primary text-sm font-medium mb-3">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
-                  <p class="text-muted text-sm leading-relaxed mb-3">{{ $locale == 'id' ? ($member->bio ?: $member->bio_id) : ($member->bio ?: $member->bio_en) }}</p>
-                  @if($member->linkedin_url)
-                  <a href="{{ $member->linkedin_url }}" target="_blank" class="text-primary hover:underline text-sm inline-flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                    LinkedIn
-                  </a>
-                  @endif
-                </div>
+              <div class="text-center">
+                <h5 class="font-heading text-xl font-bold text-text mb-1">{{ $member->name }}</h5>
+                <p class="text-primary text-sm font-medium mb-4">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
               </div>
+              <div class="border-t border-border pt-4">
+                <p class="text-muted text-sm leading-relaxed whitespace-pre-line">{{ $locale == 'id' ? ($member->bio ?: $member->bio_id) : ($member->bio ?: $member->bio_en) }}</p>
+              </div>
+              @if($member->linkedin_url)
+              <div class="mt-4 pt-4 border-t border-border flex justify-center">
+                <a href="{{ $member->linkedin_url }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors text-sm font-medium">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                  LinkedIn
+                </a>
+              </div>
+              @endif
             </div>
           </div>
           @endforeach
@@ -211,24 +210,23 @@
             <p class="text-primary text-sm font-medium">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
             <p class="text-muted text-xs mt-1">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
           </div>
-          <div class="member-bio hidden mt-6 w-full bg-surface-warm rounded-xl border border-border p-6 text-left">
-            <div class="flex items-start gap-4">
-              @if($member->photo_url)
-              <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-16 h-16 rounded-full object-cover flex-shrink-0">
-              @endif
-              <div class="flex-1 min-w-0">
-                <h5 class="font-heading text-lg font-semibold text-text mb-2">{{ $member->name }}</h5>
-                <p class="text-primary text-sm font-medium mb-3">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
-                <p class="text-muted text-sm leading-relaxed mb-3">{{ $locale == 'id' ? ($member->bio ?: $member->bio_id) : ($member->bio ?: $member->bio_en) }}</p>
-                @if($member->linkedin_url)
-                <a href="{{ $member->linkedin_url }}" target="_blank" class="text-primary hover:underline text-sm inline-flex items-center gap-1">
+<div class="member-bio hidden mt-6 w-full bg-surface-warm rounded-xl border border-border p-6 text-left">
+              <div class="text-center">
+                <h5 class="font-heading text-xl font-bold text-text mb-1">{{ $member->name }}</h5>
+                <p class="text-primary text-sm font-medium mb-4">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
+              </div>
+              <div class="border-t border-border pt-4">
+                <p class="text-muted text-sm leading-relaxed whitespace-pre-line">{{ $locale == 'id' ? ($member->bio ?: $member->bio_id) : ($member->bio ?: $member->bio_en) }}</p>
+              </div>
+              @if($member->linkedin_url)
+              <div class="mt-4 pt-4 border-t border-border flex justify-center">
+                <a href="{{ $member->linkedin_url }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors text-sm font-medium">
                   <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                   LinkedIn
                 </a>
-                @endif
               </div>
+              @endif
             </div>
-          </div>
         </div>
         @endforeach
       </div>
