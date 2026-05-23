@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TeamMember extends Model
 {
@@ -14,7 +15,7 @@ class TeamMember extends Model
         'bio_en',
         'photo_url',
         'linkedin_url',
-        'division',
+        'division_id',
         'role',
         'display_order',
     ];
@@ -22,6 +23,11 @@ class TeamMember extends Model
     protected $casts = [
         'display_order' => 'integer',
     ];
+
+    public function division(): BelongsTo
+    {
+        return $this->belongsTo(Division::class);
+    }
 
     public function getTitleAttribute($locale = null)
     {

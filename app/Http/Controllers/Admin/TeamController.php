@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
+use App\Models\Division;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -18,7 +19,8 @@ class TeamController extends Controller
 
     public function create(): View
     {
-        return view('admin.team.form');
+        $divisions = Division::where('active', true)->orderBy('display_order')->get();
+        return view('admin.team.form', compact('divisions'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -31,7 +33,7 @@ class TeamController extends Controller
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
             'linkedin_url' => 'nullable|string',
-            'division' => 'nullable|string',
+            'division_id' => 'nullable|exists:divisions,id',
             'role' => 'nullable|string',
         ]);
 
@@ -43,7 +45,8 @@ class TeamController extends Controller
     public function edit(int $id): View
     {
         $member = TeamMember::findOrFail($id);
-        return view('admin.team.form', ['member' => $member, 'id' => $id]);
+        $divisions = Division::where('active', true)->orderBy('display_order')->get();
+        return view('admin.team.form', ['member' => $member, 'divisions' => $divisions, 'id' => $id]);
     }
 
     public function update(Request $request, int $id): RedirectResponse
@@ -57,7 +60,7 @@ class TeamController extends Controller
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
             'linkedin_url' => 'nullable|string',
-            'division' => 'nullable|string',
+            'division_id' => 'nullable|exists:divisions,id',
             'role' => 'nullable|string',
         ]);
 

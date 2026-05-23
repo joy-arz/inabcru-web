@@ -92,6 +92,7 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
         $data = ['locale' => $locale, 'donationEnabled' => $donationEnabled];
         if ($page === 'about-us') {
             $data['teamMembers'] = TeamMember::orderBy('display_order')->get();
+            $data['divisions'] = \App\Models\Division::where('active', true)->orderBy('display_order')->get();
         }
         if ($page === 'programs') {
             $data['divisions'] = \App\Models\Division::where('active', true)->orderBy('display_order')->with('programs')->get();

@@ -120,53 +120,23 @@
     </div>
 
     @php
-    $divisions = [
-      'executive_board' => [
-        'label_id' => 'Executive Board',
-        'label_en' => 'Executive Board',
-        'members' => []
-      ],
-      'divisi_riset' => [
-        'label_id' => 'Divisi Riset',
-        'label_en' => 'Research Division',
-        'members' => []
-      ],
-      'divisi_konservasi' => [
-        'label_id' => 'Divisi Konservasi',
-        'label_en' => 'Conservation Division',
-        'members' => []
-      ],
-      'divisi_pendidikan' => [
-        'label_id' => 'Divisi Pendidikan & Pelatihan',
-        'label_en' => 'Education and Capacity Building Division',
-        'members' => []
-      ],
-      'database_data_sains' => [
-        'label_id' => 'Database & Data Sains',
-        'label_en' => 'Database & Data Science',
-        'members' => []
-      ],
-      'dewan_pengawas' => [
-        'label_id' => 'Dewan Pengawas',
-        'label_en' => 'Supervisory Board',
-        'members' => []
-      ],
-      'students_voluntary' => [
-        'label_id' => 'Students & Voluntary',
-        'label_en' => 'Students & Voluntary',
-        'members' => []
-      ],
-    ];
+    $divisionGroups = \App\Models\Division::where('active', true)->orderBy('display_order')->get()->mapWithKeys(function($d) {
+      return [$d->id => ['label_id' => $d->name_id, 'label_en' => $d->name_en, 'members' => collect()]];
+    })->toArray();
+
+    if (!is_array($divisionGroups)) {
+      $divisionGroups = [];
+    }
 
     foreach($teamMembers as $member) {
-      $divKey = $member->division ?? 'executive_board';
-      if (isset($divisions[$divKey])) {
-        $divisions[$divKey]['members'][] = $member;
+      $divKey = $member->division_id;
+      if ($divKey && isset($divisionGroups[$divKey])) {
+        $divisionGroups[$divKey]['members'][] = $member;
       }
     }
     @endphp
 
-    @foreach($divisions as $divKey => $division)
+    @foreach($divisionGroups as $divKey => $division)
       @if(count($division['members']) > 0)
       <div class="mb-12">
         <h3 class="font-heading text-xl font-semibold text-text mb-6 pb-2 border-b border-border">

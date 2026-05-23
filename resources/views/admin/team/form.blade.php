@@ -46,15 +46,11 @@
                 </div>
                 <div class="space-y-2">
                     <label class="text-sm font-medium text-gray-700">Division</label>
-                    <select name="division" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                    <select name="division_id" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
                         <option value="">Select division</option>
-                        <option value="executive_board" {{ (old('division', $member->division ?? '') == 'executive_board') ? 'selected' : '' }}>Executive Board</option>
-                        <option value="divisi_riset" {{ (old('division', $member->division ?? '') == 'divisi_riset') ? 'selected' : '' }}>Divisi Riset</option>
-                        <option value="divisi_konservasi" {{ (old('division', $member->division ?? '') == 'divisi_konservasi') ? 'selected' : '' }}>Divisi Konservasi</option>
-                        <option value="divisi_pendidikan" {{ (old('division', $member->division ?? '') == 'divisi_pendidikan') ? 'selected' : '' }}>Divisi Pendidikan & Pelatihan</option>
-                        <option value="database_data_sains" {{ (old('division', $member->division ?? '') == 'database_data_sains') ? 'selected' : '' }}>Database & Data Sains</option>
-                        <option value="dewan_pengawas" {{ (old('division', $member->division ?? '') == 'dewan_pengawas') ? 'selected' : '' }}>Dewan Pengawas</option>
-                        <option value="students_voluntary" {{ (old('division', $member->division ?? '') == 'students_voluntary') ? 'selected' : '' }}>Students & Voluntary</option>
+                        @foreach($divisions as $div)
+                        <option value="{{ $div->id }}" {{ (old('division_id', $member->division_id ?? '') == $div->id) ? 'selected' : '' }}>{{ $locale == 'id' ? $div->name_id : $div->name_en }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
