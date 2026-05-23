@@ -48,8 +48,8 @@
                     <label class="text-sm font-medium text-gray-700">Division</label>
                     <select name="division_id" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
                         <option value="">Select division</option>
-                        @foreach($divisions as $div)
-                        <option value="{{ $div->id }}" {{ (old('division_id', $member->division_id ?? '') == $div->id) ? 'selected' : '' }}>{{ $locale == 'id' ? $div->name_id : $div->name_en }}</option>
+                        @foreach($divisions ?? [] as $div)
+                        <option value="{{ $div->id }}" {{ (old('division_id', $member->division_id ?? '') == $div->id) ? 'selected' : '' }}>{{ $div->name_id }} / {{ $div->name_en }}</option>
                         @endforeach
                     </select>
                 </div>

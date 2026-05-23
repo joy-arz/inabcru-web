@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
-use App\Models\Division;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -52,10 +51,11 @@ class TeamController extends Controller
     public function edit(int $id): View
     {
         $member = TeamMember::findOrFail($id);
+        $divisions = collect([]);
         try {
             $divisions = \App\Models\Division::where('active', true)->orderBy('display_order')->get();
         } catch (\Exception $e) {
-            $divisions = collect([]);
+            // divisions table may not exist
         }
         return view('admin.team.form', ['member' => $member, 'divisions' => $divisions, 'id' => $id]);
     }
