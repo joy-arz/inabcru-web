@@ -1,9 +1,9 @@
 <footer class="bg-surface-warm border-t border-border py-16 px-6 lg:px-8">
   <div class="max-w-6xl mx-auto">
     <div class="flex items-start justify-between mb-12">
-      <div class="flex flex-col items-start">
-        <img src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="h-40 w-auto" style="object-fit: contain;">
-        <p class="text-gray-500 text-sm leading-relaxed">{{ trans_for('footer.tagline', $locale) }}</p>
+      <div class="relative">
+        <img src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="h-48 w-auto" style="object-fit: contain;">
+        <p class="text-gray-500 text-sm leading-relaxed mt-1">{{ trans_for('footer.tagline', $locale) }}</p>
       </div>
 
       <div class="text-right">

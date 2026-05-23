@@ -42,7 +42,7 @@
         <aside id="sidebar" class="fixed top-0 left-0 z-40 h-screen bg-white border-r transition-all duration-300 w-64 flex flex-col">
             <div class="flex items-center h-16 px-4 border-b flex-shrink-0">
                 <div class="flex items-center gap-3 overflow-hidden">
-                    <img src="/images/Logo/InaBCRU_LOGO GELAP B HORIZONTAL.webp" alt="InaBCRU" class="h-16 w-auto flex-shrink-0" style="object-fit: contain;">
+                    <img src="/images/Logo/InaBCRU_LOGO GELAP B HORIZONTAL.webp" alt="InaBCRU" class="h-20 w-auto flex-shrink-0" style="object-fit: contain;">
                     <div class="overflow-hidden">
                         <p class="font-heading font-semibold text-text-main text-sm">Admin Panel</p>
                     </div>
