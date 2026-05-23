@@ -19,7 +19,11 @@ class TeamController extends Controller
 
     public function create(): View
     {
-        $divisions = Division::where('active', true)->orderBy('display_order')->get();
+        try {
+            $divisions = \App\Models\Division::where('active', true)->orderBy('display_order')->get();
+        } catch (\Exception $e) {
+            $divisions = collect([]);
+        }
         return view('admin.team.form', compact('divisions'));
     }
 
@@ -33,11 +37,14 @@ class TeamController extends Controller
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
             'linkedin_url' => 'nullable|string',
-            'division_id' => 'nullable|exists:divisions,id',
+            'division_id' => 'nullable|integer',
             'role' => 'nullable|string',
         ]);
 
         $data['display_order'] = TeamMember::max('display_order') + 1;
+        if (empty($data['division_id'])) {
+            unset($data['division_id']);
+        }
         TeamMember::create($data);
         return redirect()->route('admin.team.index')->with('success', 'Team member added');
     }
@@ -45,7 +52,11 @@ class TeamController extends Controller
     public function edit(int $id): View
     {
         $member = TeamMember::findOrFail($id);
-        $divisions = Division::where('active', true)->orderBy('display_order')->get();
+        try {
+            $divisions = \App\Models\Division::where('active', true)->orderBy('display_order')->get();
+        } catch (\Exception $e) {
+            $divisions = collect([]);
+        }
         return view('admin.team.form', ['member' => $member, 'divisions' => $divisions, 'id' => $id]);
     }
 
@@ -60,10 +71,13 @@ class TeamController extends Controller
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
             'linkedin_url' => 'nullable|string',
-            'division_id' => 'nullable|exists:divisions,id',
+            'division_id' => 'nullable|integer',
             'role' => 'nullable|string',
         ]);
 
+        if (isset($data['division_id']) && empty($data['division_id'])) {
+            unset($data['division_id']);
+        }
         $member->update($data);
         return redirect()->route('admin.team.index')->with('success', 'Team member updated');
     }
