@@ -311,8 +311,14 @@ function removeCarouselImage(index) {
     renderCarouselPreviews(images);
 }
 
-@if(isset($program->carousel_images) && is_array($program->carousel_images))
-renderCarouselPreviews({!! json_encode($program->carousel_images) !!});
+@php
+$initCarousel = $program->carousel_images ?? [];
+if (is_string($initCarousel)) {
+    $initCarousel = json_decode($initCarousel, true) ?? [];
+}
+@endphp
+@if(is_array($initCarousel) && count($initCarousel) > 0)
+renderCarouselPreviews({!! json_encode($initCarousel) !!});
 @endif
 </script>
 @endpush

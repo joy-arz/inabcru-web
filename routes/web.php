@@ -97,6 +97,10 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
         if ($page === 'programs') {
             $data['divisions'] = \App\Models\Division::where('active', true)->orderBy('display_order')->with('programs')->get();
             $data['programsJson'] = \App\Models\Program::where('active', true)->get()->map(function($p) {
+                $carousel = $p->carousel_images;
+                if (is_string($carousel)) {
+                    $carousel = json_decode($carousel, true) ?? [];
+                }
                 return [
                     'id' => $p->id,
                     'title_id' => $p->title_id,
@@ -108,7 +112,7 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
                     'icon' => $p->icon,
                     'featured_image_url' => $p->featured_image_url,
                     'featured_image_alt' => $p->featured_image_alt,
-                    'carousel_images' => $p->carousel_images ?? [],
+                    'carousel_images' => $carousel,
                 ];
             });
         }
