@@ -120,7 +120,7 @@
 
             <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700">Carousel Images (Documentation)</label>
-                <input type="hidden" name="carousel_images" id="carousel_images" value="{{ old('carousel_images', is_array($program->carousel_images ?? null) ? json_encode($program->carousel_images) : '[]') }}">
+                <input type="hidden" name="carousel_images" id="carousel_images" value="{{ old('carousel_images', is_array($program->carousel_images ?? null) ? json_encode($program->carousel_images) : (is_string($program->carousel_images ?? null) ? $program->carousel_images : '[]')) }}">
                 <div id="carousel-upload-area" class="upload-area p-6 text-center cursor-pointer">
                     <div id="carousel-placeholder">
                         <svg class="w-8 h-8 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>

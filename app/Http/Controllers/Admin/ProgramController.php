@@ -36,7 +36,7 @@ class ProgramController extends Controller
             'icon' => 'nullable|string|max:50',
             'featured_image_url' => 'nullable|string',
             'featured_image_alt' => 'nullable|string',
-            'carousel_images' => 'nullable|array',
+            'carousel_images' => 'nullable',
             'display_order' => 'nullable|integer|min:0',
             'active' => 'boolean',
         ]);
@@ -45,6 +45,9 @@ class ProgramController extends Controller
         $data['display_order'] = $data['display_order'] ?? Program::max('display_order') + 1;
         $data['active'] = $data['active'] ?? true;
         if (isset($data['carousel_images'])) {
+            if (is_string($data['carousel_images'])) {
+                $data['carousel_images'] = json_decode($data['carousel_images'], true) ?? [];
+            }
             $data['carousel_images'] = json_encode($data['carousel_images']);
         }
         Program::create($data);
@@ -72,7 +75,7 @@ class ProgramController extends Controller
             'icon' => 'nullable|string|max:50',
             'featured_image_url' => 'nullable|string',
             'featured_image_alt' => 'nullable|string',
-            'carousel_images' => 'nullable|array',
+            'carousel_images' => 'nullable',
             'display_order' => 'nullable|integer|min:0',
             'active' => 'boolean',
         ]);
@@ -81,6 +84,9 @@ class ProgramController extends Controller
             $data['slug'] = \Illuminate\Support\Str::slug($data['title_id']);
         }
         if (isset($data['carousel_images'])) {
+            if (is_string($data['carousel_images'])) {
+                $data['carousel_images'] = json_decode($data['carousel_images'], true) ?? [];
+            }
             $data['carousel_images'] = json_encode($data['carousel_images']);
         }
         $program->update($data);
