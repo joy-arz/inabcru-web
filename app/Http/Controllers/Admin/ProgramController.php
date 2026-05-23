@@ -29,7 +29,6 @@ class ProgramController extends Controller
             'division_id' => 'required|exists:divisions,id',
             'title_id' => 'required|string|max:200',
             'title_en' => 'required|string|max:200',
-            'slug' => 'required|string|max:200|unique:programs,slug',
             'short_description_id' => 'nullable|string',
             'short_description_en' => 'nullable|string',
             'description_id' => 'nullable|string',
@@ -42,6 +41,7 @@ class ProgramController extends Controller
             'active' => 'boolean',
         ]);
 
+        $data['slug'] = \Illuminate\Support\Str::slug($data['title_id']);
         $data['display_order'] = $data['display_order'] ?? Program::max('display_order') + 1;
         $data['active'] = $data['active'] ?? true;
         if (isset($data['carousel_images'])) {
@@ -65,7 +65,6 @@ class ProgramController extends Controller
             'division_id' => 'sometimes|exists:divisions,id',
             'title_id' => 'sometimes|string|max:200',
             'title_en' => 'sometimes|string|max:200',
-            'slug' => 'sometimes|string|max:200|unique:programs,slug,' . $id,
             'short_description_id' => 'nullable|string',
             'short_description_en' => 'nullable|string',
             'description_id' => 'nullable|string',
@@ -78,6 +77,9 @@ class ProgramController extends Controller
             'active' => 'boolean',
         ]);
 
+        if (isset($data['title_id'])) {
+            $data['slug'] = \Illuminate\Support\Str::slug($data['title_id']);
+        }
         if (isset($data['carousel_images'])) {
             $data['carousel_images'] = json_encode($data['carousel_images']);
         }

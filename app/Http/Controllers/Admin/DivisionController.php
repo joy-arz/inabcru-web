@@ -26,13 +26,13 @@ class DivisionController extends Controller
         $data = $request->validate([
             'name_id' => 'required|string|max:100',
             'name_en' => 'required|string|max:100',
-            'slug' => 'required|string|max:100|unique:divisions,slug',
             'description_id' => 'nullable|string',
             'description_en' => 'nullable|string',
             'display_order' => 'nullable|integer|min:0',
             'active' => 'boolean',
         ]);
 
+        $data['slug'] = \Illuminate\Support\Str::slug($data['name_id']);
         $data['display_order'] = $data['display_order'] ?? Division::max('display_order') + 1;
         $data['active'] = $data['active'] ?? true;
         Division::create($data);
@@ -51,13 +51,15 @@ class DivisionController extends Controller
         $data = $request->validate([
             'name_id' => 'sometimes|string|max:100',
             'name_en' => 'sometimes|string|max:100',
-            'slug' => 'sometimes|string|max:100|unique:divisions,slug,' . $id,
             'description_id' => 'nullable|string',
             'description_en' => 'nullable|string',
             'display_order' => 'nullable|integer|min:0',
             'active' => 'boolean',
         ]);
 
+        if (isset($data['name_id'])) {
+            $data['slug'] = \Illuminate\Support\Str::slug($data['name_id']);
+        }
         $division->update($data);
         return redirect()->route('admin.divisions.index')->with('success', 'Division updated');
     }
