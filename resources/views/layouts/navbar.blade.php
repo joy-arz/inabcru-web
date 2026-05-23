@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 md:h-20">
       <a href="/{{ $locale }}" class="flex items-center gap-3 cursor-pointer">
-        <img id="navbar-logo" src="{{ $siteImages['logo_light']->image_url ?? '/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp' }}" alt="{{ $siteImages['logo_light']->alt_text ?? 'InaBCRU' }}" class="h-12 md:h-16 w-auto object-contain transition-opacity duration-300">
+        <img id="navbar-logo" src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="h-16 md:h-20 w-auto object-contain transition-opacity duration-300">
       </a>
 
       <div class="hidden xl:flex items-center gap-1">
@@ -156,8 +156,8 @@
       navbar.style.borderBottom = '1px solid #E8E6E1';
       navbar.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
       if (navbarLogo) {
-        navbarLogo.src = '{{ $siteImages["logo_dark"]->image_url ?? '/images/Logo/InaBCRU_LOGO GELAP A HORIZONTAL.webp' }}';
-        navbarLogo.alt = '{{ $siteImages["logo_dark"]->alt_text ?? 'InaBCRU' }}';
+        navbarLogo.src = '/images/Logo/InaBCRU_LOGO GELAP B HORIZONTAL.webp';
+        navbarLogo.alt = 'InaBCRU';
       }
       navLinks.forEach(link => {
         link.classList.remove('text-white', 'home-active');
@@ -182,8 +182,8 @@
       navbar.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
       navbar.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
       if (navbarLogo) {
-        navbarLogo.src = '{{ $siteImages["logo_light"]->image_url ?? '/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp' }}';
-        navbarLogo.alt = '{{ $siteImages["logo_light"]->alt_text ?? 'InaBCRU' }}';
+        navbarLogo.src = '/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp';
+        navbarLogo.alt = 'InaBCRU';
       }
       navLinks.forEach(link => {
         link.classList.add('text-white', 'home-active');
