@@ -56,8 +56,8 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700">Icon (FontAwesome class, e.g., fas fa-search)</label>
-                    <input type="text" name="icon" value="{{ old('icon', $program->icon ?? '') }}" placeholder="fas fa-search" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                    <label class="text-sm font-medium text-gray-700">Icon (FontAwesome class, e.g., fa-solid fa-magnifying-glass)</label>
+                    <input type="text" name="icon" value="{{ old('icon', $program->icon ?? '') }}" placeholder="fa-solid fa-magnifying-glass" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
                 </div>
             </div>
 
