@@ -106,15 +106,40 @@
                             <p class="text-sm text-gray-500">Click or drag to upload</p>
                         @endif
                     </div>
+                    <div id="featured-uploading" class="hidden">
+                        <p class="text-sm text-gray-500 mb-2">Uploading...</p>
+                        <div class="progress-bar w-48 mx-auto">
+                            <div id="featured-progress-bar" class="progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <p id="featured-progress-text" class="text-xs text-gray-400 mt-1">0%</p>
+                    </div>
                 </div>
-                <input type="file" id="featured-file-input" accept="image/*" class="hidden" onchange="handleImageUpload(this, 'featured')">
+                <input type="file" id="featured-file-input" accept="image/*" class="hidden" onchange="handleFeaturedUpload(this)">
                 <p class="text-xs text-gray-400">Recommended size: 1200x600px</p>
             </div>
 
             <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700">Carousel Images (comma-separated URLs)</label>
-                <textarea name="carousel_images" rows="2" placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none">{{ old('carousel_images', is_array($program->carousel_images ?? null) ? implode(', ', $program->carousel_images) : '') }}</textarea>
-                <p class="text-xs text-gray-400">Enter image URLs separated by commas</p>
+                <label class="text-sm font-medium text-gray-700">Carousel Images (Documentation)</label>
+                <input type="hidden" name="carousel_images" id="carousel_images" value="{{ old('carousel_images', is_array($program->carousel_images ?? null) ? json_encode($program->carousel_images) : '[]') }}">
+                <div id="carousel-upload-area" class="upload-area p-6 text-center cursor-pointer">
+                    <div id="carousel-placeholder">
+                        <svg class="w-8 h-8 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        <p class="text-sm text-gray-500">Click or drag to upload carousel images</p>
+                        <p class="text-xs text-gray-400 mt-1">JPG, PNG, WEBP (max 10MB each)</p>
+                    </div>
+                </div>
+                <input type="file" id="carousel-file-input" accept="image/*" multiple class="hidden" onchange="handleCarouselUpload(this)">
+                <div id="carousel-preview" class="grid grid-cols-3 md:grid-cols-4 gap-4 mt-4"></div>
+                <div id="carousel-upload-progress" class="hidden mt-4">
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <div class="progress-bar">
+                                <div id="carousel-progress-bar" class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <span id="carousel-progress-text" class="text-sm text-gray-500">0%</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -130,28 +155,23 @@
 @push('scripts')
 <script>
 document.getElementById('featured-upload-area').addEventListener('click', function() {
-    if (!document.getElementById('featured_file_input') || !document.getElementById('featured_file_input').files[0]) {
-        document.getElementById('featured-file-input').click();
-    }
+    document.getElementById('featured-file-input').click();
 });
 
 document.getElementById('featured-file-input').addEventListener('change', function() {
     if (this.files[0]) {
-        uploadFile(this.files[0], 'image', 'featured');
+        uploadFileWithProgress(this.files[0], 'image', 'featured');
     }
 });
 
-function handleImageUpload(input, prefix) {
-    if (input.files[0]) {
-        uploadFile(input.files[0], 'image', prefix);
-    }
-}
-
-function uploadFile(file, type, prefix) {
+function uploadFileWithProgress(file, type, prefix) {
     if (file.size > 10 * 1024 * 1024) {
         alert('File too large. Max 10MB');
         return;
     }
+
+    document.getElementById(prefix + '-placeholder').classList.add('hidden');
+    document.getElementById(prefix + '-uploading').classList.remove('hidden');
 
     var formData = new FormData();
     formData.append('file', file);
@@ -161,27 +181,136 @@ function uploadFile(file, type, prefix) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '{{ route('admin.upload') }}', true);
 
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            var percent = Math.round((e.loaded / e.total) * 100);
+            document.getElementById(prefix + '-progress-bar').style.width = percent + '%';
+            document.getElementById(prefix + '-progress-text').textContent = percent + '%';
+        }
+    });
+
     xhr.addEventListener('load', function() {
         if (xhr.status === 200) {
             var data = JSON.parse(xhr.responseText);
             if (data.error) {
                 alert(data.error);
+                resetFeaturedUI();
             } else {
                 document.getElementById(prefix + '_image_url').value = data.url;
                 var placeholder = document.getElementById(prefix + '-placeholder');
                 placeholder.innerHTML = '<img src="' + data.url + '" class="max-h-40 mx-auto rounded-lg">';
+                placeholder.classList.remove('hidden');
+                document.getElementById(prefix + '-uploading').classList.add('hidden');
             }
         } else {
             alert('Upload failed');
+            resetFeaturedUI();
         }
     });
 
     xhr.addEventListener('error', function() {
         alert('Upload failed');
+        resetFeaturedUI();
     });
 
     xhr.send(formData);
 }
+
+function resetFeaturedUI() {
+    document.getElementById('featured-placeholder').classList.remove('hidden');
+    document.getElementById('featured-uploading').classList.add('hidden');
+    document.getElementById('featured-progress-bar').style.width = '0%';
+}
+
+document.getElementById('carousel-upload-area').addEventListener('click', function() {
+    document.getElementById('carousel-file-input').click();
+});
+
+function handleCarouselUpload(input) {
+    if (!input.files.length) return;
+    uploadCarouselFiles(input.files);
+}
+
+function uploadCarouselFiles(files) {
+    var progressContainer = document.getElementById('carousel-upload-progress');
+    var progressBar = document.getElementById('carousel-progress-bar');
+    var progressText = document.getElementById('carousel-progress-text');
+    progressContainer.classList.remove('hidden');
+
+    var currentImages = JSON.parse(document.getElementById('carousel_images').value || '[]');
+    var total = files.length;
+    var uploaded = 0;
+
+    function uploadNext(index) {
+        if (index >= total) {
+            progressContainer.classList.add('hidden');
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('file', files[index]);
+        formData.append('type', 'image');
+        formData.append('_token', '{{ csrf_token() }}');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '{{ route('admin.upload') }}', true);
+
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+                var fileProgress = Math.round((e.loaded / e.total) * 100);
+                var overallProgress = Math.round(((uploaded + fileProgress) / total) * 100);
+                progressBar.style.width = overallProgress + '%';
+                progressText.textContent = overallProgress + '%';
+            }
+        });
+
+        xhr.addEventListener('load', function() {
+            if (xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    currentImages.push(data.url);
+                    document.getElementById('carousel_images').value = JSON.stringify(currentImages);
+                    renderCarouselPreviews(currentImages);
+                }
+            }
+            uploaded++;
+            uploadNext(index + 1);
+        });
+
+        xhr.addEventListener('error', function() {
+            alert('Upload failed for file ' + (index + 1));
+            uploaded++;
+            uploadNext(index + 1);
+        });
+
+        xhr.send(formData);
+    }
+
+    uploadNext(0);
+}
+
+function renderCarouselPreviews(images) {
+    var container = document.getElementById('carousel-preview');
+    container.innerHTML = images.map(function(url, idx) {
+        return '<div class="relative group">' +
+            '<img src="' + url + '" class="w-full h-24 object-cover rounded-lg">' +
+            '<button type="button" onclick="removeCarouselImage(' + idx + ')" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity">×</button>' +
+            '</div>';
+    }).join('');
+}
+
+function removeCarouselImage(index) {
+    var images = JSON.parse(document.getElementById('carousel_images').value || '[]');
+    images.splice(index, 1);
+    document.getElementById('carousel_images').value = JSON.stringify(images);
+    renderCarouselPreviews(images);
+}
+
+@if(isset($program->carousel_images) && is_array($program->carousel_images))
+renderCarouselPreviews({!! json_encode($program->carousel_images) !!});
+@endif
 </script>
 @endpush
 @endsection
