@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 md:h-20">
       <a href="/{{ $locale }}" class="flex items-center gap-3 cursor-pointer">
-        <img id="navbar-logo" src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="h-24 md:h-28 w-auto transition-opacity duration-300" style="object-fit: contain; object-position: left center;">
+        <img id="navbar-logo" src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="h-28 md:h-36 w-auto transition-opacity duration-300" style="object-fit: contain; object-position: left center;">
       </a>
 
       <div class="hidden xl:flex items-center gap-1">
