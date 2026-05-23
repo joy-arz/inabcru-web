@@ -229,12 +229,24 @@
 @push('scripts')
 <script>
 function toggleBio(element) {
-  const bio = element.querySelector('.member-bio');
+  const container = element.closest('.animate-fade-up');
+  if (!container) return;
+  const bio = container.querySelector('.member-bio');
+  if (!bio) return;
+
   const allBios = document.querySelectorAll('.member-bio');
   allBios.forEach(b => {
-    if (b !== bio) b.classList.add('hidden');
+    if (b !== bio) {
+      b.classList.add('hidden');
+      b.classList.remove('animate-fade-in');
+    }
   });
+
   bio.classList.toggle('hidden');
+  if (!bio.classList.contains('hidden')) {
+    bio.classList.add('animate-fade-in');
+    setTimeout(() => bio.classList.remove('animate-fade-in'), 300);
+  }
 }
 </script>
 @endpush

@@ -91,6 +91,24 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
         if ($page === 'about-us') {
             $data['teamMembers'] = TeamMember::orderBy('display_order')->get();
         }
+        if ($page === 'programs') {
+            $data['divisions'] = \App\Models\Division::where('active', true)->orderBy('display_order')->with('programs')->get();
+            $data['programsJson'] = \App\Models\Program::where('active', true)->get()->map(function($p) {
+                return [
+                    'id' => $p->id,
+                    'title_id' => $p->title_id,
+                    'title_en' => $p->title_en,
+                    'short_description_id' => $p->short_description_id,
+                    'short_description_en' => $p->short_description_en,
+                    'description_id' => $p->description_id,
+                    'description_en' => $p->description_en,
+                    'icon' => $p->icon,
+                    'featured_image_url' => $p->featured_image_url,
+                    'featured_image_alt' => $p->featured_image_alt,
+                    'carousel_images' => $p->carousel_images ?? [],
+                ];
+            });
+        }
         return view("pages.{$page}", $data);
     }
 
@@ -129,6 +147,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('articles', ArticleController::class)->except(['show']);
     Route::resource('team', TeamController::class)->except(['show']);
     Route::resource('partners', PartnerController::class)->except(['show']);
+    Route::resource('divisions', DivisionController::class)->except(['show']);
+    Route::resource('programs', ProgramController::class)->except(['show']);
     Route::resource('site-images', SiteImageController::class)->only(['index', 'edit', 'update']);
     Route::match(['get', 'put'], '/stats', [StatsController::class, 'index'])->name('stats');
     Route::post('/team/reorder', [TeamController::class, 'reorder'])->name('team.reorder');
