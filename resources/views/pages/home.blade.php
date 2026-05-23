@@ -26,13 +26,7 @@
       <p class="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto">
         {{ trans_for('home.hero.subtitle') }}
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/{{ $locale }}/about-us">
-          <button class="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-200 cursor-pointer">
-            {{ trans_for('nav.about') }}
-          </button>
-        </a>
-      </div>
+      
     </div>
   </div>
 
