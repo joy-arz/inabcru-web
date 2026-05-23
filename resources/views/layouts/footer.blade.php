@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="flex items-start justify-between mb-12">
       <div class="relative">
-        <img src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="h-48 w-auto" style="object-fit: contain;">
+        <img src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp" alt="InaBCRU" class="w-full max-w-[300px]" style="object-fit: contain;">
         <p class="text-gray-500 text-sm leading-relaxed mt-1">{{ trans_for('footer.tagline', $locale) }}</p>
       </div>
 
