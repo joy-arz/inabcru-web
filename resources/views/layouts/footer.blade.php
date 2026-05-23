@@ -5,7 +5,7 @@
         <img
           src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp"
           alt="InaBCRU"
-          style="width: 220px; height: 60px; object-fit: contain; object-position: left center;"
+          style="width: 300px; height: 200px; object-fit: cover; object-position: left center; margin-bottom: -70px;"
         >
         <p class="text-gray-500 text-sm leading-relaxed">{{ trans_for('footer.tagline', $locale) }}</p>
       </div>
