@@ -14,7 +14,7 @@
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8">
     <div class="animate-fade-up opacity-0">
       <p class="text-xs font-semibold uppercase tracking-[0.12em] text-white/60 mb-4">
-        {{ $locale == 'id' ? 'Tentang Kami' : 'About Us' }}
+        
       </p>
       <h1 class="font-heading text-4xl md:text-5xl font-bold tracking-[-0.02em] mb-4 text-white">
         {{ trans_for('about.title') }}

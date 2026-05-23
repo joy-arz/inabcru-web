@@ -39,8 +39,8 @@
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <div class="animate-fade-up opacity-0">
         <p class="text-xs font-semibold uppercase tracking-[0.12em] text-primary mb-4">
-          {{ $locale == 'id' ? 'Tentang Kami' : 'About Us' }}
-        </p>
+        
+      </p>
         <h2 class="font-heading text-3xl md:text-4xl font-bold tracking-[-0.02em] mb-6">
           {{ $locale == 'id' ? 'Melindungi Kelelawar Indonesia' : 'Protecting Indonesian Bats' }}
         </h2>
