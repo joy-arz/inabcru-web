@@ -42,12 +42,9 @@
         <aside id="sidebar" class="fixed top-0 left-0 z-40 h-screen bg-white border-r transition-all duration-300 w-64 flex flex-col">
             <div class="flex items-center h-16 px-4 border-b flex-shrink-0">
                 <div class="flex items-center gap-3 overflow-hidden">
-                    <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                        <span class="text-white font-bold text-lg">I</span>
-                    </div>
+                    <img src="/images/Logo/InaBCRU_LOGO GELAP B HORIZONTAL.webp" alt="InaBCRU" class="h-10 w-auto object-contain flex-shrink-0">
                     <div class="overflow-hidden">
-                        <p class="font-heading font-semibold text-text-main text-sm">InaBCRU</p>
-                        <p class="text-xs text-gray-500">Admin Panel</p>
+                        <p class="font-heading font-semibold text-text-main text-sm">Admin Panel</p>
                     </div>
                 </div>
                 <button onclick="toggleSidebar()" class="ml-auto h-8 w-8 flex items-center justify-center hover:bg-gray-100 rounded transition-colors cursor-pointer">
