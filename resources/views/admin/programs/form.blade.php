@@ -114,7 +114,7 @@
                         <p id="featured-progress-text" class="text-xs text-gray-400 mt-1">0%</p>
                     </div>
                 </div>
-                <input type="file" id="featured-file-input" accept="image/*" class="hidden" onchange="handleFeaturedUpload(this)">
+                <input type="file" id="featured-file-input" accept="image/*" class="hidden">
                 <p class="text-xs text-gray-400">Recommended size: 1200x600px</p>
             </div>
 
