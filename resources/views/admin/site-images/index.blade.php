@@ -108,8 +108,12 @@ function updateType(imageId, type) {
         }),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
         }
-    }).then(res => res.json()).then(data => {
+    }).then(res => {
+        console.log('Type update status:', res.status);
+        return res.json();
+    }).then(data => {
         if (data.success) {
             location.reload();
         }

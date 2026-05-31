@@ -41,11 +41,11 @@ class SiteImageController extends Controller
 
         $image->update($data);
 
-        if ($request->hasHeader('Accept') && str_contains($request->header('Accept'), 'application/json')) {
-            return response()->json(['success' => true]);
-        }
+        $isAjax = $request->hasHeader('X-Requested-With') ||
+                  $request->has('_method') ||
+                  $request->hasHeader('Accept');
 
-        if ($request->expectsJson()) {
+        if ($isAjax || $request->expectsJson()) {
             return response()->json(['success' => true]);
         }
 
