@@ -92,7 +92,7 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
     app()->setLocale($locale);
 
     $donationEnabled = false;
-    $validPages = ['about-us', 'donate', 'programs', 'impact', 'contact'];
+    $validPages = ['about-us', 'donate', 'programs', 'contact'];
 
     if ($page === 'home') {
         return redirect("/{$locale}");
