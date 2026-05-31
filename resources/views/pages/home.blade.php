@@ -66,9 +66,16 @@ $heroType = $heroHome->type ?? 'image';
       </div>
       <div class="grid grid-cols-2 gap-4 animate-fade-up opacity-0" style="animation-delay: 0.2s;">
         @foreach($stats as $stat)
-        <div class="bg-surface-warm rounded-2xl p-6 border border-border">
-          <p class="font-heading text-3xl font-bold text-primary mb-2">{!! $stat->icon ?? '' !!} {{ $stat->value }}</p>
-          <p class="text-muted text-sm">{{ $locale == 'id' ? $stat->label_id : $stat->label_en }}</p>
+        <div class="bg-surface-warm rounded-2xl p-6 border border-border flex items-start gap-4">
+          @if($stat->icon)
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+            <i class="{{ $stat->icon }} text-lg"></i>
+          </div>
+          @endif
+          <div>
+            <p class="font-heading text-3xl font-bold text-primary mb-1">{{ $stat->value }}</p>
+            <p class="text-muted text-sm">{{ $locale == 'id' ? $stat->label_id : $stat->label_en }}</p>
+          </div>
         </div>
         @endforeach
       </div>

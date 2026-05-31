@@ -51,8 +51,15 @@
                             <input type="text" name="stats[{{ $stat->id }}][value]" value="{{ $stat->value }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm" />
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-xs text-gray-500 mb-1">Icon (emoji)</label>
-                            <input type="text" name="stats[{{ $stat->id }}][icon]" value="{{ $stat->icon }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm" />
+                            <label class="block text-xs text-gray-500 mb-1">Icon (FontAwesome class)</label>
+                            <input type="text" name="stats[{{ $stat->id }}][icon]" value="{{ $stat->icon }}" placeholder="e.g. fa-solid fa-microscope" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-mono" />
+                            @if($stat->icon)
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="text-xs text-gray-500">Preview:</span>
+                                <i class="{{ $stat->icon }} text-lg text-primary"></i>
+                                <span class="text-xs text-gray-400 font-mono">{{ $stat->icon }}</span>
+                            </div>
+                            @endif
                         </div>
                         <div class="col-span-1 text-center">
                             <input type="hidden" name="stats[{{ $stat->id }}][id]" value="{{ $stat->id }}" />
