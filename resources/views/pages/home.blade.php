@@ -5,18 +5,19 @@
 
 @section('content')
 @php
-$videoUrl = $siteImages['hero_home_video']->image_url ?? null;
-$videoType = $siteImages['hero_home_video']->type ?? 'image';
-\Log::info('Home blade', ['videoUrl' => $videoUrl, 'videoType' => $videoType]);
+$heroHome = $siteImages['hero_home'] ?? null;
+$heroUrl = $heroHome->image_url ?? null;
+$heroType = $heroHome->type ?? 'image';
+\Log::info('Home blade', ['heroUrl' => $heroUrl, 'heroType' => $heroType]);
 @endphp
 <section class="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0" id="heroMedia">
-    @if($videoUrl && $videoType === 'video')
+    @if($heroUrl && $heroType === 'video')
     <video autoplay loop muted playsinline class="w-full h-full object-cover">
-      <source src="{{ $videoUrl }}" type="video/webm">
+      <source src="{{ $heroUrl }}" type="video/webm">
     </video>
-    @elseif(($siteImages['hero_home']->image_url ?? false))
-    <img src="{{ $siteImages['hero_home']->image_url }}" alt="{{ $siteImages['hero_home']->alt_text ?? 'Bat in natural habitat' }}" class="w-full h-full object-cover" id="heroImage">
+    @elseif($heroUrl)
+    <img src="{{ $heroUrl }}" alt="{{ $heroHome->alt_text ?? 'Bat in natural habitat' }}" class="w-full h-full object-cover" id="heroImage">
     @else
     <img src="/images/Field activity/IMG_9975.webp" alt="Bat in natural habitat" class="w-full h-full object-cover" id="heroImage">
     @endif
