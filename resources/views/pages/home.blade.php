@@ -5,13 +5,11 @@
 
 @section('content')
 <section class="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
-  <div class="absolute inset-0">
-    @if(($siteImages['hero_home_video']->image_url ?? false) && ($siteImages['hero_home_video']->type ?? 'image') === 'video')
-    <video autoplay loop muted playsinline class="w-full h-full object-cover">
-      <source src="{{ $siteImages['hero_home_video']->image_url }}" type="video/mp4">
-    </video>
+  <div class="absolute inset-0" id="heroMedia">
+    @if(($siteImages['hero_home']->image_url ?? false))
+    <img src="{{ $siteImages['hero_home']->image_url }}" alt="{{ $siteImages['hero_home']->alt_text ?? 'Bat in natural habitat' }}" class="w-full h-full object-cover" id="heroImage">
     @else
-    <img src="{{ $siteImages['hero_home']->image_url ?? '/images/Field activity/IMG_9975.webp' }}" alt="{{ $siteImages['hero_home']->alt_text ?? 'Bat in natural habitat' }}" class="w-full h-full object-cover">
+    <img src="/images/Field activity/IMG_9975.webp" alt="Bat in natural habitat" class="w-full h-full object-cover" id="heroImage">
     @endif
     <div class="absolute inset-0 bg-dark/75"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent"></div>
@@ -26,7 +24,6 @@
       <p class="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto">
         {{ trans_for('home.hero.subtitle') }}
       </p>
-      
     </div>
   </div>
 
