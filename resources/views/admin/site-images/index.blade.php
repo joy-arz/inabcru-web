@@ -181,16 +181,24 @@ function handleImageUpload(input, imageId) {
             }
         }).then(response => {
             console.log('Update response status:', response.status);
+            console.log('Response headers:', [...response.headers.entries()]);
             if (!response.ok) {
                 return response.text().then(text => {
                     console.error('Update failed response:', text);
-                    throw new Error('Update failed: ' + response.status);
+                    throw new Error('Update failed: ' + response.status + ' - ' + text.substring(0, 200));
                 });
             }
-            return response.json();
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            }
+            return response.text().then(text => {
+                throw new Error('Non-JSON response: ' + text.substring(0, 200));
+            });
         }).then(data => {
+            console.log('Update success:', data);
             if (data.success) location.reload();
-            else alert('Update failed');
+            else alert('Update failed: ' + (data.error || 'unknown'));
         }).catch(error => {
             console.error('Error:', error);
             alert('Update failed: ' + error.message);
