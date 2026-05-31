@@ -8,7 +8,6 @@
 $heroHome = $siteImages['hero_home'] ?? null;
 $heroUrl = $heroHome->image_url ?? null;
 $heroType = $heroHome->type ?? 'image';
-\Log::info('Home blade', ['heroUrl' => $heroUrl, 'heroType' => $heroType]);
 @endphp
 <section class="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0" id="heroMedia">
@@ -66,22 +65,12 @@ $heroType = $heroHome->type ?? 'image';
         </a>
       </div>
       <div class="grid grid-cols-2 gap-4 animate-fade-up opacity-0" style="animation-delay: 0.2s;">
+        @foreach($stats as $stat)
         <div class="bg-surface-warm rounded-2xl p-6 border border-border">
-          <p class="font-heading text-3xl font-bold text-primary mb-2">175+</p>
-          <p class="text-muted text-sm">{{ $locale == 'id' ? 'Spesies Kelelawar' : 'Bat Species' }}</p>
+          <p class="font-heading text-3xl font-bold text-primary mb-2">{!! $stat->icon ?? '' !!} {{ $stat->value }}</p>
+          <p class="text-muted text-sm">{{ $locale == 'id' ? $stat->label_id : $stat->label_en }}</p>
         </div>
-        <div class="bg-surface-warm rounded-2xl p-6 border border-border">
-          <p class="font-heading text-3xl font-bold text-primary mb-2">120+</p>
-          <p class="text-muted text-sm">{{ $locale == 'id' ? 'Publikasi' : 'Publications' }}</p>
-        </div>
-        <div class="bg-surface-warm rounded-2xl p-6 border border-border">
-          <p class="font-heading text-3xl font-bold text-primary mb-2">25</p>
-          <p class="text-muted text-sm">{{ $locale == 'id' ? 'Lokasi Riset' : 'Research Sites' }}</p>
-        </div>
-        <div class="bg-surface-warm rounded-2xl p-6 border border-border">
-          <p class="font-heading text-3xl font-bold text-primary mb-2">45</p>
-          <p class="text-muted text-sm">{{ $locale == 'id' ? 'Peneliti' : 'Researchers' }}</p>
-        </div>
+        @endforeach
       </div>
     </div>
   </div>

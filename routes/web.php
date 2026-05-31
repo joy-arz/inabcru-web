@@ -15,6 +15,7 @@ use App\Models\Publication;
 use App\Models\Article;
 use App\Models\TeamMember;
 use App\Models\Partner;
+use App\Models\ImpactStat;
 use Illuminate\Support\Facades\Route;
 
 function getTranslations(string $locale): array {
@@ -81,8 +82,9 @@ Route::get('/{locale}', function ($locale) {
     app()->setLocale($locale);
     $latestArticles = Article::where('published', true)->orderBy('created_at', 'desc')->take(3)->get();
     $partners = Partner::orderBy('display_order')->get();
+    $stats = ImpactStat::orderBy('display_order')->get();
     $donationEnabled = false;
-    return view('pages.home', ['locale' => $locale, 'latestArticles' => $latestArticles, 'partners' => $partners, 'donationEnabled' => $donationEnabled]);
+    return view('pages.home', ['locale' => $locale, 'latestArticles' => $latestArticles, 'partners' => $partners, 'stats' => $stats, 'donationEnabled' => $donationEnabled]);
 })->where('locale', 'id|en');
 
 Route::get('/{locale}/{page}', function ($locale, $page) {
