@@ -18,7 +18,7 @@ class StatsController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
-        \Log::info('Stats update called', $request->all());
+        \Log::info('Stats update called', ['all' => $request->all(), 'query' => $request->query()]);
 
         $data = $request->validate([
             'stats' => 'required|array',
@@ -32,12 +32,16 @@ class StatsController extends Controller
         \Log::info('Stats validated', $data);
 
         foreach ($data['stats'] as $statData) {
-            ImpactStat::where('id', $statData['id'])->update([
-                'label_id' => $statData['label_id'],
-                'label_en' => $statData['label_en'],
-                'value' => $statData['value'],
-                'icon' => $statData['icon'] ?? null,
-            ]);
+            $stat = ImpactStat::find($statData['id']);
+            \Log::info('Updating stat', ['id' => $statData['id'], 'found' => $stat ? 'yes' : 'no', 'label_id' => $statData['label_id']]);
+            if ($stat) {
+                $stat->update([
+                    'label_id' => $statData['label_id'],
+                    'label_en' => $statData['label_en'],
+                    'value' => $statData['value'],
+                    'icon' => $statData['icon'] ?? null,
+                ]);
+            }
         }
 
         return redirect()->back()->with('success', 'Stats updated');
