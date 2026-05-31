@@ -51,8 +51,11 @@ Route::get('/', function () {
 });
 
 Route::get('/video/{path}', function ($path) {
-    $fullPath = storage_path('app/public/' . str_replace('..', '', $path));
+    $cleanPath = str_replace('..', '', $path);
+    \Log::info('Video route accessed', ['path' => $path, 'clean' => $cleanPath, 'full' => storage_path('app/public/' . $cleanPath), 'exists' => file_exists(storage_path('app/public/' . $cleanPath))]);
+    $fullPath = storage_path('app/public/' . $cleanPath);
     if (!file_exists($fullPath)) {
+        \Log::error('Video file not found', ['fullPath' => $fullPath]);
         abort(404);
     }
     $mimeType = 'video/webm';
