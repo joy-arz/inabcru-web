@@ -180,7 +180,8 @@ function handleImageUpload(input, imageId) {
         progressContainer.classList.add('hidden');
     };
 
-    xhr.open('POST', '{{ route('admin.upload') }}');
+    xhr.open('POST', '{{ route('upload') }}');
+    xhr.setRequestHeader('Accept', 'application/json');
     xhr.send(formData);
 }
 
@@ -194,6 +195,7 @@ function updateAltText(imageId, altText) {
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
         }
     });
 }
