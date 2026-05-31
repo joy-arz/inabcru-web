@@ -95,13 +95,13 @@ function updateType(imageId, type) {
     const label = section.querySelector('.upload-label');
     const btnText = section.querySelector('.upload-btn-text');
     const fileInput = section.querySelector('input[type="file"]');
-    const preview = section.querySelector('.video-preview');
+    const previewContainer = section.querySelector('.video-preview');
 
     section.dataset.type = type;
     label.textContent = type === 'video' ? 'Replace Video' : 'Replace Image';
     btnText.textContent = type === 'video' ? 'Upload Video' : 'Upload';
     fileInput.accept = type === 'video' ? 'video/*' : 'image/*';
-    preview.classList.toggle('hidden', !(type === 'video' && fileInput.closest('.upload-section').querySelector('video')));
+    previewContainer.classList.toggle('hidden', type !== 'video');
 
     fetch('/admin/site-images/' + imageId, {
         method: 'PUT',
@@ -112,6 +112,7 @@ function updateType(imageId, type) {
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
         }
     });
 }
@@ -151,14 +152,15 @@ function handleImageUpload(input, imageId) {
     });
 
     xhr.onload = function() {
+        progressContainer.classList.add('hidden');
         if (xhr.status !== 200) {
-            alert('Upload failed');
-            progressContainer.classList.add('hidden');
+            alert('Upload failed: Server error ' + xhr.status);
             return;
         }
         let data;
         try { data = JSON.parse(xhr.responseText); } catch { data = {}; }
-        if (data.error) { alert(data.error); progressContainer.classList.add('hidden'); return; }
+        if (data.error) { alert(data.error); return; }
+        if (!data.url) { alert('Upload failed: No URL returned'); return; }
 
         const formData2 = new FormData();
         formData2.append('image_url', data.url);
@@ -170,17 +172,24 @@ function handleImageUpload(input, imageId) {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Accept': 'application/json',
             }
-        }).then(response => response.json()).then(data => {
+        }).then(response => {
+            if (!response.ok) throw new Error('Update failed');
+            return response.json();
+        }).then(data => {
             if (data.success) window.location.reload();
-        }).catch(() => window.location.reload());
+            else alert('Update failed');
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Update failed');
+        });
     };
 
     xhr.onerror = function() {
-        alert('Upload failed');
         progressContainer.classList.add('hidden');
+        alert('Upload failed: Network error');
     };
 
-    xhr.open('POST', '{{ route('upload') }}');
+    xhr.open('POST', '{{ route('admin.upload') }}');
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send(formData);
 }
