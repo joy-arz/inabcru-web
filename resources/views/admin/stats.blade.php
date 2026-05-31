@@ -24,9 +24,8 @@
                 <p class="text-gray-500">No stats configured yet</p>
             </div>
         @else
-            <form action="{{ route('admin.stats') }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.stats.update') }}" method="POST" class="space-y-6">
                 @csrf
-                @method('PUT')
 
                 <div class="space-y-4">
                     @foreach($stats as $index => $stat)

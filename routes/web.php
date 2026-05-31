@@ -185,6 +185,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('programs', ProgramController::class)->except(['show']);
     Route::resource('site-images', SiteImageController::class)->only(['index', 'edit', 'update']);
     Route::match(['get', 'put'], '/stats', [StatsController::class, 'index'])->name('stats');
+    Route::post('/stats', [StatsController::class, 'update'])->name('stats.update');
     Route::post('/team/reorder', [TeamController::class, 'reorder'])->name('team.reorder');
     Route::post('/upload', [FileUploadController::class, 'upload'])->name('upload');
 });
