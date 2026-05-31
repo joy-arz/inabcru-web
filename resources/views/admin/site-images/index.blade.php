@@ -33,10 +33,9 @@
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($grouped[$category] as $image)
-                    @php $imgType = $image->type ?? 'image'; @endphp
                     <div class="border border-gray-200 rounded-lg p-4" data-item-id="{{ $image->id }}">
-                        <div class="relative aspect-video mb-3 rounded-lg overflow-hidden bg-gray-50">
-                            @if($imgType === 'video')
+                        <div class="relative aspect-video mb-3 rounded-lg overflow-hidden bg-gray-50 preview-area" data-type="{{ $image->type ?? 'image' }}" data-url="{{ $image->image_url }}">
+                            @if(($image->type ?? 'image') === 'video')
                             <video src="{{ $image->image_url }}" class="w-full h-full object-contain" muted></video>
                             @else
                             <img src="{{ $image->image_url }}" alt="{{ $image->alt_text ?? $image->key }}" class="w-full h-full object-contain" onerror="this.src='/images/placeholder.webp'">
@@ -63,10 +62,10 @@
                             <div class="upload-section" data-type="{{ $image->type ?? 'image' }}">
                                 <label class="block text-xs font-medium text-gray-700 mb-1 upload-label">{{ $image->type == 'video' ? 'Replace Video' : 'Replace Image' }}</label>
                                 <div class="flex items-center gap-2">
-                                    <label class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-sm upload-label-text">
+                                    <label class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-sm">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         <span class="upload-btn-text">{{ $image->type == 'video' ? 'Upload Video' : 'Upload' }}</span>
-                                        <input type="file" accept="image/*" class="hidden" data-image-id="{{ $image->id }}" onchange="handleImageUpload(this, {{ $image->id }})" />
+                                        <input type="file" accept="{{ ($image->type ?? 'image') === 'video' ? 'video/*' : 'image/*' }}" class="hidden" onchange="handleImageUpload(this, {{ $image->id }})" />
                                     </label>
                                 </div>
                                 <div class="progress-bar-container mt-2 hidden">
@@ -74,9 +73,6 @@
                                         <div class="bg-primary h-2 rounded-full transition-all duration-300 progress-bar" style="width: 0%"></div>
                                     </div>
                                     <p class="text-xs text-gray-500 mt-1 text-center progress-text">0%</p>
-                                </div>
-                                <div class="video-preview mt-2 {{ $image->type == 'video' && $image->image_url ? '' : 'hidden' }}">
-                                    <video src="{{ $image->image_url }}" class="w-full h-24 object-cover rounded-lg bg-black" controls></video>
                                 </div>
                             </div>
                         </div>
@@ -95,13 +91,13 @@ function updateType(imageId, type) {
     const label = section.querySelector('.upload-label');
     const btnText = section.querySelector('.upload-btn-text');
     const fileInput = section.querySelector('input[type="file"]');
-    const previewContainer = section.querySelector('.video-preview');
+    const previewArea = item.querySelector('.preview-area');
 
     section.dataset.type = type;
     label.textContent = type === 'video' ? 'Replace Video' : 'Replace Image';
     btnText.textContent = type === 'video' ? 'Upload Video' : 'Upload';
     fileInput.accept = type === 'video' ? 'video/*' : 'image/*';
-    previewContainer.classList.toggle('hidden', type !== 'video');
+    previewArea.dataset.type = type;
 
     fetch('/admin/site-images/' + imageId, {
         method: 'PUT',
@@ -114,7 +110,11 @@ function updateType(imageId, type) {
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded',
         }
-    });
+    }).then(res => res.json()).then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    }).catch(err => console.error('Type update failed:', err));
 }
 
 function handleImageUpload(input, imageId) {
@@ -154,33 +154,36 @@ function handleImageUpload(input, imageId) {
     xhr.onload = function() {
         progressContainer.classList.add('hidden');
         if (xhr.status !== 200) {
-            alert('Upload failed: Server error ' + xhr.status);
+            alert('Upload failed: Server error ' + xhr.status + ' - ' + xhr.statusText);
             return;
         }
         let data;
-        try { data = JSON.parse(xhr.responseText); } catch { data = {}; }
-        if (data.error) { alert(data.error); return; }
+        try { data = JSON.parse(xhr.responseText); } catch (e) { data = {}; console.error('Parse error:', xhr.responseText); }
+        if (data.error) { alert('Upload error: ' + data.error); return; }
         if (!data.url) { alert('Upload failed: No URL returned'); return; }
 
         const formData2 = new FormData();
         formData2.append('image_url', data.url);
         formData2.append('_token', '{{ csrf_token() }}');
+
         fetch('/admin/site-images/' + imageId, {
             method: 'PUT',
             body: formData2,
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-            }
         }).then(response => {
-            if (!response.ok) throw new Error('Update failed');
+            console.log('Update response status:', response.status);
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error('Update failed response:', text);
+                    throw new Error('Update failed: ' + response.status);
+                });
+            }
             return response.json();
         }).then(data => {
-            if (data.success) window.location.reload();
+            if (data.success) location.reload();
             else alert('Update failed');
         }).catch(error => {
             console.error('Error:', error);
-            alert('Update failed');
+            alert('Update failed: ' + error.message);
         });
     };
 
