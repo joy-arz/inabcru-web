@@ -24,16 +24,26 @@ class SiteImageController extends Controller
         return view('admin.site-images.form', ['image' => $image, 'id' => $id]);
     }
 
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(Request $request, int $id): JsonResponse|RedirectResponse
     {
         $image = SiteImage::findOrFail($id);
-        $data = $request->validate([
-            'image_url' => 'sometimes|string',
-            'alt_text' => 'nullable|string',
-            'type' => 'sometimes|string|in:image,video',
-        ]);
+
+        $data = [];
+        if ($request->has('image_url')) {
+            $data['image_url'] = $request->input('image_url');
+        }
+        if ($request->has('alt_text')) {
+            $data['alt_text'] = $request->input('alt_text');
+        }
+        if ($request->has('type')) {
+            $data['type'] = $request->input('type');
+        }
 
         $image->update($data);
+
+        if ($request->hasHeader('Accept') && str_contains($request->header('Accept'), 'application/json')) {
+            return response()->json(['success' => true]);
+        }
 
         if ($request->expectsJson()) {
             return response()->json(['success' => true]);

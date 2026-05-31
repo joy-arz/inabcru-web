@@ -100,14 +100,13 @@ function updateType(imageId, type) {
     previewArea.dataset.type = type;
 
     fetch('/admin/site-images/' + imageId, {
-        method: 'PUT',
+        method: 'POST',
         body: new URLSearchParams({
-            '_token': '{{ csrf_token() }}',
-            'type': type
+            '_method': 'PUT',
+            'type': type,
+            '_token': '{{ csrf_token() }}'
         }),
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded',
         }
     }).then(res => res.json()).then(data => {
@@ -167,8 +166,15 @@ function handleImageUpload(input, imageId) {
         formData2.append('_token', '{{ csrf_token() }}');
 
         fetch('/admin/site-images/' + imageId, {
-            method: 'PUT',
-            body: formData2,
+            method: 'POST',
+            body: new URLSearchParams({
+                '_method': 'PUT',
+                'image_url': data.url,
+                '_token': '{{ csrf_token() }}'
+            }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
         }).then(response => {
             console.log('Update response status:', response.status);
             if (!response.ok) {
@@ -199,14 +205,13 @@ function handleImageUpload(input, imageId) {
 
 function updateAltText(imageId, altText) {
     fetch('/admin/site-images/' + imageId, {
-        method: 'PUT',
+        method: 'POST',
         body: new URLSearchParams({
-            '_token': '{{ csrf_token() }}',
-            'alt_text': altText
+            '_method': 'PUT',
+            'alt_text': altText,
+            '_token': '{{ csrf_token() }}'
         }),
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded',
         }
     });
