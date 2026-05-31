@@ -6,7 +6,11 @@
 @section('content')
 <section class="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0" id="heroMedia">
-    @if(($siteImages['hero_home']->image_url ?? false))
+    @if(($siteImages['hero_home_video']->image_url ?? false) && ($siteImages['hero_home_video']->type ?? 'image') === 'video')
+    <video autoplay loop muted playsinline class="w-full h-full object-cover">
+      <source src="{{ $siteImages['hero_home_video']->image_url }}" type="video/webm">
+    </video>
+    @elseif(($siteImages['hero_home']->image_url ?? false))
     <img src="{{ $siteImages['hero_home']->image_url }}" alt="{{ $siteImages['hero_home']->alt_text ?? 'Bat in natural habitat' }}" class="w-full h-full object-cover" id="heroImage">
     @else
     <img src="/images/Field activity/IMG_9975.webp" alt="Bat in natural habitat" class="w-full h-full object-cover" id="heroImage">

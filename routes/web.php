@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SiteImageController;
 use App\Http\Controllers\Admin\FileUploadController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\VideoStreamController;
 use App\Models\Publication;
 use App\Models\Article;
 use App\Models\TeamMember;
@@ -48,6 +49,27 @@ function trans_for(string $key, ?string $locale = null): string {
 Route::get('/', function () {
     return redirect('/id');
 });
+
+Route::get('/video/{path}', function ($path) {
+    $fullPath = storage_path('app/public/' . str_replace('..', '', $path));
+    if (!file_exists($fullPath)) {
+        abort(404);
+    }
+    $mimeType = 'video/webm';
+    $fileSize = filesize($fullPath);
+    $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($fullPath) {
+        $stream = fopen($fullPath, 'rb');
+        fpassthru($stream);
+        fclose($stream);
+    }, 200, [
+        'Content-Type' => $mimeType,
+        'Content-Length' => $fileSize,
+        'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+        'Cache-Control' => 'public, max-age=3600',
+        'Accept-Ranges' => 'bytes',
+    ]);
+    return $response;
+})->where('path', '.*');
 
 Route::get('/{locale}', function ($locale) {
     if (!in_array($locale, ['id', 'en'])) {

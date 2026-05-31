@@ -1,0 +1,57 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "InaBCRU" [ref=e5] [cursor=pointer]:
+        - /url: /id
+        - img "InaBCRU" [ref=e6]
+      - button "ID" [ref=e9] [cursor=pointer]:
+        - img [ref=e10]
+        - generic [ref=e12]: ID
+        - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - img "Conservation programs" [ref=e18]
+      - generic [ref=e22]:
+        - paragraph
+        - heading "Program" [level=1] [ref=e23]
+        - paragraph [ref=e24]: Program konservasi dan penelitian kami
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - heading "Divisi Riset" [level=2] [ref=e28]
+        - generic [ref=e30] [cursor=pointer]:
+          - generic [ref=e32]: 
+          - heading "Penelitian" [level=3] [ref=e33]
+          - paragraph [ref=e34]: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      - generic [ref=e35]:
+        - heading "Divisi Konservasi" [level=2] [ref=e36]
+        - generic [ref=e38] [cursor=pointer]:
+          - generic [ref=e40]: 
+          - heading "Konservasi" [level=3] [ref=e41]
+          - paragraph [ref=e42]: Lorem ipsum
+      - generic [ref=e43]:
+        - heading "Divisi Pendidikan & Pelatihan" [level=2] [ref=e44]
+        - generic [ref=e46] [cursor=pointer]:
+          - generic [ref=e48]: 
+          - heading "Pendidikan dan Pelatihan" [level=3] [ref=e49]
+          - paragraph [ref=e50]: Lorem ipsum dolor sit amet, consectetur
+    - generic [ref=e65]:
+      - button [ref=e66] [cursor=pointer]:
+        - img [ref=e67]
+      - generic [ref=e71]:
+        - generic [ref=e72]:
+          - generic [ref=e74]: 
+          - generic [ref=e75]:
+            - heading "Penelitian" [level=2] [ref=e76]
+            - paragraph [ref=e77]: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        - generic [ref=e78]: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nisi erat, ultricies nec lobortis eget, tincidunt id tortor. Aliquam rutrum, diam iaculis iaculis tincidunt, velit ipsum lobortis nibh, id molestie felis felis id nibh. Nam eget velit sapien. Integer lacinia ornare nibh, id consectetur neque gravida eget. Morbi et pulvinar augue, ut volutpat leo. Nullam gravida feugiat magna. Mauris egestas pulvinar placerat. Sed quis urna laoreet, sagittis eros ac, varius nibh. Aliquam in tellus eget justo imperdiet placerat suscipit nec enim. Sed efficitur sagittis ex vitae luctus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed elementum a arcu semper maximus. Donec ac quam nunc. Pellentesque finibus erat vitae nibh convallis, non dignissim augue facilisis. In laoreet dictum vulputate. Vivamus elementum enim ac malesuada tempor. Suspendisse tortor augue, vehicula ac aliquet id, finibus vel neque. Suspendisse potenti. Nam mollis elementum leo, et euismod dui. Etiam dictum, diam ac lacinia luctus, metus diam posuere odio, volutpat congue odio sapien vitae est. Donec mi urna, scelerisque non finibus sed, pellentesque et lectus. Nunc quis scelerisque ante, non mollis magna. Nulla vehicula pharetra tristique. Integer viverra molestie tempor. Integer suscipit tincidunt nunc eu placerat. Ut libero neque, auctor a elit quis, ultricies malesuada nibh. In sit amet diam tempus augue venenatis faucibus at eu sapien. Fusce tempus nisl nec eleifend dapibus. Proin consequat sollicitudin hendrerit. Suspendisse feugiat nulla odio, vitae vulputate leo ultricies nec. Vestibulum feugiat luctus vehicula. Etiam luctus scelerisque porttitor. Donec nec placerat enim, condimentum facilisis magna. Cras ut mauris non nibh vestibulum congue. Quisque sed aliquam nibh, nec vulputate sapien. Donec id diam placerat, vehicula ligula a, luctus nibh. Fusce mollis vestibulum mollis. Integer tincidunt neque ut venenatis tempus.
+        - heading "Documentation" [level=4] [ref=e80]
+  - contentinfo [ref=e51]:
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - img "InaBCRU" [ref=e55]
+        - paragraph [ref=e56]: Membangun jejaring peneliti, pemerhati dan pegiat konservasi kelelawar di Indonesia
+      - generic [ref=e57]:
+        - heading "Informasi Kontak" [level=4] [ref=e58]
+        - list [ref=e59]:
+          - listitem [ref=e60]: "Email: info.inabcru@gmail.com"
+          - listitem [ref=e61]: "Didirikan: February 5, 2025"

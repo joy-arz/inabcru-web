@@ -152,16 +152,20 @@ class FileUploadController extends Controller
     {
         $this->ensureDirectoryExists($folder);
 
-        $filename = $uuid . '.' . $extension;
+        $filename = $uuid . '.webm';
         $path = $file->storeAs($folder, $filename, 'public');
 
         \Log::info('Video processed', [
             'path' => $path,
             'original_size' => $file->getSize(),
-            'extension' => $extension
+            'extension' => $extension,
+            'stored_as' => 'webm'
         ]);
 
-        return ['path' => $path, 'url' => asset('storage/' . $path)];
+        return [
+            'path' => $path,
+            'url' => '/video/' . $path
+        ];
     }
 
     private function processPdf(UploadedFile $file, string $folder, string $uuid): array
