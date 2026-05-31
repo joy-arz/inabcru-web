@@ -34,7 +34,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($grouped[$category] as $image)
                     @php $imgType = $image->type ?? 'image'; @endphp
-                    <div class="border border-gray-200 rounded-lg p-4">
+                    <div class="border border-gray-200 rounded-lg p-4" data-item-id="{{ $image->id }}">
                         <div class="relative aspect-video mb-3 rounded-lg overflow-hidden bg-gray-50">
                             @if($imgType === 'video')
                             <video src="{{ $image->image_url }}" class="w-full h-full object-contain" muted></video>
@@ -60,20 +60,24 @@
                                     <option value="video" {{ $image->type == 'video' ? 'selected' : '' }}>Video</option>
                                 </select>
                             </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">{{ $image->type == 'video' ? 'Replace Video' : 'Replace Image' }}</label>
+                            <div class="upload-section" data-type="{{ $image->type ?? 'image' }}">
+                                <label class="block text-xs font-medium text-gray-700 mb-1 upload-label">{{ $image->type == 'video' ? 'Replace Video' : 'Replace Image' }}</label>
                                 <div class="flex items-center gap-2">
-                                    <label class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-sm">
+                                    <label class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-sm upload-label-text">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                        {{ $image->type == 'video' ? 'Upload Video' : 'Upload' }}
-                                        <input type="file" accept="{{ $image->type == 'video' ? 'video/*' : 'image/*' }}" class="hidden" data-image-id="{{ $image->id }}" onchange="handleImageUpload(this, {{ $image->id }})" />
+                                        <span class="upload-btn-text">{{ $image->type == 'video' ? 'Upload Video' : 'Upload' }}</span>
+                                        <input type="file" accept="image/*" class="hidden" data-image-id="{{ $image->id }}" onchange="handleImageUpload(this, {{ $image->id }})" />
                                     </label>
                                 </div>
-                                @if($image->type == 'video' && $image->image_url)
-                                <div class="mt-2">
+                                <div class="progress-bar-container mt-2 hidden">
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-primary h-2 rounded-full transition-all duration-300 progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1 text-center progress-text">0%</p>
+                                </div>
+                                <div class="video-preview mt-2 {{ $image->type == 'video' && $image->image_url ? '' : 'hidden' }}">
                                     <video src="{{ $image->image_url }}" class="w-full h-24 object-cover rounded-lg bg-black" controls></video>
                                 </div>
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -85,26 +89,77 @@
 </div>
 
 <script>
+function updateType(imageId, type) {
+    const item = document.querySelector(`[data-item-id="${imageId}"]`);
+    const section = item.querySelector('.upload-section');
+    const label = section.querySelector('.upload-label');
+    const btnText = section.querySelector('.upload-btn-text');
+    const fileInput = section.querySelector('input[type="file"]');
+    const preview = section.querySelector('.video-preview');
+
+    section.dataset.type = type;
+    label.textContent = type === 'video' ? 'Replace Video' : 'Replace Image';
+    btnText.textContent = type === 'video' ? 'Upload Video' : 'Upload';
+    fileInput.accept = type === 'video' ? 'video/*' : 'image/*';
+    preview.classList.toggle('hidden', !(type === 'video' && fileInput.closest('.upload-section').querySelector('video')));
+
+    fetch('/admin/site-images/' + imageId, {
+        method: 'PUT',
+        body: new URLSearchParams({
+            '_token': '{{ csrf_token() }}',
+            'type': type
+        }),
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        }
+    });
+}
+
 function handleImageUpload(input, imageId) {
     const file = input.files[0];
     if (!file) return;
-    const typeSelect = input.closest('.border').querySelector('select');
-    const type = typeSelect ? typeSelect.value : 'image';
+    const item = input.closest('[data-item-id]');
+    const section = item.querySelector('.upload-section');
+    const type = section.dataset.type || 'image';
     const maxSize = type === 'video' ? 100 * 1024 * 1024 : 5 * 1024 * 1024;
     if (file.size > maxSize) {
         alert('File too large. Max ' + (type === 'video' ? '100MB' : '5MB'));
         input.value = '';
         return;
     }
+
+    const progressContainer = section.querySelector('.progress-bar-container');
+    const progressBar = section.querySelector('.progress-bar');
+    const progressText = section.querySelector('.progress-text');
+    progressContainer.classList.remove('hidden');
+    progressBar.style.width = '0%';
+    progressText.textContent = '0%';
+
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('type', type === 'video' ? 'video' : 'image');
+    formData.append('type', type);
     formData.append('_token', '{{ csrf_token() }}');
-    fetch('{{ route('admin.upload') }}', {
-        method: 'POST',
-        body: formData
-    }).then(res => res.json()).then(data => {
-        if (data.error) { alert(data.error); return; }
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            progressBar.style.width = percent + '%';
+            progressText.textContent = percent + '%';
+        }
+    });
+
+    xhr.onload = function() {
+        if (xhr.status !== 200) {
+            alert('Upload failed');
+            progressContainer.classList.add('hidden');
+            return;
+        }
+        let data;
+        try { data = JSON.parse(xhr.responseText); } catch { data = {}; }
+        if (data.error) { alert(data.error); progressContainer.classList.add('hidden'); return; }
+
         const formData2 = new FormData();
         formData2.append('image_url', data.url);
         formData2.append('_token', '{{ csrf_token() }}');
@@ -116,14 +171,17 @@ function handleImageUpload(input, imageId) {
                 'Accept': 'application/json',
             }
         }).then(response => response.json()).then(data => {
-            if (data.success) {
-                window.location.reload();
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-            window.location.reload();
-        });
-    }).catch(() => alert('Upload failed'));
+            if (data.success) window.location.reload();
+        }).catch(() => window.location.reload());
+    };
+
+    xhr.onerror = function() {
+        alert('Upload failed');
+        progressContainer.classList.add('hidden');
+    };
+
+    xhr.open('POST', '{{ route('admin.upload') }}');
+    xhr.send(formData);
 }
 
 function updateAltText(imageId, altText) {
@@ -132,20 +190,6 @@ function updateAltText(imageId, altText) {
         body: new URLSearchParams({
             '_token': '{{ csrf_token() }}',
             'alt_text': altText
-        }),
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json',
-        }
-    });
-}
-
-function updateType(imageId, type) {
-    fetch('/admin/site-images/' + imageId, {
-        method: 'PUT',
-        body: new URLSearchParams({
-            '_token': '{{ csrf_token() }}',
-            'type': type
         }),
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
