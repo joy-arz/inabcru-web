@@ -24,31 +24,32 @@ class SiteImageController extends Controller
         return view('admin.site-images.form', ['image' => $image, 'id' => $id]);
     }
 
-    public function update(Request $request, int $id): JsonResponse|RedirectResponse
+    public function update(Request $request, int $id)
     {
-        $image = SiteImage::findOrFail($id);
+        try {
+            $image = SiteImage::findOrFail($id);
 
-        $data = [];
-        if ($request->has('image_url')) {
-            $data['image_url'] = $request->input('image_url');
+            $data = [];
+            if ($request->has('image_url')) {
+                $data['image_url'] = $request->input('image_url');
+            }
+            if ($request->has('alt_text')) {
+                $data['alt_text'] = $request->input('alt_text');
+            }
+            if ($request->has('type')) {
+                $data['type'] = $request->input('type');
+            }
+
+            $image->update($data);
+
+            if ($request->hasHeader('X-Requested-With') || $request->has('_method') || $request->expectsJson()) {
+                return response()->json(['success' => true]);
+            }
+
+            return redirect()->route('admin.site-images.index')->with('success', 'Image updated');
+        } catch (\Exception $e) {
+            \Log::error('SiteImage update error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
-        if ($request->has('alt_text')) {
-            $data['alt_text'] = $request->input('alt_text');
-        }
-        if ($request->has('type')) {
-            $data['type'] = $request->input('type');
-        }
-
-        $image->update($data);
-
-        $isAjax = $request->hasHeader('X-Requested-With') ||
-                  $request->has('_method') ||
-                  $request->hasHeader('Accept');
-
-        if ($isAjax || $request->expectsJson()) {
-            return response()->json(['success' => true]);
-        }
-
-        return redirect()->route('admin.site-images.index')->with('success', 'Image updated');
     }
 }
