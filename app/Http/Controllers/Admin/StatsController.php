@@ -18,6 +18,8 @@ class StatsController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
+        \Log::info('Stats update called', $request->all());
+
         $data = $request->validate([
             'stats' => 'required|array',
             'stats.*.id' => 'required|integer',
@@ -26,6 +28,8 @@ class StatsController extends Controller
             'stats.*.value' => 'required|string',
             'stats.*.icon' => 'nullable|string',
         ]);
+
+        \Log::info('Stats validated', $data);
 
         foreach ($data['stats'] as $statData) {
             ImpactStat::where('id', $statData['id'])->update([
