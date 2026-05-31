@@ -66,7 +66,7 @@
                                     <label class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors text-sm">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         {{ $image->type == 'video' ? 'Upload Video' : 'Upload' }}
-                                        <input type="file" accept="{{ $image->type == 'video' ? 'video/*' : 'image/*' }}" class="hidden" onchange="handleImageUpload(this, {{ $image->id }}, '{{ $image->type }}')" />
+                                        <input type="file" accept="{{ $image->type == 'video' ? 'video/*' : 'image/*' }}" class="hidden" data-image-id="{{ $image->id }}" onchange="handleImageUpload(this, {{ $image->id }})" />
                                     </label>
                                 </div>
                                 @if($image->type == 'video' && $image->image_url)
@@ -85,9 +85,11 @@
 </div>
 
 <script>
-function handleImageUpload(input, imageId, type) {
+function handleImageUpload(input, imageId) {
     const file = input.files[0];
     if (!file) return;
+    const typeSelect = input.closest('.border').querySelector('select');
+    const type = typeSelect ? typeSelect.value : 'image';
     const maxSize = type === 'video' ? 100 * 1024 * 1024 : 5 * 1024 * 1024;
     if (file.size > maxSize) {
         alert('File too large. Max ' + (type === 'video' ? '100MB' : '5MB'));
