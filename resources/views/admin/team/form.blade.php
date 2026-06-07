@@ -262,11 +262,10 @@ showFocalPicker('{{ $member->photo_url }}', {{ $member->photo_focal_x ?? 50 }}, 
 var focalPicker = document.getElementById('focal-point-picker');
 var focalImg = document.getElementById('focal-preview-img');
 var focalCrosshair = document.getElementById('focal-crosshair');
-var focalOverlay = document.getElementById('focal-overlay');
 var focalXInput = document.getElementById('photo_focal_x');
 var focalYInput = document.getElementById('photo_focal_y');
 
-focalPicker.addEventListener('click', function(e) {
+focalImg.addEventListener('click', function(e) {
     var rect = focalImg.getBoundingClientRect();
     var x = ((e.clientX - rect.left) / rect.width) * 100;
     var y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -294,16 +293,24 @@ function showFocalPicker(url, focalX, focalY) {
     var container = document.getElementById('focal-point-container');
     var img = document.getElementById('focal-preview-img');
     var crosshair = document.getElementById('focal-crosshair');
-    
-    img.src = url;
-    container.style.display = 'flex';
-    
-    crosshair.style.left = focalX + '%';
-    crosshair.style.top = focalY + '%';
-    
     var circleImg = document.getElementById('focal-circle-img');
-    circleImg.src = url;
-    updateFocalPreview(focalX, focalY);
+    
+    img.onload = function() {
+        container.style.display = 'flex';
+        crosshair.style.left = focalX + '%';
+        crosshair.style.top = focalY + '%';
+        circleImg.src = url;
+        updateFocalPreview(focalX, focalY);
+    };
+    img.src = url;
+    
+    if (img.complete) {
+        container.style.display = 'flex';
+        crosshair.style.left = focalX + '%';
+        crosshair.style.top = focalY + '%';
+        circleImg.src = url;
+        updateFocalPreview(focalX, focalY);
+    }
 }
 
 function resetFocalPoint() {
