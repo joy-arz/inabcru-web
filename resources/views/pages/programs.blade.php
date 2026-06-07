@@ -27,32 +27,47 @@
 </section>
 
 {{-- Programs Grid Section --}}
-<section class="py-24 bg-background">
+<section class="py-16 bg-background">
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
-    @foreach($divisions as $division)
+    @foreach($divisions as $divisionIndex => $division)
       @if($division->programs->count() > 0)
       <div class="mb-16">
         <h2 class="font-heading text-2xl font-bold text-text mb-8 pb-4 border-b border-border">
           {{ $locale == 'id' ? $division->name_id : $division->name_en }}
         </h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          @foreach($division->programs as $idx => $program)
-            <div class="bg-surface-warm rounded-2xl p-8 border border-border group hover:shadow-lg transition-shadow duration-300 cursor-pointer animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;" onclick="openProgramModal({{ $program->id }})">
-              <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                @if($program->icon)
-                  <i class="{{ $program->icon }} text-xl"></i>
-                @else
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                @endif
-              </div>
-              <h3 class="font-heading text-xl font-semibold text-text mb-3">
-                {{ $locale == 'id' ? $program->title_id : $program->title_en }}
-              </h3>
-              <p class="text-muted leading-relaxed">
-                {{ $locale == 'id' ? $program->short_description_id : $program->short_description_en }}
-              </p>
+
+        <div class="relative flex items-center">
+          @if($division->programs->count() > 1)
+          <button onclick="scrollCarousel('division_{{ $divisionIndex }}', -1)" class="absolute left-0 z-10 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center text-primary hover:bg-white transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+          @endif
+          <div class="carousel-container flex-1 overflow-x-auto pb-4 scrollbar-hide mx-8" data-carousel-id="division_{{ $divisionIndex }}" data-auto-slide="{{ $division->programs->count() > 1 ? 'true' : 'false' }}">
+            <div class="flex gap-6" style="width: max-content;">
+              @foreach($division->programs as $program)
+                <div class="w-80 flex-shrink-0 bg-surface-warm rounded-2xl p-8 border border-border group hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="openProgramModal({{ $program->id }})">
+                  <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                    @if($program->icon)
+                      <i class="{{ $program->icon }} text-xl"></i>
+                    @else
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    @endif
+                  </div>
+                  <h3 class="font-heading text-xl font-semibold text-text mb-3">
+                    {{ $locale == 'id' ? $program->title_id : $program->title_en }}
+                  </h3>
+                  <p class="text-muted leading-relaxed">
+                    {{ $locale == 'id' ? $program->short_description_id : $program->short_description_en }}
+                  </p>
+                </div>
+              @endforeach
             </div>
-          @endforeach
+          </div>
+          @if($division->programs->count() > 1)
+          <button onclick="scrollCarousel('division_{{ $divisionIndex }}', 1)" class="absolute right-0 z-10 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center text-primary hover:bg-white transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+          @endif
         </div>
       </div>
       @endif
@@ -81,8 +96,52 @@
 @endsection
 
 @push('scripts')
+<style>
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.carousel-container { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+.carousel-container::-webkit-scrollbar { display: none; }
+</style>
 <script>
 const programs = @json($programsJson);
+
+function scrollCarousel(sectionIndex, direction) {
+  const container = document.querySelector(`[data-carousel-id="${sectionIndex}"]`);
+  if (!container) return;
+
+  const cardWidth = 344;
+  const newScrollLeft = container.scrollLeft + (direction * cardWidth);
+  container.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
+}
+
+function initAutoSlide() {
+  document.querySelectorAll('.carousel-container[data-auto-slide="true"]').forEach(container => {
+    let autoSlideInterval;
+    let isPaused = false;
+
+    container.addEventListener('mouseenter', () => { isPaused = true; });
+    container.addEventListener('mouseleave', () => { isPaused = false; });
+    container.addEventListener('touchstart', () => { isPaused = true; });
+    container.addEventListener('touchend', () => { setTimeout(() => { isPaused = false; }, 2000); });
+
+    autoSlideInterval = setInterval(() => {
+      if (!isPaused) {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (container.scrollLeft >= maxScroll - 10) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: 344, behavior: 'smooth' });
+        }
+      }
+    }, 5000);
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAutoSlide);
+} else {
+  initAutoSlide();
+}
 
 function openProgramModal(id) {
   const program = programs.find(p => p.id === id);
