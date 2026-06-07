@@ -57,7 +57,7 @@ function extractYouTubeId($url) {
                 @php
                 $contentBlocks = is_array($pub->content_blocks) ? $pub->content_blocks : json_decode($pub->content_blocks ?? '[]', true);
                 @endphp
-                <div class="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer" @if(count($contentBlocks) > 0) onclick="openPreviewModal({{ $sectionIndex }}_{{ $idx }})" @elseif($pub->doi) onclick="window.open('{{ $pub->doi }}', '_blank')" @endif>
+                <div class="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer" @if(count($contentBlocks) > 0) onclick="openPreviewModal('{{ $sectionIndex }}_{{ $idx }}')" @elseif($pub->doi) onclick="window.open('{{ $pub->doi }}', '_blank')" @endif>
                   @if($pub->cover_image_url)
                     <div class="aspect-video overflow-hidden relative group">
                       <img src="{{ $pub->cover_image_url }}" alt="{{ $locale == 'id' ? $pub->title_id : $pub->title_en }}" class="w-full h-full object-cover">
@@ -101,11 +101,11 @@ function extractYouTubeId($url) {
 
                 @if(count($contentBlocks) > 0)
                 <div id="preview-modal-{{ $sectionIndex }}_{{ $idx }}" class="fixed inset-0 z-50 hidden">
-                  <div class="absolute inset-0 bg-dark/80 backdrop-blur-sm" onclick="closePreviewModal({{ $sectionIndex }}_{{ $idx }})"></div>
+                  <div class="absolute inset-0 bg-dark/80 backdrop-blur-sm" onclick="closePreviewModal('{{ $sectionIndex }}_{{ $idx }}')"></div>
                   <div class="absolute inset-4 md:inset-8 lg:inset-16 bg-surface-warm rounded-2xl shadow-2xl overflow-hidden flex flex-col">
                     <div class="flex items-center justify-between p-4 border-b border-border flex-shrink-0">
                       <h3 class="font-heading text-lg font-semibold text-text">{{ $locale == 'id' ? $pub->title_id : $pub->title_en }}</h3>
-                      <button onclick="closePreviewModal({{ $sectionIndex }}_{{ $idx }})" class="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
+                      <button onclick="closePreviewModal('{{ $sectionIndex }}_{{ $idx }}')" class="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
                         <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></svg>
                         </svg>
@@ -140,7 +140,7 @@ function extractYouTubeId($url) {
 
                       @if(count($contentBlocks) > 1)
                       <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-dark/50 backdrop-blur-sm rounded-full px-4 py-2">
-                        <button onclick="switchSlide({{ $sectionIndex }}_{{ $idx }}, -1)" class="p-1.5 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
+                        <button onclick="switchSlide('{{ $sectionIndex }}_{{ $idx }}', -1)" class="p-1.5 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
                           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                           </svg>
@@ -148,10 +148,10 @@ function extractYouTubeId($url) {
                         <span id="slide-counter-{{ $sectionIndex }}_{{ $idx }}" class="text-white text-xs font-medium px-2">1 / {{ count($contentBlocks) }}</span>
                         <div class="flex gap-1">
                           @foreach($contentBlocks as $blockIdx => $block)
-                            <button onclick="goToSlide({{ $sectionIndex }}_{{ $idx }}, {{ $blockIdx }})" class="w-2 h-2 rounded-full transition-colors {{ $blockIdx == 0 ? 'bg-white' : 'bg-white/40 hover:bg-white/60' }} cursor-pointer"></button>
+                            <button onclick="goToSlide('{{ $sectionIndex }}_{{ $idx }}', {{ $blockIdx }})" class="w-2 h-2 rounded-full transition-colors {{ $blockIdx == 0 ? 'bg-white' : 'bg-white/40 hover:bg-white/60' }} cursor-pointer"></button>
                           @endforeach
                         </div>
-                        <button onclick="switchSlide({{ $sectionIndex }}_{{ $idx }}, 1)" class="p-1.5 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
+                        <button onclick="switchSlide('{{ $sectionIndex }}_{{ $idx }}', 1)" class="p-1.5 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
                           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                           </svg>
