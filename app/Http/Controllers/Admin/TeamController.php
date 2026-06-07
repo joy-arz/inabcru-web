@@ -48,8 +48,8 @@ class TeamController extends Controller
             unset($data['division_id']);
         }
         $data['photo_position'] = $data['photo_position'] ?? 'top';
-        $data['photo_focal_x'] = $data['photo_focal_x'] ?? 50;
-        $data['photo_focal_y'] = $data['photo_focal_y'] ?? 50;
+        $data['photo_focal_x'] = is_numeric($data['photo_focal_x'] ?? null) ? $data['photo_focal_x'] : 50;
+        $data['photo_focal_y'] = is_numeric($data['photo_focal_y'] ?? null) ? $data['photo_focal_y'] : 50;
         TeamMember::create($data);
         return redirect()->route('admin.team.index')->with('success', 'Team member added');
     }
@@ -87,15 +87,11 @@ class TeamController extends Controller
         if (isset($data['division_id']) && empty($data['division_id'])) {
             unset($data['division_id']);
         }
-        if (!isset($data['photo_position'])) {
+        if (!isset($data['photo_position']) || empty($data['photo_position'])) {
             $data['photo_position'] = 'top';
         }
-        if (!isset($data['photo_focal_x'])) {
-            $data['photo_focal_x'] = 50;
-        }
-        if (!isset($data['photo_focal_y'])) {
-            $data['photo_focal_y'] = 50;
-        }
+        $data['photo_focal_x'] = is_numeric($data['photo_focal_x'] ?? null) ? $data['photo_focal_x'] : 50;
+        $data['photo_focal_y'] = is_numeric($data['photo_focal_y'] ?? null) ? $data['photo_focal_y'] : 50;
         $member->update($data);
         return redirect()->route('admin.team.index')->with('success', 'Team member updated');
     }

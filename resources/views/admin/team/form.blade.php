@@ -118,25 +118,34 @@
                 <label class="text-sm font-medium text-gray-700">Photo Focal Point</label>
                 <input type="hidden" name="photo_focal_x" id="photo_focal_x" value="{{ old('photo_focal_x', $member->photo_focal_x ?? 50) }}">
                 <input type="hidden" name="photo_focal_y" id="photo_focal_y" value="{{ old('photo_focal_y', $member->photo_focal_y ?? 50) }}">
-                <div id="focal-point-container" class="relative w-full max-w-xs mx-auto" style="display: none;">
-                    <div id="focal-point-picker" class="relative bg-gray-100 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing">
-                        <img id="focal-preview-img" src="" alt="" class="w-full h-auto block pointer-events-none">
-                        <div id="focal-overlay" class="absolute inset-0 pointer-events-none">
-                            <div id="focal-crosshair" class="absolute w-16 h-16 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                                <svg viewBox="0 0 64 64" class="w-full h-full">
-                                    <circle cx="32" cy="32" r="30" fill="none" stroke="white" stroke-width="2" stroke-dasharray="4 4"/>
-                                    <line x1="32" y1="2" x2="32" y2="14" stroke="white" stroke-width="2"/>
-                                    <line x1="32" y1="50" x2="32" y2="62" stroke="white" stroke-width="2"/>
-                                    <line x1="2" y1="32" x2="14" y2="32" stroke="white" stroke-width="2"/>
-                                    <line x1="50" y1="32" x2="62" y2="32" stroke="white" stroke-width="2"/>
-                                </svg>
+                <div id="focal-point-container" class="flex gap-6 items-start" style="display: none;">
+                    <div class="flex-1">
+                        <div id="focal-point-picker" class="relative bg-gray-100 rounded-lg overflow-hidden cursor-pointer">
+                            <img id="focal-preview-img" src="" alt="" class="w-full h-auto block">
+                            <div id="focal-overlay" class="absolute inset-0 pointer-events-none">
+                                <div id="focal-crosshair" class="absolute w-12 h-12 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                                    <svg viewBox="0 0 48 48" class="w-full h-full drop-shadow-lg">
+                                        <circle cx="24" cy="24" r="22" fill="none" stroke="white" stroke-width="2.5"/>
+                                        <line x1="24" y1="2" x2="24" y2="10" stroke="white" stroke-width="2.5"/>
+                                        <line x1="24" y1="38" x2="24" y2="46" stroke="white" stroke-width="2.5"/>
+                                        <line x1="2" y1="24" x2="10" y2="24" stroke="white" stroke-width="2.5"/>
+                                        <line x1="38" y1="24" x2="46" y2="24" stroke="white" stroke-width="2.5"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
+                        <p class="text-xs text-gray-400 text-center mt-2">Click anywhere on the image to set focal point</p>
                     </div>
-                    <p class="text-xs text-gray-400 text-center mt-2">Click anywhere on the image to set the focal point (center of the circle)</p>
-                    <div class="flex gap-2 justify-center mt-1">
-                        <button type="button" onclick="resetFocalPoint()" class="text-xs text-gray-500 hover:text-gray-700 underline">Reset to center</button>
+                    <div class="flex-shrink-0 text-center">
+                        <p class="text-xs text-gray-500 mb-2">Preview (circular crop)</p>
+                        <div id="focal-circle-preview" class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 mx-auto">
+                            <img id="focal-circle-img" src="" alt="" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2">X: <span id="focal-x-display">50</span>% Y: <span id="focal-y-display">50</span>%</p>
                     </div>
+                </div>
+                <div class="flex gap-2 justify-center mt-2">
+                    <button type="button" onclick="resetFocalPoint()" class="text-xs text-gray-500 hover:text-gray-700 underline">Reset to center</button>
                 </div>
             </div>
 
@@ -278,7 +287,19 @@ focalPicker.addEventListener('click', function(e) {
     
     focalCrosshair.style.left = x + '%';
     focalCrosshair.style.top = y + '%';
+    
+    updateFocalPreview(x, y);
 });
+
+function updateFocalPreview(x, y) {
+    var circleImg = document.getElementById('focal-circle-img');
+    var focalXDisplay = document.getElementById('focal-x-display');
+    var focalYDisplay = document.getElementById('focal-y-display');
+    
+    circleImg.style.objectPosition = x + '% ' + y + '%';
+    focalXDisplay.textContent = Math.round(x * 10) / 10;
+    focalYDisplay.textContent = Math.round(y * 10) / 10;
+}
 
 function showFocalPicker(url, focalX, focalY) {
     var container = document.getElementById('focal-point-container');
@@ -286,10 +307,14 @@ function showFocalPicker(url, focalX, focalY) {
     var crosshair = document.getElementById('focal-crosshair');
     
     img.src = url;
-    container.style.display = 'block';
+    container.style.display = 'flex';
     
     crosshair.style.left = focalX + '%';
     crosshair.style.top = focalY + '%';
+    
+    var circleImg = document.getElementById('focal-circle-img');
+    circleImg.src = url;
+    updateFocalPreview(focalX, focalY);
 }
 
 function resetFocalPoint() {
@@ -298,6 +323,7 @@ function resetFocalPoint() {
     focalYInput.value = 50;
     crosshair.style.left = '50%';
     crosshair.style.top = '50%';
+    updateFocalPreview(50, 50);
 }
 
 function handlePhotoUpload(input) {
