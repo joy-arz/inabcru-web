@@ -7,11 +7,12 @@
           alt="InaBCRU"
           style="width: 220px; height: auto;"
         >
-        <p class="text-gray-500 text-sm leading-relaxed">{{ trans_for('footer.tagline', $locale) }}</p>
+        <p class="text-gray-600 text-base md:text-lg leading-relaxed mt-2">{{ trans_for('footer.tagline', $locale) }}</p>
       </div>
       <div class="text-center md:text-right flex-shrink-0">
         <h4 class="font-heading font-semibold text-base mb-3">{{ trans_for('footer.contactInfo', $locale) }}</h4>
         <ul class="space-y-2.5">
+          <li class="text-gray-500 text-sm">{{ trans_for('footer.address', $locale) }}: Ngadiwinatan NGI/1327, Desa/Kelurahan Ngampilan, Kec. Ngampilan, Kota Yogyakarta, Provinsi Daerah Istimewa Yogyakarta, Kode Pos: 55261</li>
           <li class="text-gray-500 text-sm">{{ trans_for('footer.email', $locale) }}: info.inabcru@gmail.com</li>
           <li class="text-gray-500 text-sm">{{ trans_for('footer.founded', $locale) }}: February 5, 2025</li>
         </ul>
