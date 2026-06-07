@@ -54,7 +54,10 @@ function extractYouTubeId($url) {
           <div class="carousel-container overflow-x-auto pb-4 scrollbar-hide" data-carousel-id="{{ $sectionIndex }}">
             <div class="flex gap-6 pb-4" style="width: max-content;">
               @foreach($section->publications as $idx => $pub)
-                <div class="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="openPreviewModal({{ $sectionIndex }}_{{ $idx }})">
+                @php
+                $contentBlocks = is_array($pub->content_blocks) ? $pub->content_blocks : json_decode($pub->content_blocks ?? '[]', true);
+                @endphp
+                <div class="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer" @if(count($contentBlocks) > 0) onclick="openPreviewModal({{ $sectionIndex }}_{{ $idx }})" @elseif($pub->doi) onclick="window.open('{{ $pub->doi }}', '_blank')" @endif>
                   @if($pub->cover_image_url)
                     <div class="aspect-video overflow-hidden relative group">
                       <img src="{{ $pub->cover_image_url }}" alt="{{ $locale == 'id' ? $pub->title_id : $pub->title_en }}" class="w-full h-full object-cover">
