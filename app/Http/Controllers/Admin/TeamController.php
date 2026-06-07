@@ -35,6 +35,7 @@ class TeamController extends Controller
             'bio_id' => 'nullable|string',
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
+            'photo_position' => 'nullable|string|in:top,center,bottom,left,right',
             'linkedin_url' => 'nullable|string',
             'division_id' => 'nullable|integer',
             'role' => 'nullable|string',
@@ -44,6 +45,7 @@ class TeamController extends Controller
         if (empty($data['division_id'])) {
             unset($data['division_id']);
         }
+        $data['photo_position'] = $data['photo_position'] ?? 'top';
         TeamMember::create($data);
         return redirect()->route('admin.team.index')->with('success', 'Team member added');
     }
@@ -70,6 +72,7 @@ class TeamController extends Controller
             'bio_id' => 'nullable|string',
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
+            'photo_position' => 'nullable|string|in:top,center,bottom,left,right',
             'linkedin_url' => 'nullable|string',
             'division_id' => 'nullable|integer',
             'role' => 'nullable|string',
@@ -77,6 +80,9 @@ class TeamController extends Controller
 
         if (isset($data['division_id']) && empty($data['division_id'])) {
             unset($data['division_id']);
+        }
+        if (!isset($data['photo_position'])) {
+            $data['photo_position'] = 'top';
         }
         $member->update($data);
         return redirect()->route('admin.team.index')->with('success', 'Team member updated');

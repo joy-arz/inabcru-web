@@ -31,22 +31,44 @@
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
       @forelse($teamMembers as $idx => $member)
+        @php $position = $member->photo_position ?? 'top'; @endphp
+        @if($position === 'left' || $position === 'right')
+        <div class="group cursor-pointer animate-fade-up opacity-0 col-span-2" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
+          <div class="flex gap-4 p-4 bg-surface-warm rounded-xl border border-border group-hover:border-primary transition-colors duration-300 {{ $position === 'right' ? 'flex-row-reverse' : '' }}">
+            <div class="relative w-32 h-32 shrink-0 rounded-lg bg-background overflow-hidden border border-border">
+              @if($member->photo_url)
+                <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-full h-full object-cover" style="object-position: {{ $position === 'bottom' ? 'bottom' : 'top' }};">
+              @else
+                <svg class="absolute inset-0 w-full h-full text-primary/20" viewBox="0 0 100 100" fill="currentColor">
+                  <path d="M50 10c-5 0-9 4-9 9v6c-8 3-14 11-14 20 0 12 9 22 20 24v5c0 3 2 5 5 5h8c3 0 5-2 5-5v-5c11-2 20-12 20-24 0-9-6-17-14-20v-6c0-5-4-9-9-9h-12zm-3 9c0-2 2-4 4-4s4 2 4 4v6c0 2-2 4-4 4s-4-2-4-4v-6zm6 22c8 0 14 4 14 10 0 3-1 5-3 6l2 7H34l2-7c-2-1-3-3-3-6 0-6 6-10 14-10h8z"/>
+                </svg>
+              @endif
+            </div>
+            <div class="flex flex-col justify-center {{ $position === 'right' ? 'text-right' : '' }}">
+              <h3 class="font-heading text-lg font-semibold text-text mb-1">{{ $member->name }}</h3>
+              <p class="text-cta text-sm font-medium mb-2">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
+              <p class="text-muted text-sm">{{ $locale == 'id' ? ($member->bio_id ?: '') : ($member->bio_en ?: '') }}</p>
+            </div>
+          </div>
+        </div>
+        @else
         <div class="text-center group cursor-pointer animate-fade-up opacity-0" style="animation-delay: {{ ($idx + 1) * 0.1 }}s;">
           <div class="relative w-24 h-24 mx-auto mb-4 rounded-full bg-surface-warm overflow-hidden border-2 border-border group-hover:border-primary transition-colors duration-300">
             @if($member->photo_url)
-              <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-full h-full object-cover">
+              <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-full h-full object-cover" style="object-position: {{ $position }};">
             @else
               <svg class="absolute inset-0 w-full h-full text-primary/20" viewBox="0 0 100 100" fill="currentColor">
                 <path d="M50 10c-5 0-9 4-9 9v6c-8 3-14 11-14 20 0 12 9 22 20 24v5c0 3 2 5 5 5h8c3 0 5-2 5-5v-5c11-2 20-12 20-24 0-9-6-17-14-20v-6c0-5-4-9-9-9h-12zm-3 9c0-2 2-4 4-4s4 2 4 4v6c0 2-2 4-4 4s-4-2-4-4v-6zm6 22c8 0 14 4 14 10 0 3-1 5-3 6l2 7H34l2-7c-2-1-3-3-3-6 0-6 6-10 14-10h8z"/>
               </svg>
             @endif
           </div>
-          <h3 class="font-heading text-lg font-semibold text-text mb-1">
-            {{ $member->name }}
-          </h3>
+          <h3 class="font-heading text-lg font-semibold text-text mb-1">{{ $member->name }}</h3>
           <p class="text-cta text-sm font-medium mb-2">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
+          @if($position === 'bottom')
           <p class="text-muted text-sm">{{ $locale == 'id' ? ($member->bio_id ?: '') : ($member->bio_en ?: '') }}</p>
+          @endif
         </div>
+        @endif
       @empty
         <div class="col-span-4 text-center py-16">
           <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

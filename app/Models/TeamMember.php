@@ -14,6 +14,7 @@ class TeamMember extends Model
         'bio_id',
         'bio_en',
         'photo_url',
+        'photo_position',
         'linkedin_url',
         'division_id',
         'role',
