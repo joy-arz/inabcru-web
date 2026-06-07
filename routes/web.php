@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\PublicationController;
+use App\Http\Controllers\Admin\PublicationSectionController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\PartnerController;
