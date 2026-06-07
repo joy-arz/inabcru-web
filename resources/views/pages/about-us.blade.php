@@ -166,10 +166,10 @@
               <h4 class="font-heading text-base font-semibold text-text mb-1">{{ $member->name }}</h4>
               <p class="text-primary text-sm font-medium">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
             </div>
-            <div class="member-bio hidden mt-6 w-full bg-surface-warm rounded-xl border border-border p-6 text-left">
+<div class="member-bio hidden mt-6 w-full bg-surface-warm rounded-xl border border-border p-6 text-left">
               <div class="text-center">
                 <h5 class="font-heading text-xl font-bold text-text mb-1">{{ $member->name }}</h5>
-                <p class="text-primary text-sm font-medium mb-4">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
+                <p class="text-primary text-sm font-medium mb-4">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
               </div>
               <div class="border-t border-border pt-4">
                 <p class="text-muted text-sm leading-relaxed whitespace-pre-line">{{ $locale == 'id' ? ($member->bio ?: $member->bio_id) : ($member->bio ?: $member->bio_en) }}</p>
