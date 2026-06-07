@@ -165,7 +165,6 @@
               </div>
               <h4 class="font-heading text-base font-semibold text-text mb-1">{{ $member->name }}</h4>
               <p class="text-primary text-sm font-medium">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
-              <p class="text-muted text-xs mt-1">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
             </div>
             <div class="member-bio hidden mt-6 w-full bg-surface-warm rounded-xl border border-border p-6 text-left">
               <div class="text-center">
@@ -212,7 +211,6 @@
             </div>
             <h4 class="font-heading text-base font-semibold text-text mb-1">{{ $member->name }}</h4>
             <p class="text-primary text-sm font-medium">{{ $member->role ?: ($locale == 'id' ? $member->title_id : $member->title_en) }}</p>
-            <p class="text-muted text-xs mt-1">{{ $locale == 'id' ? $member->title_id : $member->title_en }}</p>
           </div>
 <div class="member-bio hidden mt-6 w-full bg-surface-warm rounded-xl border border-border p-6 text-left">
               <div class="text-center">
