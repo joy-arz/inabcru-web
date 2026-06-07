@@ -50,14 +50,14 @@ function extractYouTubeId($url) {
           {{ $locale == 'id' ? $section->title_id : $section->title_en }}
         </h2>
 
-        <div class="relative px-4 md:px-12">
-          <div class="carousel-container overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory" data-carousel-id="{{ $sectionIndex }}" data-auto-slide="{{ $section->publications->count() > 1 ? 'true' : 'false' }}">
-            <div class="flex gap-6 pb-4 snap-x" style="width: max-content;">
+        <div class="relative">
+          <div class="carousel-container overflow-x-auto pb-4 scrollbar-hide" data-carousel-id="{{ $sectionIndex }}" data-auto-slide="{{ $section->publications->count() > 1 ? 'true' : 'false' }}">
+            <div class="flex gap-6" style="width: max-content;">
               @foreach($section->publications as $idx => $pub)
                 @php
                 $contentBlocks = is_array($pub->content_blocks) ? $pub->content_blocks : json_decode($pub->content_blocks ?? '[]', true);
                 @endphp
-                <div class="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer snap-center" @if(count($contentBlocks) > 0) onclick="openPreviewModal('{{ $sectionIndex }}_{{ $idx }}')" @elseif($pub->doi) onclick="window.open('{{ $pub->doi }}', '_blank')" @endif>
+                <div class="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer" @if(count($contentBlocks) > 0) onclick="openPreviewModal('{{ $sectionIndex }}_{{ $idx }}')" @elseif($pub->doi) onclick="window.open('{{ $pub->doi }}', '_blank')" @endif>
                   @if($pub->cover_image_url)
                     <div class="aspect-video overflow-hidden relative group">
                       <img src="{{ $pub->cover_image_url }}" alt="{{ $locale == 'id' ? $pub->title_id : $pub->title_en }}" class="w-full h-full object-cover">
@@ -320,11 +320,11 @@ function extractYouTubeId($url) {
   scrollbar-width: none;
 }
 .carousel-container {
-  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
-.carousel-container > div > div {
-  scroll-snap-align: start;
+.carousel-container::-webkit-scrollbar {
+  display: none;
 }
 </style>
 
@@ -464,9 +464,10 @@ function scrollCarousel(sectionIndex, direction) {
   const container = document.querySelector(`[data-carousel-id="${sectionIndex}"]`);
   if (!container) return;
 
-  const scrollAmount = 340;
-  container.scrollBy({
-    left: direction * scrollAmount,
+  const cardWidth = 344;
+  const newScrollLeft = container.scrollLeft + (direction * cardWidth);
+  container.scrollTo({
+    left: newScrollLeft,
     behavior: 'smooth'
   });
 }
