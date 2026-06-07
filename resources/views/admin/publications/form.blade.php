@@ -97,6 +97,18 @@
                     </div>
 
                     <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Section</label>
+                        <select name="publication_section_id" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                            <option value="">-- No Section --</option>
+                            @foreach($sections ?? [] as $section)
+                                <option value="{{ $section->id }}" {{ old('publication_section_id', $publication->publication_section_id ?? '') == $section->id ? 'selected' : '' }}>
+                                    {{ $section->title_id }} ({{ $section->title_en }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
                         <label class="text-sm font-medium text-gray-700">DOI</label>
                         <input type="text" name="doi" value="{{ old('doi', $publication->doi ?? '') }}" placeholder="https://doi.org/..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
                     </div>

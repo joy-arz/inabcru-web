@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Publication;
+use App\Models\PublicationSection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -18,7 +19,8 @@ class PublicationController extends Controller
 
     public function create(): View
     {
-        return view('admin.publications.form');
+        $sections = PublicationSection::orderBy('display_order')->get();
+        return view('admin.publications.form', compact('sections'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -32,6 +34,7 @@ class PublicationController extends Controller
             'year' => 'nullable|integer',
             'doi' => 'nullable|string',
             'cover_image_url' => 'nullable|string',
+            'publication_section_id' => 'nullable|integer',
         ]);
 
         $data['content_blocks'] = json_decode($request->input('content_blocks', '[]'), true);
@@ -43,7 +46,8 @@ class PublicationController extends Controller
     public function edit(int $id): View
     {
         $publication = Publication::findOrFail($id);
-        return view('admin.publications.form', ['publication' => $publication, 'id' => $id]);
+        $sections = PublicationSection::orderBy('display_order')->get();
+        return view('admin.publications.form', ['publication' => $publication, 'id' => $id, 'sections' => $sections]);
     }
 
     public function update(Request $request, int $id): RedirectResponse
@@ -58,6 +62,7 @@ class PublicationController extends Controller
             'year' => 'nullable|integer',
             'doi' => 'nullable|string',
             'cover_image_url' => 'nullable|string',
+            'publication_section_id' => 'nullable|integer',
         ]);
 
         $data['content_blocks'] = json_decode($request->input('content_blocks', '[]'), true);

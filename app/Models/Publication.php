@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Publication extends Model
 {
@@ -16,12 +17,18 @@ class Publication extends Model
         'doi',
         'cover_image_url',
         'content_blocks',
+        'publication_section_id',
     ];
 
     protected $casts = [
         'content_blocks' => 'array',
         'year' => 'integer',
     ];
+
+    public function section(): BelongsTo
+    {
+        return $this->belongsTo(PublicationSection::class, 'publication_section_id');
+    }
 
     public function getTitleAttribute($locale = null)
     {

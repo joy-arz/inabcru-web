@@ -102,7 +102,10 @@ Route::get('/{locale}/{page}', function ($locale, $page) {
 
     if ($page === 'publications') {
         $publications = Publication::orderBy('year', 'desc')->get();
-        return view('pages.publications', compact('locale', 'publications', 'donationEnabled'));
+        $sections = \App\Models\PublicationSection::with(['publications' => function($q) {
+            $q->orderBy('year', 'desc');
+        }])->orderBy('display_order')->get();
+        return view('pages.publications', compact('locale', 'publications', 'sections', 'donationEnabled'));
     }
 
     if ($page === 'news') {
@@ -178,6 +181,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     })->name('dashboard');
 
     Route::resource('publications', PublicationController::class)->except(['show']);
+    Route::resource('publication-sections', PublicationSectionController::class)->except(['show']);
     Route::resource('articles', ArticleController::class)->except(['show']);
     Route::resource('team', TeamController::class)->except(['show']);
     Route::resource('partners', PartnerController::class)->except(['show']);
