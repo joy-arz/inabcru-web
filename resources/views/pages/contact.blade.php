@@ -122,7 +122,7 @@
             </div>
             <div>
               <h3 class="font-semibold text-text mb-1">{{ trans_for('contact.location', $locale) }}</h3>
-              <p class="text-muted">Yogyakarta, Indonesia</p>
+              <p class="text-muted">Indonesia</p>
             </div>
           </div>
 
