@@ -20,25 +20,24 @@
     @endif
 
     @php
-    $divisions = [
-        'executive_board' => ['label' => 'Executive Board', 'members' => []],
-        'divisi_riset' => ['label' => 'Divisi Riset', 'members' => []],
-        'divisi_konservasi' => ['label' => 'Divisi Konservasi', 'members' => []],
-        'divisi_pendidikan' => ['label' => 'Divisi Pendidikan & Pelatihan', 'members' => []],
-        'database_data_sains' => ['label' => 'Database & Data Sains', 'members' => []],
-        'dewan_pengawas' => ['label' => 'Dewan Pengawas', 'members' => []],
-        'students_voluntary' => ['label' => 'Students & Voluntary', 'members' => []],
-    ];
+    $allDivisions = \App\Models\Division::orderBy('display_order')->get();
+    $divisionGroups = [];
+    foreach($allDivisions as $div) {
+        $divisionGroups[$div->id] = ['label' => $div->name_id . ' / ' . $div->name_en, 'members' => collect()];
+    }
+    $divisionGroups[0] = ['label' => 'Unassigned', 'members' => collect()];
 
     foreach($team as $member) {
-        $divKey = $member->division ?: 'executive_board';
-        if (isset($divisions[$divKey])) {
-            $divisions[$divKey]['members'][] = $member;
+        $divId = $member->division_id ?? 0;
+        if (isset($divisionGroups[$divId])) {
+            $divisionGroups[$divId]['members'][] = $member;
+        } else {
+            $divisionGroups[0]['members'][] = $member;
         }
     }
     @endphp
 
-    @foreach($divisions as $divKey => $division)
+    @foreach($divisionGroups as $divId => $division)
         @if(count($division['members']) > 0)
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
