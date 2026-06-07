@@ -27,7 +27,7 @@ $heroType = $heroHome->type ?? 'image';
 
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 text-center">
     <div class="animate-fade-up opacity-0">
-      <img src="/images/Logo/InaBCRU_LOGO GELAP B.webp" alt="InaBCRU" class="w-40 md:w-52 mx-auto mb-1">
+      <img src="/images/Logo/InaBCRU_LOGO GELAP B.webp" alt="InaBCRU" class="w-40 md:w-52 mx-auto" style="margin-bottom: -8px;">
       <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
         {{ trans_for('home.hero.title') }}
       </h1>
