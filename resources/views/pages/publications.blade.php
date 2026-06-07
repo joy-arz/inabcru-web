@@ -50,8 +50,13 @@ function extractYouTubeId($url) {
           {{ $locale == 'id' ? $section->title_id : $section->title_en }}
         </h2>
 
-        <div class="relative">
-          <div class="carousel-container overflow-x-auto pb-4 scrollbar-hide" data-carousel-id="{{ $sectionIndex }}" data-auto-slide="{{ $section->publications->count() > 1 ? 'true' : 'false' }}">
+        <div class="relative flex items-center">
+          @if($section->publications->count() > 1)
+          <button onclick="scrollCarousel('{{ $sectionIndex }}', -1)" class="absolute left-0 z-10 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center text-primary hover:bg-white transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+          @endif
+          <div class="carousel-container flex-1 overflow-x-auto pb-4 scrollbar-hide mx-8" data-carousel-id="{{ $sectionIndex }}" data-auto-slide="{{ $section->publications->count() > 1 ? 'true' : 'false' }}">
             <div class="flex gap-6" style="width: max-content;">
               @foreach($section->publications as $idx => $pub)
                 @php
@@ -165,18 +170,9 @@ function extractYouTubeId($url) {
               @endforeach
             </div>
           </div>
-
-          {{-- Navigation Arrows --}}
           @if($section->publications->count() > 1)
-          <button onclick="scrollCarousel('{{ $sectionIndex }}', -1)" class="absolute left-4 md:left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-          </button>
-          <button onclick="scrollCarousel('{{ $sectionIndex }}', 1)" class="absolute right-4 md:right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
+          <button onclick="scrollCarousel('{{ $sectionIndex }}', 1)" class="absolute right-0 z-10 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center text-primary hover:bg-white transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </button>
           @endif
         </div>
