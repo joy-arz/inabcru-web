@@ -116,8 +116,6 @@
 
             <div class="space-y-3">
                 <label class="text-sm font-medium text-gray-700">Photo Focal Point</label>
-                <input type="hidden" name="photo_focal_x" id="photo_focal_x" value="{{ old('photo_focal_x', $member->photo_focal_x ?? 50) }}">
-                <input type="hidden" name="photo_focal_y" id="photo_focal_y" value="{{ old('photo_focal_y', $member->photo_focal_y ?? 50) }}">
                 <div id="focal-point-container" class="flex gap-6 items-start" style="display: none;">
                     <div class="flex-1">
                         <div id="focal-point-picker" class="relative bg-gray-100 rounded-lg overflow-hidden cursor-pointer">
@@ -141,9 +139,11 @@
                         <div id="focal-circle-preview" class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 mx-auto">
                             <img id="focal-circle-img" src="" alt="" class="w-full h-full object-cover">
                         </div>
-                        <p class="text-xs text-gray-400 mt-2">X: <span id="focal-x-display">50</span>% Y: <span id="focal-y-display">50</span>%</p>
+                        <p class="text-xs text-gray-400 mt-2">X: <span id="focal-x-display">{{ $member->photo_focal_x ?? 50 }}</span>% Y: <span id="focal-y-display">{{ $member->photo_focal_y ?? 50 }}</span>%</p>
                     </div>
                 </div>
+                <input type="hidden" name="photo_focal_x" id="photo_focal_x" value="{{ old('photo_focal_x', $member->photo_focal_x ?? 50) }}">
+                <input type="hidden" name="photo_focal_y" id="photo_focal_y" value="{{ old('photo_focal_y', $member->photo_focal_y ?? 50) }}">
                 <div class="flex gap-2 justify-center mt-2">
                     <button type="button" onclick="resetFocalPoint()" class="text-xs text-gray-500 hover:text-gray-700 underline">Reset to center</button>
                 </div>
