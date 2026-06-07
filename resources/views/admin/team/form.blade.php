@@ -118,21 +118,25 @@
                 <label class="text-sm font-medium text-gray-700">Photo Focal Point</label>
                 <input type="hidden" name="photo_focal_x" id="photo_focal_x" value="{{ old('photo_focal_x', $member->photo_focal_x ?? 50) }}">
                 <input type="hidden" name="photo_focal_y" id="photo_focal_y" value="{{ old('photo_focal_y', $member->photo_focal_y ?? 50) }}">
-                <div id="focal-point-picker" class="relative w-40 h-40 mx-auto rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 cursor-move" style="display: none;">
-                    <img id="focal-preview-img" src="" alt="" class="absolute w-full h-full object-cover pointer-events-none">
-                    <div id="focal-crosshair" class="absolute w-6 h-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                        <svg viewBox="0 0 24 24" class="w-full h-full text-blue-500 drop-shadow-md">
-                            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <line x1="12" y1="2" x2="12" y2="6" stroke="currentColor" stroke-width="2"/>
-                            <line x1="12" y1="18" x2="12" y2="22" stroke="currentColor" stroke-width="2"/>
-                            <line x1="2" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="2"/>
-                            <line x1="18" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2"/>
-                        </svg>
+                <div id="focal-point-container" class="relative w-full max-w-xs mx-auto" style="display: none;">
+                    <div id="focal-point-picker" class="relative bg-gray-100 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing">
+                        <img id="focal-preview-img" src="" alt="" class="w-full h-auto block pointer-events-none">
+                        <div id="focal-overlay" class="absolute inset-0 pointer-events-none">
+                            <div id="focal-crosshair" class="absolute w-16 h-16 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                                <svg viewBox="0 0 64 64" class="w-full h-full">
+                                    <circle cx="32" cy="32" r="30" fill="none" stroke="white" stroke-width="2" stroke-dasharray="4 4"/>
+                                    <line x1="32" y1="2" x2="32" y2="14" stroke="white" stroke-width="2"/>
+                                    <line x1="32" y1="50" x2="32" y2="62" stroke="white" stroke-width="2"/>
+                                    <line x1="2" y1="32" x2="14" y2="32" stroke="white" stroke-width="2"/>
+                                    <line x1="50" y1="32" x2="62" y2="32" stroke="white" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <p class="text-xs text-gray-400 text-center">Drag the image inside the circle to set which part shows in the circular crop</p>
-                <div class="flex gap-2 justify-center mt-2">
-                    <button type="button" onclick="resetFocalPoint()" class="text-xs text-gray-500 hover:text-gray-700 underline">Reset to center</button>
+                    <p class="text-xs text-gray-400 text-center mt-2">Click anywhere on the image to set the focal point (center of the circle)</p>
+                    <div class="flex gap-2 justify-center mt-1">
+                        <button type="button" onclick="resetFocalPoint()" class="text-xs text-gray-500 hover:text-gray-700 underline">Reset to center</button>
+                    </div>
                 </div>
             </div>
 
@@ -204,6 +208,8 @@ function uploadFile(file, type, prefix) {
                 showPreviewUI(prefix, data.url);
                 if (prefix === 'photo') {
                     showFocalPicker(data.url, 50, 50);
+                    document.getElementById('photo_focal_x').value = 50;
+                    document.getElementById('photo_focal_y').value = 50;
                 }
             }
         } else {
@@ -258,77 +264,40 @@ showFocalPicker('{{ $member->photo_url }}', {{ $member->photo_focal_x ?? 50 }}, 
 var focalPicker = document.getElementById('focal-point-picker');
 var focalImg = document.getElementById('focal-preview-img');
 var focalCrosshair = document.getElementById('focal-crosshair');
+var focalOverlay = document.getElementById('focal-overlay');
 var focalXInput = document.getElementById('photo_focal_x');
 var focalYInput = document.getElementById('photo_focal_y');
 
-var isDragging = false;
-var startX, startY;
-
-focalPicker.addEventListener('mousedown', function(e) {
-    isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    e.preventDefault();
-});
-
-document.addEventListener('mousemove', function(e) {
-    if (!isDragging) return;
+focalPicker.addEventListener('click', function(e) {
+    var rect = focalImg.getBoundingClientRect();
+    var x = ((e.clientX - rect.left) / rect.width) * 100;
+    var y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    var rect = focalPicker.getBoundingClientRect();
-    var deltaX = e.clientX - startX;
-    var deltaY = e.clientY - startY;
+    focalXInput.value = Math.round(x * 10) / 10;
+    focalYInput.value = Math.round(y * 10) / 10;
     
-    var currentX = parseFloat(focalImg.style.left || '0%');
-    var currentY = parseFloat(focalImg.style.top || '0%');
-    
-    var newX = currentX + (deltaX / rect.width) * 100;
-    var newY = currentY + (deltaY / rect.height) * 100;
-    
-    newX = Math.max(-50, Math.min(50, newX));
-    newY = Math.max(-50, Math.min(50, newY));
-    
-    focalImg.style.left = newX + '%';
-    focalImg.style.top = newY + '%';
-    
-    var focalX = 50 + newX;
-    var focalY = 50 + newY;
-    focalCrosshair.style.left = focalX + '%';
-    focalCrosshair.style.top = focalY + '%';
-    
-    focalXInput.value = Math.round(focalX * 10) / 10;
-    focalYInput.value = Math.round(focalY * 10) / 10;
-    
-    startX = e.clientX;
-    startY = e.clientY;
-});
-
-document.addEventListener('mouseup', function() {
-    isDragging = false;
+    focalCrosshair.style.left = x + '%';
+    focalCrosshair.style.top = y + '%';
 });
 
 function showFocalPicker(url, focalX, focalY) {
-    var picker = document.getElementById('focal-point-picker');
+    var container = document.getElementById('focal-point-container');
     var img = document.getElementById('focal-preview-img');
     var crosshair = document.getElementById('focal-crosshair');
     
     img.src = url;
-    picker.style.display = 'block';
+    container.style.display = 'block';
     
-    var offsetX = focalX - 50;
-    var offsetY = focalY - 50;
-    img.style.left = offsetX + '%';
-    img.style.top = offsetY + '%';
     crosshair.style.left = focalX + '%';
     crosshair.style.top = focalY + '%';
 }
 
 function resetFocalPoint() {
-    focalImg.style.left = '0%';
-    focalImg.style.top = '0%';
-    focalCrosshair.style.left = '50%';
-    focalCrosshair.style.top = '50%';
+    var crosshair = document.getElementById('focal-crosshair');
     focalXInput.value = 50;
     focalYInput.value = 50;
+    crosshair.style.left = '50%';
+    crosshair.style.top = '50%';
 }
 
 function handlePhotoUpload(input) {
