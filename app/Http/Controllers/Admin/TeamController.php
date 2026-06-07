@@ -36,6 +36,8 @@ class TeamController extends Controller
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
             'photo_position' => 'nullable|string|in:top,center,bottom,left,right',
+            'photo_focal_x' => 'nullable|numeric|min:0|max:100',
+            'photo_focal_y' => 'nullable|numeric|min:0|max:100',
             'linkedin_url' => 'nullable|string',
             'division_id' => 'nullable|integer',
             'role' => 'nullable|string',
@@ -46,6 +48,8 @@ class TeamController extends Controller
             unset($data['division_id']);
         }
         $data['photo_position'] = $data['photo_position'] ?? 'top';
+        $data['photo_focal_x'] = $data['photo_focal_x'] ?? 50;
+        $data['photo_focal_y'] = $data['photo_focal_y'] ?? 50;
         TeamMember::create($data);
         return redirect()->route('admin.team.index')->with('success', 'Team member added');
     }
@@ -73,6 +77,8 @@ class TeamController extends Controller
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
             'photo_position' => 'nullable|string|in:top,center,bottom,left,right',
+            'photo_focal_x' => 'nullable|numeric|min:0|max:100',
+            'photo_focal_y' => 'nullable|numeric|min:0|max:100',
             'linkedin_url' => 'nullable|string',
             'division_id' => 'nullable|integer',
             'role' => 'nullable|string',
@@ -83,6 +89,12 @@ class TeamController extends Controller
         }
         if (!isset($data['photo_position'])) {
             $data['photo_position'] = 'top';
+        }
+        if (!isset($data['photo_focal_x'])) {
+            $data['photo_focal_x'] = 50;
+        }
+        if (!isset($data['photo_focal_y'])) {
+            $data['photo_focal_y'] = 50;
         }
         $member->update($data);
         return redirect()->route('admin.team.index')->with('success', 'Team member updated');

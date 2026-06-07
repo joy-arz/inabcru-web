@@ -15,6 +15,8 @@ class TeamMember extends Model
         'bio_en',
         'photo_url',
         'photo_position',
+        'photo_focal_x',
+        'photo_focal_y',
         'linkedin_url',
         'division_id',
         'role',
@@ -23,6 +25,8 @@ class TeamMember extends Model
 
     protected $casts = [
         'display_order' => 'integer',
+        'photo_focal_x' => 'float',
+        'photo_focal_y' => 'float',
     ];
 
     public function division(): BelongsTo
