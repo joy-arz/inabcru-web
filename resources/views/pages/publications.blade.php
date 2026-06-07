@@ -50,7 +50,7 @@ function extractYouTubeId($url) {
           {{ $locale == 'id' ? $section->title_id : $section->title_en }}
         </h2>
 
-        <div class="relative">
+        <div class="relative px-4 md:px-12">
           <div class="carousel-container overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory" data-carousel-id="{{ $sectionIndex }}" data-auto-slide="{{ $section->publications->count() > 1 ? 'true' : 'false' }}">
             <div class="flex gap-6 pb-4 snap-x" style="width: max-content;">
               @foreach($section->publications as $idx => $pub)
@@ -168,12 +168,12 @@ function extractYouTubeId($url) {
 
           {{-- Navigation Arrows --}}
           @if($section->publications->count() > 1)
-          <button onclick="scrollCarousel('{{ $sectionIndex }}', -1)" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10 hidden md:flex">
+          <button onclick="scrollCarousel('{{ $sectionIndex }}', -1)" class="absolute left-4 md:left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
           </button>
-          <button onclick="scrollCarousel('{{ $sectionIndex }}', 1)" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10 hidden md:flex">
+          <button onclick="scrollCarousel('{{ $sectionIndex }}', 1)" class="absolute right-4 md:right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
@@ -473,25 +473,16 @@ function scrollCarousel(sectionIndex, direction) {
 
 function initAutoSlide() {
   document.querySelectorAll('.carousel-container[data-auto-slide="true"]').forEach(container => {
-    const sectionIndex = container.dataset.carouselId;
     let autoSlideInterval;
     let isPaused = false;
 
-    function startAutoSlide() {
-      autoSlideInterval = setInterval(() => {
-        if (!isPaused) {
-          const maxScroll = container.scrollWidth - container.clientWidth;
-          if (container.scrollLeft >= maxScroll - 10) {
-            container.scrollTo({ left: 0, behavior: 'smooth' });
-          } else {
-            container.scrollBy({ left: 340, behavior: 'smooth' });
-          }
-        }
-      }, 4000);
-    }
-
-    function stopAutoSlide() {
-      clearInterval(autoSlideInterval);
+    function autoScroll() {
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (container.scrollLeft >= maxScroll - 10) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: 340, behavior: 'smooth' });
+      }
     }
 
     container.addEventListener('mouseenter', () => { isPaused = true; });
@@ -499,11 +490,19 @@ function initAutoSlide() {
     container.addEventListener('touchstart', () => { isPaused = true; });
     container.addEventListener('touchend', () => { setTimeout(() => { isPaused = false; }, 2000); });
 
-    startAutoSlide();
+    autoSlideInterval = setInterval(() => {
+      if (!isPaused) {
+        autoScroll();
+      }
+    }, 5000);
   });
 }
 
-document.addEventListener('DOMContentLoaded', initAutoSlide);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAutoSlide);
+} else {
+  initAutoSlide();
+}
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
