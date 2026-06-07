@@ -9,7 +9,7 @@ $heroHome = $siteImages['hero_home'] ?? null;
 $heroUrl = $heroHome->image_url ?? null;
 $heroType = $heroHome->type ?? 'image';
 @endphp
-<section class="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
+<section class="relative min-h-[100svh] flex items-start justify-center overflow-hidden pt-20 md:pt-28">
   <div class="absolute inset-0" id="heroMedia">
     @if($heroUrl && $heroType === 'video')
     <video autoplay loop muted playsinline class="w-full h-full object-cover">
@@ -27,11 +27,11 @@ $heroType = $heroHome->type ?? 'image';
 
   <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 text-center">
     <div class="animate-fade-up opacity-0">
-      <img src="/images/Logo/InaBCRU_LOGO GELAP B.webp" alt="InaBCRU" class="w-40 md:w-52 mx-auto" style="margin-bottom: -8px;">
-      <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+      <img src="/images/Logo/InaBCRU_LOGO GELAP B.webp" alt="InaBCRU" class="w-44 md:w-56 mx-auto" style="margin-bottom: -16px;">
+      <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight" style="margin-top: 0;">
         {{ trans_for('home.hero.title') }}
       </h1>
-      <p class="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto">
+      <p class="text-lg md:text-xl text-white/70 max-w-2xl mx-auto">
         {{ trans_for('home.hero.subtitle') }}
       </p>
     </div>
