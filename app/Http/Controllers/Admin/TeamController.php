@@ -35,7 +35,6 @@ class TeamController extends Controller
             'bio_id' => 'nullable|string',
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
-            'photo_position' => 'nullable|string|in:top,center,bottom,left,right',
             'photo_focal_x' => 'nullable|numeric|min:0|max:100',
             'photo_focal_y' => 'nullable|numeric|min:0|max:100',
             'linkedin_url' => 'nullable|string',
@@ -47,7 +46,6 @@ class TeamController extends Controller
         if (empty($data['division_id'])) {
             unset($data['division_id']);
         }
-        $data['photo_position'] = $data['photo_position'] ?? 'top';
         $data['photo_focal_x'] = is_numeric($data['photo_focal_x'] ?? null) ? $data['photo_focal_x'] : 50;
         $data['photo_focal_y'] = is_numeric($data['photo_focal_y'] ?? null) ? $data['photo_focal_y'] : 50;
         TeamMember::create($data);
@@ -76,7 +74,6 @@ class TeamController extends Controller
             'bio_id' => 'nullable|string',
             'bio_en' => 'nullable|string',
             'photo_url' => 'nullable|string',
-            'photo_position' => 'nullable|string|in:top,center,bottom,left,right',
             'photo_focal_x' => 'nullable|numeric|min:0|max:100',
             'photo_focal_y' => 'nullable|numeric|min:0|max:100',
             'linkedin_url' => 'nullable|string',
@@ -86,9 +83,6 @@ class TeamController extends Controller
 
         if (isset($data['division_id']) && empty($data['division_id'])) {
             unset($data['division_id']);
-        }
-        if (!isset($data['photo_position']) || empty($data['photo_position'])) {
-            $data['photo_position'] = 'top';
         }
         $data['photo_focal_x'] = is_numeric($data['photo_focal_x'] ?? null) ? $data['photo_focal_x'] : 50;
         $data['photo_focal_y'] = is_numeric($data['photo_focal_y'] ?? null) ? $data['photo_focal_y'] : 50;

@@ -149,18 +149,7 @@
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700">Card Layout</label>
-                <select name="photo_position" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
-                    <option value="top" {{ (old('photo_position', $member->photo_position ?? 'top') == 'top') ? 'selected' : '' }}>Top (Photo above text)</option>
-                    <option value="center" {{ (old('photo_position', $member->photo_position ?? 'top') == 'center') ? 'selected' : '' }}>Center (Photo centered)</option>
-                    <option value="bottom" {{ (old('photo_position', $member->photo_position ?? 'top') == 'bottom') ? 'selected' : '' }}>Bottom (Photo below text)</option>
-                    <option value="left" {{ (old('photo_position', $member->photo_position ?? 'top') == 'left') ? 'selected' : '' }}>Left (Photo on left side)</option>
-                    <option value="right" {{ (old('photo_position', $member->photo_position ?? 'top') == 'right') ? 'selected' : '' }}>Right (Photo on right side)</option>
-                </select>
-                <p class="text-xs text-gray-400">Choose how the photo is positioned relative to the text content</p>
             </div>
-        </div>
 
         <div class="flex justify-end gap-3 mt-6">
             <a href="{{ route('admin.team.index') }}" class="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-600">Cancel</a>
