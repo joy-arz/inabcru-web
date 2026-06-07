@@ -51,13 +51,13 @@ function extractYouTubeId($url) {
         </h2>
 
         <div class="relative">
-          <div class="carousel-container overflow-x-auto pb-4 scrollbar-hide" data-carousel-id="{{ $sectionIndex }}">
-            <div class="flex gap-6 pb-4" style="width: max-content;">
+          <div class="carousel-container overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory" data-carousel-id="{{ $sectionIndex }}" data-auto-slide="{{ $section->publications->count() > 1 ? 'true' : 'false' }}">
+            <div class="flex gap-6 pb-4 snap-x" style="width: max-content;">
               @foreach($section->publications as $idx => $pub)
                 @php
                 $contentBlocks = is_array($pub->content_blocks) ? $pub->content_blocks : json_decode($pub->content_blocks ?? '[]', true);
                 @endphp
-                <div class="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer" @if(count($contentBlocks) > 0) onclick="openPreviewModal('{{ $sectionIndex }}_{{ $idx }}')" @elseif($pub->doi) onclick="window.open('{{ $pub->doi }}', '_blank')" @endif>
+                <div class="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 cursor-pointer snap-center" @if(count($contentBlocks) > 0) onclick="openPreviewModal('{{ $sectionIndex }}_{{ $idx }}')" @elseif($pub->doi) onclick="window.open('{{ $pub->doi }}', '_blank')" @endif>
                   @if($pub->cover_image_url)
                     <div class="aspect-video overflow-hidden relative group">
                       <img src="{{ $pub->cover_image_url }}" alt="{{ $locale == 'id' ? $pub->title_id : $pub->title_en }}" class="w-full h-full object-cover">
@@ -167,13 +167,13 @@ function extractYouTubeId($url) {
           </div>
 
           {{-- Navigation Arrows --}}
-          @if($section->publications->count() > 3)
-          <button onclick="scrollCarousel({{ $sectionIndex }}, -1)" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10 hidden md:flex">
+          @if($section->publications->count() > 1)
+          <button onclick="scrollCarousel('{{ $sectionIndex }}', -1)" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10 hidden md:flex">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
           </button>
-          <button onclick="scrollCarousel({{ $sectionIndex }}, 1)" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10 hidden md:flex">
+          <button onclick="scrollCarousel('{{ $sectionIndex }}', 1)" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-gray-50 transition-colors cursor-pointer z-10 hidden md:flex">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
@@ -319,6 +319,13 @@ function extractYouTubeId($url) {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+.carousel-container {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.carousel-container > div > div {
+  scroll-snap-align: start;
+}
 </style>
 
 <script>
@@ -457,12 +464,46 @@ function scrollCarousel(sectionIndex, direction) {
   const container = document.querySelector(`[data-carousel-id="${sectionIndex}"]`);
   if (!container) return;
 
-  const scrollAmount = 320 * 3;
+  const scrollAmount = 340;
   container.scrollBy({
     left: direction * scrollAmount,
     behavior: 'smooth'
   });
 }
+
+function initAutoSlide() {
+  document.querySelectorAll('.carousel-container[data-auto-slide="true"]').forEach(container => {
+    const sectionIndex = container.dataset.carouselId;
+    let autoSlideInterval;
+    let isPaused = false;
+
+    function startAutoSlide() {
+      autoSlideInterval = setInterval(() => {
+        if (!isPaused) {
+          const maxScroll = container.scrollWidth - container.clientWidth;
+          if (container.scrollLeft >= maxScroll - 10) {
+            container.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            container.scrollBy({ left: 340, behavior: 'smooth' });
+          }
+        }
+      }, 4000);
+    }
+
+    function stopAutoSlide() {
+      clearInterval(autoSlideInterval);
+    }
+
+    container.addEventListener('mouseenter', () => { isPaused = true; });
+    container.addEventListener('mouseleave', () => { isPaused = false; });
+    container.addEventListener('touchstart', () => { isPaused = true; });
+    container.addEventListener('touchend', () => { setTimeout(() => { isPaused = false; }, 2000); });
+
+    startAutoSlide();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initAutoSlide);
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
