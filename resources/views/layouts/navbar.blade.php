@@ -167,7 +167,7 @@
       navbar.style.borderBottom = '1px solid #E8E6E1';
       navbar.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
       if (navbarLogo) {
-        navbarLogo.src = '/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp';
+        navbarLogo.src = '/images/Logo/InaBCRU_No Text.png';
         navbarLogo.alt = 'InaBCRU';
       }
       navLinks.forEach(link => {
