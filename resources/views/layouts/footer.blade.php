@@ -7,7 +7,7 @@
           alt="InaBCRU"
           style="width: 260px; height: auto;"
         >
-        <p class="text-gray-600 text-base md:text-lg leading-relaxed mt-2 text-center md:text-left font-bold">{{ trans_for('footer.tagline', $locale) }}</p>
+        <p style="font-weight: bold; color: #4b5563; font-size: 1rem; line-height: 1.625; margin-top: 0.5rem; text-align: center;" class="text-center md:text-left">{{ trans_for('footer.tagline', $locale) }}</p>
       </div>
       <div class="text-center md:text-right flex-shrink-0">
         <h4 class="font-heading font-semibold text-base mb-3">{{ trans_for('footer.contactInfo', $locale) }}</h4>
