@@ -193,7 +193,7 @@
       navbar.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
       navbar.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
       if (navbarLogo) {
-        navbarLogo.src = '/images/Logo/InaBCRU_LOGO GELAP B HORIZONTAL.webp';
+        navbarLogo.src = '/images/Logo/InaBCRU_No Text.png';
         navbarLogo.alt = 'InaBCRU';
       }
       navLinks.forEach(link => {
