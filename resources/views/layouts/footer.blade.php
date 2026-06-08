@@ -3,11 +3,11 @@
     <div class="flex flex-col md:flex-row items-center md:items-start justify-between mb-12 gap-8">
       <div class="flex flex-col items-center md:items-start gap-1.5">
 <img
-          src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp"
+          src="/images/Logo/InaBCRU_No Text.png"
           alt="InaBCRU"
           style="width: 260px; height: auto;"
         >
-        <p class="text-gray-600 text-base md:text-lg leading-relaxed mt-2 text-center md:text-left">{{ trans_for('footer.tagline', $locale) }}</p>
+        <p class="text-gray-600 text-base md:text-lg leading-relaxed mt-2 text-center md:text-left font-bold">{{ trans_for('footer.tagline', $locale) }}</p>
       </div>
       <div class="text-center md:text-right flex-shrink-0">
         <h4 class="font-heading font-semibold text-base mb-3">{{ trans_for('footer.contactInfo', $locale) }}</h4>
