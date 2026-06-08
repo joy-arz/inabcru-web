@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between h-16 md:h-20">
       <a href="/{{ $locale }}" class="flex items-center gap-3 cursor-pointer">
         <img id="navbar-logo"
-          src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp"
+          src="/images/Logo/InaBCRU_No Text.png"
           alt="InaBCRU"
           class="h-10 md:h-12 w-auto transition-opacity duration-300 mt-[7px]"
           style="object-fit: contain; object-position: left center;">
