@@ -3,7 +3,7 @@
     <div class="flex flex-col md:flex-row items-center md:items-start justify-between mb-12 gap-8">
       <div class="flex flex-col items-center md:items-start gap-1.5">
 <img
-          src="/images/Logo/InaBCRU_No Text.png"
+          src="/images/Logo/InaBCRU_LOGO CERAH HORIZONTAL.webp"
           alt="InaBCRU"
           style="width: 260px; height: auto;"
         >
