@@ -108,7 +108,7 @@
 .prose img { width: 100%; height: auto; border-radius: 12px; margin: 1.5rem 0; }
 .prose ul { margin: 1rem 0 1.5rem 0 !important; padding-left: 0 !important; list-style: none !important; }
 .prose ul li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; padding-left: 2rem !important; position: relative; list-style: none !important; }
-.prose ul li::before { content: '•'; position: absolute; left: 0.5rem; color: #2B3984; font-weight: bold; }
+.prose ul li::before { content: '    •'; position: absolute; left: 0.5rem; color: #2B3984; font-weight: bold; }
 .prose ol { margin: 1rem 0 1.5rem 0 !important; padding-left: 0 !important; list-style: none !important; counter-reset: ol-counter; }
 .prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; padding-left: 2rem !important; position: relative; list-style: none !important; counter-increment: ol-counter; }
 .prose ol li::before { content: counter(ol-counter) '.'; position: absolute; left: 0.5rem; color: #2B3984; font-weight: bold; }
