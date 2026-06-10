@@ -102,16 +102,15 @@
 
 @push('styles')
 <style>
+.prose { max-width: none; }
 .prose h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #0F1117; margin: 2rem 0 1rem; }
 .prose h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600; color: #0F1117; margin: 1.5rem 0 0.75rem; }
 .prose p { font-size: 1rem; line-height: 1.8; color: #374151; margin-bottom: 1.25rem; }
 .prose img { width: 100%; height: auto; border-radius: 12px; margin: 1.5rem 0; }
-.prose ul { margin: 1rem 0 1.5rem 0 !important; padding-left: 0 !important; list-style: none !important; }
-.prose ul li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; padding-left: 2rem !important; position: relative; list-style: none !important; }
-.prose ul li::before { content: '    •'; position: absolute; left: 0.5rem; color: #2B3984; font-weight: bold; }
-.prose ol { margin: 1rem 0 1.5rem 0 !important; padding-left: 0 !important; list-style: none !important; counter-reset: ol-counter; }
-.prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; padding-left: 2rem !important; position: relative; list-style: none !important; counter-increment: ol-counter; }
-.prose ol li::before { content: counter(ol-counter) '.'; position: absolute; left: 0.5rem; color: #2B3984; font-weight: bold; }
+.prose ul { list-style: disc !important; margin: 1rem 0 1.5rem 1.5rem !important; padding-left: 1.5rem !important; }
+.prose ul li { list-style: disc !important; color: #374151; margin-bottom: 0.5rem; line-height: 1.7; }
+.prose ol { list-style: decimal !important; margin: 1rem 0 1.5rem 1.5rem !important; padding-left: 1.5rem !important; }
+.prose ol li { list-style: decimal !important; color: #374151; margin-bottom: 0.5rem; line-height: 1.7; }
 .prose blockquote { border-left: 4px solid #2B3984; padding: 1rem 1.5rem; margin: 1.5rem 0; background: #F8F6F1; border-radius: 0 12px 12px 0; }
 .prose blockquote p { margin: 0; font-style: italic; }
 .prose a { color: #2B3984; text-decoration: underline; }
