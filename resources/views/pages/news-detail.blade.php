@@ -107,10 +107,12 @@
 .prose p { font-size: 1rem; line-height: 1.8; color: #374151; margin-bottom: 1.25rem; }
 .prose img { width: 100%; height: auto; border-radius: 12px; margin: 1.5rem 0; }
 .prose ul { margin: 1rem 0 1.5rem 1.5rem !important; list-style: disc !important; }
-.prose ul li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: disc !important; }
+.prose ul li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: disc !important; display: list-item; }
 .prose ul li::marker { color: #2B3984 !important; }
+.prose ul li.ql-align-justify { list-style: disc !important; display: list-item !important; }
 .prose ol { margin: 1rem 0 1.5rem 1.5rem !important; list-style: decimal !important; }
-.prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: decimal !important; }
+.prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: decimal !important; display: list-item; }
+.prose ol li.ql-align-justify { list-style: decimal !important; display: list-item !important; }
 .prose blockquote { border-left: 4px solid #2B3984; padding: 1rem 1.5rem; margin: 1.5rem 0; background: #F8F6F1; border-radius: 0 12px 12px 0; }
 .prose blockquote p { margin: 0; font-style: italic; }
 .prose a { color: #2B3984; text-decoration: underline; }
