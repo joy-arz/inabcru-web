@@ -80,7 +80,7 @@ class ArticleController extends Controller
         $isPublishing = $request->input('published') === '1';
         $data['published'] = $isPublishing;
 
-        if ($isPublishing && empty($article->published_at)) {
+        if ($isPublishing && empty($article->published_at) && empty($data['published_at'])) {
             $data['published_at'] = now();
         }
 
