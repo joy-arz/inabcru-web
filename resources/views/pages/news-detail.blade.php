@@ -102,22 +102,16 @@
 
 @push('styles')
 <style>
-ol, ul { list-style: disc !important; }
 .prose h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #0F1117; margin: 2rem 0 1rem; }
 .prose h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600; color: #0F1117; margin: 1.5rem 0 0.75rem; }
 .prose p { font-size: 1rem; line-height: 1.8; color: #374151; margin-bottom: 1.25rem; }
 .prose img { width: 100%; height: auto; border-radius: 12px; margin: 1.5rem 0; }
-.prose ul { margin: 1rem 0 1.5rem 1.5rem !important; list-style: disc !important; }
-.prose ul li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: disc !important; display: list-item; }
-.prose ul li::marker { color: #2B3984 !important; }
-.prose ul li.ql-align-justify { list-style: disc !important; display: list-item !important; }
-.prose ol { margin: 1rem 0 1.5rem 1.5rem !important; list-style: decimal !important; }
-.prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: decimal !important; display: list-item; }
-article ul { list-style: disc !important; margin-left: 1.5rem !important; padding-left: 1.5rem !important; }
-article ul li { list-style: disc !important; display: list-item !important; }
-article ol { list-style: decimal !important; margin-left: 1.5rem !important; padding-left: 1.5rem !important; }
-article ol li { list-style: decimal !important; display: list-item !important; }
-.prose ol li.ql-align-justify { list-style: decimal !important; display: list-item !important; }
+.prose ul { margin: 1rem 0 1.5rem 0 !important; padding-left: 0 !important; list-style: none !important; }
+.prose ul li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; padding-left: 2rem !important; position: relative; list-style: none !important; }
+.prose ul li::before { content: '•'; position: absolute; left: 0.5rem; color: #2B3984; font-weight: bold; }
+.prose ol { margin: 1rem 0 1.5rem 0 !important; padding-left: 0 !important; list-style: none !important; counter-reset: ol-counter; }
+.prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; padding-left: 2rem !important; position: relative; list-style: none !important; counter-increment: ol-counter; }
+.prose ol li::before { content: counter(ol-counter) '.'; position: absolute; left: 0.5rem; color: #2B3984; font-weight: bold; }
 .prose blockquote { border-left: 4px solid #2B3984; padding: 1rem 1.5rem; margin: 1.5rem 0; background: #F8F6F1; border-radius: 0 12px 12px 0; }
 .prose blockquote p { margin: 0; font-style: italic; }
 .prose a { color: #2B3984; text-decoration: underline; }
