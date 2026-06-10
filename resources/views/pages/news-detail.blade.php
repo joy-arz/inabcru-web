@@ -112,6 +112,10 @@
 .prose ul li.ql-align-justify { list-style: disc !important; display: list-item !important; }
 .prose ol { margin: 1rem 0 1.5rem 1.5rem !important; list-style: decimal !important; }
 .prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: decimal !important; display: list-item; }
+article ul { list-style: disc !important; margin-left: 1.5rem !important; padding-left: 1.5rem !important; }
+article ul li { list-style: disc !important; display: list-item !important; }
+article ol { list-style: decimal !important; margin-left: 1.5rem !important; padding-left: 1.5rem !important; }
+article ol li { list-style: decimal !important; display: list-item !important; }
 .prose ol li.ql-align-justify { list-style: decimal !important; display: list-item !important; }
 .prose blockquote { border-left: 4px solid #2B3984; padding: 1rem 1.5rem; margin: 1.5rem 0; background: #F8F6F1; border-radius: 0 12px 12px 0; }
 .prose blockquote p { margin: 0; font-style: italic; }
