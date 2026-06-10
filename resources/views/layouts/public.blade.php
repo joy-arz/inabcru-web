@@ -74,6 +74,7 @@
 
         html { scroll-behavior: smooth; }
     </style>
+    @stack('styles')
 </head>
 <body class="font-body antialiased">
     <script>
