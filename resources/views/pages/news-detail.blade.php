@@ -102,6 +102,7 @@
 
 @push('styles')
 <style>
+ol, ul { list-style: disc !important; }
 .prose h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #0F1117; margin: 2rem 0 1rem; }
 .prose h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600; color: #0F1117; margin: 1.5rem 0 0.75rem; }
 .prose p { font-size: 1rem; line-height: 1.8; color: #374151; margin-bottom: 1.25rem; }
