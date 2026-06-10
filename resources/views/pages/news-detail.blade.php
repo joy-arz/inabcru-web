@@ -106,10 +106,10 @@
 .prose h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600; color: #0F1117; margin: 1.5rem 0 0.75rem; }
 .prose p { font-size: 1rem; line-height: 1.8; color: #374151; margin-bottom: 1.25rem; }
 .prose img { width: 100%; height: auto; border-radius: 12px; margin: 1.5rem 0; }
-.prose ul { margin: 1rem 0 1.5rem 1.5rem; }
-.prose ul li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; }
-.prose ol { margin: 1rem 0 1.5rem 1.5rem; }
-.prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; }
+.prose ul { margin: 1rem 0 1.5rem 1.5rem; list-style: disc; }
+.prose ul li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: disc; }
+.prose ol { margin: 1rem 0 1.5rem 1.5rem; list-style: decimal; }
+.prose ol li { font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 0.5rem; list-style: decimal; }
 .prose blockquote { border-left: 4px solid #2B3984; padding: 1rem 1.5rem; margin: 1.5rem 0; background: #F8F6F1; border-radius: 0 12px 12px 0; }
 .prose blockquote p { margin: 0; font-style: italic; }
 .prose a { color: #2B3984; text-decoration: underline; }

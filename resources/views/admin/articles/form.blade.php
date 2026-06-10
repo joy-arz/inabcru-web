@@ -138,13 +138,19 @@
                 <div class="bg-white rounded-xl shadow-sm p-6">
                     <h2 class="font-heading text-lg font-semibold text-gray-900 mb-4">Actions</h2>
                     <input type="hidden" name="published" id="published_value" value="{{ isset($id) && $article->published ? '1' : '0' }}">
-                    <div class="space-y-3">
-                        <button type="submit" onclick="setPublishAction('0')" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-center text-gray-600 text-sm font-medium transition-colors">
-                            Save as Draft
-                        </button>
-                        <button type="submit" onclick="setPublishAction('1')" class="w-full px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 text-center text-sm font-medium transition-colors">
-                            Publish
-                        </button>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Publish Date</label>
+                            <input type="date" name="published_at" id="published_at" value="{{ old('published_at', $article->published_at ? $article->published_at->format('Y-m-d') : '') }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                        </div>
+                        <div class="space-y-3">
+                            <button type="submit" onclick="setPublishAction('0')" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-center text-gray-600 text-sm font-medium transition-colors">
+                                Save as Draft
+                            </button>
+                            <button type="submit" onclick="setPublishAction('1')" class="w-full px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 text-center text-sm font-medium transition-colors">
+                                Publish
+                            </button>
+                        </div>
                     </div>
                 </div>
 

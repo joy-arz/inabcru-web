@@ -35,6 +35,8 @@ class ArticleController extends Controller
             'meta_location_id' => 'nullable|string',
             'meta_location_en' => 'nullable|string',
             'published' => 'nullable|string',
+            'published_at' => 'nullable|date',
+            'published_at' => 'nullable|date',
         ]);
 
         $isPublishing = $request->input('published') === '1';
@@ -72,6 +74,7 @@ class ArticleController extends Controller
             'meta_location_id' => 'nullable|string',
             'meta_location_en' => 'nullable|string',
             'published' => 'nullable|string',
+            'published_at' => 'nullable|date',
         ]);
 
         $isPublishing = $request->input('published') === '1';
